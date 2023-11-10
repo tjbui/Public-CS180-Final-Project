@@ -359,7 +359,7 @@ public class DataManager {
             Product product = this.products.get(i);
 
             if (product.getName().contains(term) || product.getDescription().contains(term) ||
-                    this.getStore(product.getStore()).contains(term)) {
+                    this.getStore(product.getStoreId()).getName().contains(term)) {
                 results.add(product);
             }
         }
@@ -370,8 +370,9 @@ public class DataManager {
     public void makePurchase(Product product, int quantity) throws InvalidQuantityError {
         if (product.checkQuantity(quantity)) {
             product.purchase(quantity);
-            Transaction transaction = new Transaction(product.getId(), product.getStore(),
-                    this.currentUser.getEmail(), product.getSellerEmail(), quantity, product.getPrice());
+            Transaction transaction = new Transaction(product.getId(), product.getStoreId(),
+                    this.currentUser.getEmail(), this.getStore(product.getStoreId()).getSellerEmail(), 
+                    quantity, product.getPrice());
             this.transactions.add(transaction);
         } else {
             throw new InvalidQuantityError("Invalid purchase quantity");
@@ -383,7 +384,7 @@ public class DataManager {
             ArrayList<Transaction> results = new ArrayList<Transaction>();
 
             for (int i = 0; i < this.transactions.size(); i++) {
-                if (this.transactions.get(i).getCustomer().equals(this.currentUser.getEmail())) {
+                if (this.transactions.get(i).getCustomerEmail().equals(this.currentUser.getEmail())) {
                     results.add(this.transactions.get(i));
                 }
             }
@@ -396,13 +397,15 @@ public class DataManager {
 
     public ArrayList<String[]> getSaleData(Store store) {
         if (this.currentUser != null && this.currentUser instanceof Seller &&
-                store.getSeller().equals(this.currentUser.getEmail())) {
+                store.getSellerEmail().equals(this.currentUser.getEmail())) {
             ArrayList<String[]> data = new ArrayList<String[]>();
 
             for (int i = 0; i < this.transactions.size(); i++) {
-                if (this.transactions.get(i).getStore() == store.getId()) {
-                    String[] datum = {this.transactions.get(i).getCustomer(),
-                            this.transactions.get(i).getQuantity() * this.transactions.get(i).getPrice()};
+                if (this.transactions.get(i).getStoreId() == store.getId()) {
+                    String[] datum = {this.transactions.get(i).getCustomerEmail(),
+                            String.format("$.2f", 
+                            ((double) this.transactions.get(i).getQuantitySold())
+                             * this.transactions.get(i).getPrice())};
                     data.add(datum);
                 }
             }

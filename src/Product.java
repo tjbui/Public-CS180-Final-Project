@@ -2,16 +2,17 @@
 public class Product {
 
     private String name;
-    //private Store store;
+    private int storeId;
     private String description;
     private int quantity;
     private double price;
     private static int count = 0;
     private int id;
 
-    public Product(String name, String description, int quantity, double price, int id) {
+    public Product(String name, String description, int storeId, int quantity, double price, int id) {
         this.name = name;
         this.description = description;
+        this.storeId = storeId;
         this.quantity = quantity;
         this.price = price;
         this.id = count;
@@ -42,6 +43,10 @@ public class Product {
         return id;
     }
 
+    public int getStoreId() {
+        return this.storeId;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -67,7 +72,7 @@ public class Product {
     }
 
     public boolean checkQuantity(int quantity) {
-        if (quantity <= this.quantity) {
+        if (quantity <= this.quantity || quantity < 0) {
             return true;
         } else {
             return false;
@@ -77,6 +82,4 @@ public class Product {
     public void purchase(int quantity) {
         this.quantity -= quantity;
     }
-
-
 }
