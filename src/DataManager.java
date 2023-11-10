@@ -352,6 +352,13 @@ public class DataManager {
         }
     }
 
+    /**
+     * Searches the product list for products where the name, description, or store name contains
+     * the search term.
+     * 
+     * @param term The term to search by
+     * @return An ArrayList of products which match the term
+     */
     public ArrayList<Product> search(String term) {
         ArrayList<Product> results = new ArrayList<Product>();
 
@@ -367,6 +374,14 @@ public class DataManager {
         return results;
     }
 
+    /**
+     * Purchases a single item in the given quantity and creates a corresponding Transaction.
+     * 
+     * @param product
+     * @param quantity
+     * @throws InvalidQuantityError Thrown if the quantity is negative or greater than the quantity
+     * of the Product currently in stock
+     */
     public void makePurchase(Product product, int quantity) throws InvalidQuantityError {
         if (product.checkQuantity(quantity)) {
             product.purchase(quantity);
@@ -379,6 +394,11 @@ public class DataManager {
         }
     }
 
+    /**
+     * Gets the purchase history of the current user.
+     * 
+     * @return A list of Transactions where the customer making the purchase equals the current user
+     */
     public ArrayList<Transaction> getPurchaseHistory() {
         if (this.currentUser != null && this.currentUser instanceof Customer) {
             ArrayList<Transaction> results = new ArrayList<Transaction>();
@@ -395,6 +415,15 @@ public class DataManager {
         return null;
     }
 
+    /**
+     * Gets sale data for a particular store if the current user owns that store. Data is returned
+     * as an ArrayList of String arrays. Each string array contains two entries. The first represents
+     * the customer making the purchase, and the second represents the revenue made by that
+     * transaction (formatted to two decimal places and prefixed with a dollar sign).
+     * 
+     * @param store
+     * @return An ArrayList of String arrays in the described format
+     */
     public ArrayList<String[]> getSaleData(Store store) {
         if (this.currentUser != null && this.currentUser instanceof Seller &&
                 store.getSellerEmail().equals(this.currentUser.getEmail())) {
@@ -407,6 +436,49 @@ public class DataManager {
                             ((double) this.transactions.get(i).getQuantitySold())
                              * this.transactions.get(i).getPrice())};
                     data.add(datum);
+                }
+            }
+
+            return data;
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets all products associated with the Seller currently logged in that are currently in
+     * users' shopping carts. Product information is formatted as an array of strings, with the 
+     * first string in the array containing the email of the customer, the second containing the 
+     * product name, the third containing the store name, and the fourth containing the quantity 
+     * of the product currently in the user's shopping cart.
+     *  
+     * @return An ArrayList of String arrays in the specified format
+     */
+    public ArrayList<String[]> getSellerShoppingCartView() {
+        if (this.currentUser != null && this.currentUser instanceof Seller) {
+            ArrayList<String[]> data = new ArrayList<String[]>();
+
+            for (int i = 0; i < this.users.size(); i++) {
+                if (this.users.get(i) instanceof Customer) {
+                    ArrayList<Integer> productIds = ((Customer) this.users.get(i)).getIds();
+                    ArrayList<Integer> productQuantities = 
+                        ((Customer) this.users.get(i)).getQuantities();
+
+                    for (int j = 0; j < productIds.size(); j++) {
+                        Product product = this.getProduct(((int) productIds.get(j)));
+
+                        if (this.getStore(product.getStore()).getSellerEmail()
+                            .equals(this.currentUser.getEmail())) {
+                                String[] datum = {
+                                    this.users.get(i).getEmail(),
+                                    this.getProduct(productIds.get(j)).getName(),
+                                    this.getStore(product.getStore()).getName(),
+                                    productQuantities.get(j).toString()
+                                };
+
+                                data.add(datum);
+                        }
+                    }
                 }
             }
 

@@ -16,6 +16,7 @@ public class Product {
         this.quantity = quantity;
         this.price = price;
         this.id = count;
+        this.store = store;
         count++;
     }
 
@@ -33,6 +34,10 @@ public class Product {
 
     public double getPrice() {
         return price;
+    }
+
+    public int getStore() {
+        return this.store;
     }
 
     public static int getCount() {
