@@ -467,12 +467,12 @@ public class DataManager {
                     for (int j = 0; j < productIds.size(); j++) {
                         Product product = this.getProduct(((int) productIds.get(j)));
 
-                        if (this.getStore(product.getStore()).getSellerEmail()
+                        if (this.getStore(product.getStoreId()).getSellerEmail()
                             .equals(this.currentUser.getEmail())) {
                                 String[] datum = {
                                     this.users.get(i).getEmail(),
                                     this.getProduct(productIds.get(j)).getName(),
-                                    this.getStore(product.getStore()).getName(),
+                                    this.getStore(product.getStoreId()).getName(),
                                     productQuantities.get(j).toString()
                                 };
 
