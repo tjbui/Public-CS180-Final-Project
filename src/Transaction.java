@@ -82,4 +82,16 @@ public class Transaction {
     public void setQuantitySold(int quantitySold) {
         this.quantitySold = quantitySold;
     }
+
+    public String toStringFormat() {
+        return String.format("%d,%d,%s,%s,%d,%f", this.productId, this.storeId, 
+            this.customerEmail, this.sellerEmail, this.quantitySold, this.price);
+    }
+
+    public static Transaction fromStringFormat(String raw) {
+        String[] parts = raw.split(",");
+
+        return new Transaction(Integer.valueOf(parts[0]), Integer.valueOf(parts[1]), parts[2], 
+        parts[3], Integer.valueOf(parts[4]), Float.valueOf(parts[5]));
+    } 
 }

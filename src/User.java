@@ -22,4 +22,14 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String toStringFormat() {
+        return String.format("%s,%s", this.email, this.password);
+    }
+
+    public static User fromStringFormat(String raw) {
+        String[] parts = raw.split(",");
+
+        return new User(parts[0], parts[1]);
+    }
 }

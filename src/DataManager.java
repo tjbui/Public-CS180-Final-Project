@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.io.*;
 
 /**
  * The DataManager class is designed to handle the other classes in the system in aggregate form.
@@ -14,6 +15,13 @@ public class DataManager {
     private ArrayList<User> users;
     private ArrayList<Store> stores;
     private ArrayList<Transaction> transactions;
+
+    private int currentProductId;
+    private int currentStoreId;
+
+    private Product dummyProduct;
+    private User dummyUser;
+    private Store dummyStore;
 
     private User currentUser;
 
@@ -33,7 +41,250 @@ public class DataManager {
 
         this.currentUser = null;
 
-        //TODO: read in data from file sources
+        this.dummyProduct = new Product("Product not found", 
+            "Product description not found", -1, 0, 0.0, -1);
+        this.dummyUser = new User("User not found", "");
+        this.dummyStore = new Store(new ArrayList<Integer>(), "Store not found", 
+            "User not found", -1);
+
+        try {
+            File fProduct = new File("products.csv");
+            FileReader frProduct = new FileReader(fProduct);
+            BufferedReader bfrProduct = new BufferedReader(frProduct);
+
+            String line = bfrProduct.readLine();
+
+            while (line != null) {
+                Product newProduct = Product.fromStringFormat(line);
+                this.products.add(newProduct);
+                line = bfrProduct.readLine();
+            }
+
+            bfrProduct.close();
+        } catch (Exception e) {}
+
+        try {
+            File fUser = new File("users.csv");
+            FileReader frUser = new FileReader(fUser);
+            BufferedReader bfrUser = new BufferedReader(frUser);
+
+            String line = bfrUser.readLine();
+
+            while (line != null) {
+                if (line.charAt(0) == 's') {
+                    Seller newSeller = Seller.fromStringFormat(line);
+                    this.users.add(newSeller);
+                } else if (line.charAt(0) == 'c') {
+                    Customer newCustomer = Customer.fromStringFormat(line);
+                    this.users.add(newCustomer);
+                }
+
+                line = bfrUser.readLine();
+            }
+
+            bfrUser.close();
+        } catch (Exception e) {}
+
+        try {
+            File fStore = new File("stores.csv");
+            FileReader frStore = new FileReader(fStore);
+            BufferedReader bfrStore = new BufferedReader(frStore);
+
+            String line = bfrStore.readLine();
+
+            while (line != null) {
+                Store newStore = Store.fromStringFormat(line);
+                this.stores.add(newStore);
+                line = bfrStore.readLine();
+            }
+
+            bfrStore.close();
+        } catch (Exception e) {}
+
+        try {
+            File fTransaction = new File("transactions.csv");
+            FileReader frTransaction = new FileReader(fTransaction);
+            BufferedReader bfrTransaction = new BufferedReader(frTransaction);
+
+            String line = bfrTransaction.readLine();
+
+            while (line != null) {
+                Transaction newTransaction = Transaction.fromStringFormat(line);
+                this.transactions.add(newTransaction);
+                line = bfrTransaction.readLine();
+            }
+
+            bfrTransaction.close();
+        } catch (Exception e) {}
+
+        try {
+            File fCurrentIds = new File("ids.txt");
+            FileReader frCurrentIds = new FileReader(fCurrentIds);
+            BufferedReader bfrCurrentIds = new BufferedReader(frCurrentIds);
+
+            this.currentProductId = Integer.valueOf(bfrCurrentIds.readLine());
+            this.currentStoreId = Integer.valueOf(bfrCurrentIds.readLine());
+
+            bfrCurrentIds.close();
+        } catch (Exception e) {
+            this.currentProductId = 0;
+            this.currentStoreId = 0;
+        }
+
+        Product.setCount(this.currentProductId);
+    }
+
+    /**
+     * Saves the DataManager's information to a series of files. Should be called before exiting the
+     * program so that data is not lost.
+     */
+    public void saveToFile() {
+        try {
+            File fProduct = new File("products.csv");
+            PrintWriter pwProduct = new PrintWriter(fProduct);
+
+            for (int i = 0; i < this.products.size(); i++) {
+                String line = this.products.get(i).toStringFormat();
+                pwProduct.println(line);
+            }
+
+            pwProduct.close();
+
+            File fUser = new File("users.csv");
+            PrintWriter pwUser = new PrintWriter(fUser);
+
+            for (int i = 0; i < this.users.size(); i++) {
+                String line = this.users.get(i).toStringFormat();
+                pwUser.println(line);
+            }
+
+            pwUser.close();
+
+            File fStore = new File("stores.csv");
+            PrintWriter pwStore = new PrintWriter(fStore);
+
+            for (int i = 0; i < this.stores.size(); i++) {
+                String line = this.stores.get(i).toStringFormat();
+                pwStore.println(line);
+            }
+
+            pwStore.close();
+
+            File fTransaction = new File("transactions.csv");
+            PrintWriter pwTransaction = new PrintWriter(fTransaction);
+
+            for (int i = 0; i < this.transactions.size(); i++) {
+                String line = this.transactions.get(i).toStringFormat();
+                pwTransaction.println(line);
+            }
+
+            pwTransaction.close();
+
+            File fCurrentIds = new File("ids.txt");
+            PrintWriter pwCurrentIds = new PrintWriter(fCurrentIds);
+
+            pwCurrentIds.println(Product.getCount());
+            pwCurrentIds.println(this.currentStoreId);
+
+            pwCurrentIds.close();
+        } catch (Exception e) {}
+    }
+
+    /**
+     * Loads products from a CSV file. If any product entry has an id matching the id of an existing
+     * product in the database, that product entry will nto be added.
+     * 
+     * @param filename The file from which to load product data
+     */
+    public void loadProductsFromFile(String filename) {
+        if (this.currentUser != null && this.currentUser instanceof Seller) {
+            try {
+                File f = new File(filename);
+                FileReader fr = new FileReader(f);
+                BufferedReader bfr = new BufferedReader(fr);
+
+                String line = bfr.readLine();
+
+                while (line != null) {
+                    Product product = Product.fromStringFormat(line);
+
+                    if (this.getProduct(product.getId()) == this.dummyProduct &&
+                    this.getStore(product.getStoreId()).getSellerEmail()
+                    .equals(this.currentUser.getEmail())) {
+                        this.products.add(product);
+                    }
+                }
+
+                bfr.close();
+            } catch (Exception e) {}
+        }
+    }
+
+    /**
+     * Exports all transactions associated with the current user to a file at the given location.
+     * 
+     * @param filename The file to which the transaction data will be written
+     */
+    public void exportPurchaseHistory(String filename) {
+        if (this.currentUser != null && this.currentUser instanceof Customer) {
+            try {
+                File f = new File(filename);
+                PrintWriter pw = new PrintWriter(f);
+
+                for (int i = 0; i < this.transactions.size(); i++) {
+                    if (this.transactions.get(i).getCustomerEmail()
+                    .equals(this.currentUser.getEmail())) {
+                        String line = this.transactions.get(i).toStringFormat();
+
+                        pw.println(line);
+                    }
+                }
+
+                pw.close();
+            } catch (Exception e) {}
+        }
+    }
+
+    /**
+     * Exports product data in CSV form to a given file source.
+     * 
+     * @param filename The file to which the product data will be written
+     */
+    public void exportProductData(String filename) {
+        if (this.currentUser != null && this.currentUser instanceof Seller) {
+            try {
+                File f = new File(filename);
+                PrintWriter pw = new PrintWriter(f);
+
+                for (int i = 0; i < this.products.size(); i++) {
+                    if (this.getStore(this.products.get(i).getStoreId()).getSellerEmail()
+                    .equals(this.currentUser.getEmail())) {
+                        String formattedProduct = this.products.get(i).toStringFormat();
+
+                        pw.println(formattedProduct);
+                    }
+                }
+
+                pw.close();
+            } catch (Exception e) {}
+        }
+    }
+
+    /**
+     * 
+     * @return The ID that will be assigned to the next created Store object
+     */
+    public int getCurrentStoreId() {
+        return this.currentStoreId;
+    }
+
+    /**
+     * Increments the ID that will be assigned to the next created Store object. This function
+     * should always be called after creating a new Store object that uses the getCurrentStoreId()
+     * function.
+     */
+    public void incrementCurrentStoreId() {
+        this.currentStoreId++;
     }
 
     /**
@@ -58,7 +309,7 @@ public class DataManager {
             }
         }
 
-        return null;
+        return this.dummyUser;
     }
 
     /**
@@ -89,6 +340,10 @@ public class DataManager {
      * @return Whether or not a User with the given email and password exists
      */
     public boolean checkUserLogin(String email, String password) {
+        if (email.equals("User not found")) {
+            return false;
+        }
+
         User user = this.getUser(email);
 
         if (user != null && user.getPassword().equals(password)) {
@@ -117,7 +372,7 @@ public class DataManager {
     public void addUser(User user) {
         User existingUser = this.getUser(user.getEmail());
 
-        if (existingUser == null) {
+        if (existingUser == this.dummyUser) {
             this.users.add(user);
             this.setCurrentUser(user.getEmail());
         }
@@ -130,12 +385,22 @@ public class DataManager {
      * @param newPassword
      */
     public void editCurrentUser(String newEmail, String newPassword) {
-        if (this.currentUser != null) {
+        if (this.currentUser != this.dummyUser) {
             this.currentUser.setEmail(newEmail);
             this.currentUser.setPassword(newPassword);
         }
     }
 
+    /**
+     * Logs out the current user.
+     */
+    public void logoutCurrentUser() {
+        this.currentUser = null;
+    }
+
+    /**
+     * @return All products in the database, in an unsorted format
+     */
     public ArrayList<Product> getProductList() {
         return this.getProductList(BY_NOTHING, NOT_SORTED);
     }
@@ -214,7 +479,7 @@ public class DataManager {
             }
         }
 
-        return null;
+        return this.dummyProduct;
     }
 
     /**
@@ -225,7 +490,7 @@ public class DataManager {
      */
     public void addProduct(Product product) {
         if (this.currentUser != null && this.currentUser instanceof Seller) {
-            if (this.getProduct(product.getId()) == null) {
+            if (this.getProduct(product.getId()) == this.dummyProduct) {
                 this.products.add(product);
             }
         }
@@ -262,7 +527,8 @@ public class DataManager {
         if (this.currentUser != null && this.currentUser instanceof Seller) {
             Product product = this.getProduct(id);
 
-            if (this.currentUserOwnsStore(this.getStore(product.getId()))) {
+            if (product != this.dummyProduct && 
+            this.currentUserOwnsStore(this.getStore(product.getId()))) {
                 this.products.remove(product);
             }
         }
@@ -309,7 +575,7 @@ public class DataManager {
             }
         }
 
-        return null;
+        return this.dummyStore;
     }
 
     /**
@@ -320,7 +586,7 @@ public class DataManager {
     public void addStore(Store store) {
         Store existingStore = this.getStore(store.getId());
 
-        if (existingStore == null) {
+        if (existingStore == this.dummyStore) {
             this.stores.add(store);
         }
     }
@@ -333,7 +599,7 @@ public class DataManager {
     public void deleteStore(int id) {
         Store existingStore = this.getStore(id);
 
-        if (existingStore != null && this.currentUserOwnsStore(existingStore)) {
+        if (existingStore != this.dummyStore && this.currentUserOwnsStore(existingStore)) {
             this.stores.remove(existingStore);
         }
     }
@@ -347,7 +613,7 @@ public class DataManager {
     public void editStore(int id, String name) {
         Store store = this.getStore(id);
 
-        if (store != null) {
+        if (store != this.dummyStore) {
             store.setName(name);
         }
     }
@@ -434,7 +700,7 @@ public class DataManager {
                     String[] datum = {this.transactions.get(i).getCustomerEmail(),
                             String.format("$.2f", 
                             ((double) this.transactions.get(i).getQuantitySold())
-                             * this.transactions.get(i).getPrice())};
+                            * this.transactions.get(i).getPrice())};
                     data.add(datum);
                 }
             }

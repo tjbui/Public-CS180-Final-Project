@@ -15,9 +15,11 @@ public class Product {
         this.storeId = storeId;
         this.quantity = quantity;
         this.price = price;
-        this.id = count;
-        this.storeId = storeId;
-        count++;
+        this.id = id;
+    }
+
+    public Product(String name, String description, int storeId, int quantity, double price) {
+        this(name, description, storeId, quantity, price, count++);
     }
 
     public String getName() {
@@ -82,5 +84,17 @@ public class Product {
 
     public void purchase(int quantity) {
         this.quantity -= quantity;
+    }
+
+    public String toStringFormat() {
+        return String.format("%s,%s,%d,%d,%f,%d", this.name, this.description, this.storeId, 
+        this.quantity, this.price, this.id);
+    }
+
+    public static Product fromStringFormat(String raw) {
+        String[] parts = raw.split(",");
+
+        return new Product(parts[0], parts[1], Integer.valueOf(parts[2]), Integer.valueOf(parts[3]), 
+        Float.valueOf(parts[4]), Integer.valueOf(parts[5]));
     }
 }

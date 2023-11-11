@@ -16,4 +16,31 @@ public class Seller extends User {
     public void setStoreIDs(ArrayList<Integer> storeIDs) {
         this.storeIDs = storeIDs;
     }
+
+    @Override
+    public String toStringFormat() {
+        String storeIdString = "";
+
+        for (int i = 0; i < this.storeIDs.size(); i++) {
+            storeIdString = storeIdString + Integer.toString(this.storeIDs.get(i)) + "&";
+        }
+
+        storeIdString = storeIdString.substring(0, storeIdString.length() - 1);
+
+        return String.format("s,%s,%s,%s", this.getEmail(), this.getPassword(), storeIdString);
+    }
+
+    public static Seller fromStringFormat(String raw) {
+        String[] parts = raw.split(",");
+
+        ArrayList<Integer> storeIdList = new ArrayList<Integer>();
+
+        String[] storeIdStrings = parts[3].split("&");
+
+        for (int i = 0; i < storeIdStrings.length; i++) {
+            storeIdList.add(Integer.valueOf(storeIdStrings[i]));
+        }
+
+        return new Seller(parts[1], parts[2], storeIdList);
+    }
 }
