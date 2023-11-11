@@ -42,4 +42,30 @@ public class Store {
     public void setId(int id) {
         this.id = id;
     }
+
+    public String toStringFormat() {
+        String productIdString = "";
+
+        for (int i = 0; i < this.products.size(); i++) {
+            productIdString = productIdString + this.products.get(i).toString() + "&";
+        }
+
+        productIdString = productIdString.substring(0, productIdString.length() - 1);
+
+        return String.format("%s,%s,%d,%s", this.name, this.sellerEmail, this.id, productIdString);
+    }
+
+    public static Store fromStringFormat(String raw) {
+        String[] parts = raw.split(",");
+
+        ArrayList<Integer> products = new ArrayList<Integer>();
+
+        String[] productIdList = parts[3].split("&");
+
+        for (int i = 0; i < productIdList.length; i++) {
+            products.add(Integer.valueOf(productIdList[i]));
+        }
+
+        return new Store(products, parts[0], parts[1], Integer.parseInt(parts[2]));
+    }
 }

@@ -26,4 +26,38 @@ public class Customer extends User {
     public void setQuantities(ArrayList<Integer> quantities) {
         this.quantities = quantities;
     }
+
+    @Override
+    public String toStringFormat() {
+        String productIdString = "";
+        String quantityIdString = "";
+
+        for (int i = 0; i < this.ids.size(); i++) {
+            productIdString = productIdString + this.ids.get(i).toString() + "&";
+            quantityIdString = quantityIdString + this.quantities.get(i).toString() + "&";
+        }
+
+        productIdString = productIdString.substring(0, productIdString.length() - 1);
+        quantityIdString = quantityIdString.substring(0, quantityIdString.length() - 1);
+
+        return String.format("c,%s,%s,%s,%s", this.getEmail(), this.getPassword(), productIdString, 
+        quantityIdString);
+    }
+
+    public static Customer fromStringFormat(String raw) {
+        String[] parts = raw.split(",");
+
+        ArrayList<Integer> productIds = new ArrayList<Integer>();
+        ArrayList<Integer> productQuantities = new ArrayList<Integer>();
+
+        String[] productIdParts = parts[3].split("&");
+        String[] quantityIdParts = parts[4].split("&");
+
+        for (int i = 0; i < productIdParts.length; i++) {
+            productIds.add(Integer.valueOf(productIdParts[i]));
+            productQuantities.add(Integer.valueOf(quantityIdParts[i]));
+        }
+
+        return new Customer(parts[1], parts[2], productIds, productQuantities);
+    }
 }
