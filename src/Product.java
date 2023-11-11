@@ -9,7 +9,11 @@ public class Product {
     private static int count = 0;
     private int id;
 
-    public Product(String name, String description, int storeId, int quantity, double price, int id) {
+    public Product(String name, String description, int storeId, int quantity, double price, int id) throws InvalidPriceError {
+        if (price <= 0) {
+            throw new InvalidPriceError(String.format("Invalid price: %f", price));
+        }
+
         this.name = name;
         this.description = description;
         this.storeId = storeId;
@@ -18,7 +22,7 @@ public class Product {
         this.id = id;
     }
 
-    public Product(String name, String description, int storeId, int quantity, double price) {
+    public Product(String name, String description, int storeId, int quantity, double price) throws InvalidPriceError {
         this(name, description, storeId, quantity, price, count++);
     }
 
@@ -62,7 +66,10 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(double price) throws InvalidPriceError {
+        if (price <= 0) {
+            throw new InvalidPriceError(String.format("Invalid price: %f", price));
+        }
         this.price = price;
     }
 
@@ -91,7 +98,7 @@ public class Product {
         this.quantity, this.price, this.id);
     }
 
-    public static Product fromStringFormat(String raw) {
+    public static Product fromStringFormat(String raw) throws InvalidPriceError {
         String[] parts = raw.split(",");
 
         return new Product(parts[0], parts[1], Integer.valueOf(parts[2]), Integer.valueOf(parts[3]), 

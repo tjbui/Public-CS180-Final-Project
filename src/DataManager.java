@@ -41,8 +41,10 @@ public class DataManager {
 
         this.currentUser = null;
 
-        this.dummyProduct = new Product("Product not found", 
+        try {
+            this.dummyProduct = new Product("Product not found", 
             "Product description not found", -1, 0, 0.0, -1);
+        } catch (Exception e) {}
         this.dummyUser = new User("User not found", "");
         this.dummyStore = new Store(new ArrayList<Integer>(), "Store not found", 
             "User not found", -1);
@@ -513,7 +515,9 @@ public class DataManager {
                 product.setName(name);
                 product.setDescription(description);
                 product.setQuantity(quantity);
-                product.setPrice(price);
+                try {
+                    product.setPrice(price);
+                } catch (Exception e) {}
             }
         }
     }
