@@ -19,8 +19,8 @@ the test classes and run the test classes.</p>
 
 <hr>
 <ul>
-<li>Student 1 - Submitted Report on Brightspace.</li>
-<li>Student 2 - Submitted Vocareum workspace.</li>
+<li>Student 1 [todo] - Submitted Report on Brightspace.</li>
+<li>Student 2 [todo] - Submitted Vocareum workspace.</li>
 </ul>
 <hr>
 
