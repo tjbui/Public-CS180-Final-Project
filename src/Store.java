@@ -50,7 +50,11 @@ public class Store {
             productIdString = productIdString + this.products.get(i).toString() + "&";
         }
 
-        productIdString = productIdString.substring(0, productIdString.length() - 1);
+        if (productIdString.length() > 0) {
+            productIdString = productIdString.substring(0, productIdString.length() - 1);
+        } else {
+            productIdString = "&";
+        }
 
         return String.format("%s,%s,%d,%s", this.name, this.sellerEmail, this.id, productIdString);
     }
