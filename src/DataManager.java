@@ -324,7 +324,7 @@ public class DataManager {
     public boolean setCurrentUser(String email) {
         User user = this.getUser(email);
 
-        if (user == null) {
+        if (user.getEmail().equals("User not found")) {
             return false;
         } else {
             this.currentUser = user;
@@ -418,50 +418,65 @@ public class DataManager {
         ArrayList<Product> notSorted = this.products;
         ArrayList<Product> results = new ArrayList<Product>();
 
-        if (by == BY_NOTHING || sort == NOT_SORTED) {
+        if (by == BY_NOTHING || sort == NOT_SORTED || notSorted.size() < 2) {
             results = notSorted;
         } else {
-            int counter = 0;
-            boolean[] entered = new boolean[notSorted.size()];
-
             if (by == BY_QUANTITY) {
-                int threshold = -1;
+                int current_threshold = Integer.MAX_VALUE;
+                int current_threshold_index = 0;
 
                 if (sort == SORTED_DESC) {
-                    threshold = Integer.MAX_VALUE;
+                    current_threshold = Integer.MIN_VALUE;
                 }
 
-                while (counter < notSorted.size()) {
-                    while (!entered[counter]) {
-                        counter++;
+                while (results.size() < notSorted.size()) {
+                    for (int i = 0; i < notSorted.size(); i++) {
+                        Product product = notSorted.get(i);
+
+                        if ((sort == SORTED_ASC && product.getQuantity() <= current_threshold && 
+                        results.indexOf(product) == -1) ||
+                        (sort == SORTED_DESC && product.getQuantity() >= current_threshold && 
+                        results.indexOf(product) == -1)) {
+                            current_threshold = product.getQuantity();
+                            current_threshold_index = i;
+                        }
                     }
 
-                    if ((sort == SORTED_ASC && notSorted.get(counter).getQuantity() >= threshold)
-                            || (sort == SORTED_DESC && notSorted.get(counter).getQuantity() <= threshold)) {
-                        threshold = notSorted.get(counter).getQuantity();
-                        results.add(notSorted.get(counter));
-                        entered[counter] = true;
-                        counter = 0;
+                    results.add(notSorted.get(current_threshold_index));
+
+                    current_threshold = Integer.MAX_VALUE;
+                    
+                    if (sort == SORTED_DESC) {
+                        current_threshold = Integer.MIN_VALUE;
                     }
                 }
             } else if (by == BY_PRICE) {
-                double threshold = -1.0;
+                double current_threshold = Float.MAX_VALUE;
+                int current_threshold_index = 0;
 
                 if (sort == SORTED_DESC) {
-                    threshold = Float.MAX_VALUE;
+                    current_threshold = Float.MIN_VALUE;
                 }
 
-                while (counter < notSorted.size()) {
-                    while (!entered[counter]) {
-                        counter++;
+                while (results.size() < notSorted.size()) {
+                    for (int i = 0; i < notSorted.size(); i++) {
+                        Product product = notSorted.get(i);
+
+                        if ((sort == SORTED_ASC && product.getPrice() <= current_threshold && 
+                        results.indexOf(product) == -1) ||
+                        (sort == SORTED_DESC && product.getPrice() >= current_threshold && 
+                        results.indexOf(product) == -1)) {
+                            current_threshold = product.getPrice();
+                            current_threshold_index = i;
+                        }
                     }
 
-                    if ((sort == SORTED_ASC && notSorted.get(counter).getPrice() >= threshold)
-                            || (sort == SORTED_DESC && notSorted.get(counter).getPrice() <= threshold)) {
-                        threshold = notSorted.get(counter).getPrice();
-                        results.add(notSorted.get(counter));
-                        entered[counter] = true;
-                        counter = 0;
+                    results.add(notSorted.get(current_threshold_index));
+
+                    current_threshold = Float.MAX_VALUE;
+
+                    if (sort == SORTED_DESC) {
+                        current_threshold = Float.MIN_VALUE;
                     }
                 }
             }
@@ -472,7 +487,7 @@ public class DataManager {
 
     /**
      * @param id
-     * @return The product with the given id if it exists, or null if not
+     * @return The product with the given id if it exists, or a dummy if not
      */
     public Product getProduct(int id) {
         for (int i = 0; i < this.products.size(); i++) {
