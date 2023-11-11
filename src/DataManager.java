@@ -583,6 +583,23 @@ public class DataManager {
         return false;
     }
 
+    public ArrayList<Product> getStoreProducts(Store store) {
+        if (this.currentUser != null && this.currentUser instanceof Seller &&
+            store.getSellerEmail().equals(this.currentUser.getEmail())) {
+            ArrayList<Product> results = new ArrayList<Product>();
+
+            for (int i = 0; i < this.products.size(); i++) {
+                if (this.products.get(i).getStoreId() == store.getId()) {
+                    results.add(products.get(i));
+                }
+            }
+
+            return results;
+        }
+
+        return null;
+    }
+
     /**
      * @param id
      * @return The store with the given id
