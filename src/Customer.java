@@ -37,8 +37,13 @@ public class Customer extends User {
             quantityIdString = quantityIdString + this.quantities.get(i).toString() + "&";
         }
 
-        productIdString = productIdString.substring(0, productIdString.length() - 1);
-        quantityIdString = quantityIdString.substring(0, quantityIdString.length() - 1);
+        if (productIdString.length() > 0) {
+            productIdString = productIdString.substring(0, productIdString.length() - 1);
+            quantityIdString = quantityIdString.substring(0, quantityIdString.length() - 1);
+        } else {
+            productIdString = "&";
+            quantityIdString = "&";
+        }
 
         return String.format("c,%s,%s,%s,%s", this.getEmail(), this.getPassword(), productIdString, 
         quantityIdString);
