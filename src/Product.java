@@ -82,7 +82,7 @@ public class Product {
     }
 
     public boolean checkQuantity(int quantity) {
-        if (quantity <= this.quantity || quantity < 0) {
+        if (quantity <= this.quantity && quantity >= 0) {
             return true;
         } else {
             return false;
@@ -94,7 +94,7 @@ public class Product {
     }
 
     public String toStringFormat() {
-        return String.format("%s,%s,%d,%d,%f,%d", this.name, this.description, this.storeId, 
+        return String.format("%s,%s,%d,%d,%.2f,%d", this.name, this.description, this.storeId, 
         this.quantity, this.price, this.id);
     }
 
