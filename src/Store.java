@@ -11,6 +11,12 @@ public class Store {
     String sellerEmail;
     int id;
 
+    public Store() {
+        products = null;
+        name = "";
+        sellerEmail = "";
+    }
+
     public Store(ArrayList<Integer> products, String name, String sellerEmail, int id) { // constructor
         this.products = products;
         this.name = name;
