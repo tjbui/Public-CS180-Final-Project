@@ -25,7 +25,11 @@ public class Seller extends User {
             storeIdString = storeIdString + Integer.toString(this.storeIDs.get(i)) + "&";
         }
 
-        storeIdString = storeIdString.substring(0, storeIdString.length() - 1);
+        if (storeIdString.length() > 0) {
+            storeIdString = storeIdString.substring(0, storeIdString.length() - 1);
+        } else {
+            storeIdString = "&";
+        }
 
         return String.format("s,%s,%s,%s", this.getEmail(), this.getPassword(), storeIdString);
     }

@@ -27,3 +27,9 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+products.csv
+users.csv
+transactions.csv
+stores.csv
+ids.txt
