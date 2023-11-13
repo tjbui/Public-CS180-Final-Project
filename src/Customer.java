@@ -17,9 +17,8 @@ public class Customer extends User {
     }
 
     public void removeProduct(int id) {
-        int index = ids.indexOf(Integer.valueOf(id));
-        ids.remove(index);
-        quantities.remove(index);
+        ids.remove(id);
+        quantities.remove(id);
     }
 
 
