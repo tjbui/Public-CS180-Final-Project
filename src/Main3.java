@@ -73,7 +73,7 @@ public class Main3 {
         System.out.println("Create a password:");
         String password = scan();
 
-        if (dataManager.getUser(email).getEmail().equals("User not found")) {
+        if (dataManager.getUser(email) == dataManager.dummyUser) {
             System.out.println("What kind of account do you want to create?\n" +
                     "[1] Seller \n[2] Customer\n[3] Back to menu");
             int input = Integer.parseInt(scan()); //not int error
@@ -162,9 +162,10 @@ public class Main3 {
                             for (int i = 0; i < ((Customer) dataManager.getCurrentUser()).getIds().size(); i++) {
                                 try {
                                     dataManager.makePurchase(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)), (((Customer) dataManager.getCurrentUser()).getQuantities().get(i)));
+                                    System.out.println(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).toStringFormat() + "purchase complete!");
                                 } catch (InvalidQuantityError e) {
                                     System.out.println("Quantity is too high for " + dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i))
-                                            + "\n The products which were listed before this have been purchased");
+                                            + "\n This product cannot be purchased");
                                 }
                             }
                             break;
