@@ -4,7 +4,7 @@ import java.util.Scanner;
 /**
  * Main method which is the UI for every user
  */
-public class mymain {
+public class Main3 {
     static DataManager dataManager = new DataManager();
     static Store currentStore;
 
