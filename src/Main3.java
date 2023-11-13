@@ -167,11 +167,16 @@ public class Main3 {
                             for (int i = 0; i < ((Customer) dataManager.getCurrentUser()).getIds().size(); i++) {
                                 try {
                                     dataManager.makePurchase(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)), (((Customer) dataManager.getCurrentUser()).getQuantities().get(i)));
-                                    System.out.println(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).getName() + "purchase complete!");
+                                    System.out.println(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).getName() + " purchase complete!");
                                 } catch (InvalidQuantityError e) {
-                                    System.out.println("Quantity is too high for " + dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i))
+                                    System.out.println("Quantity is too high for " + dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).getName()
                                             + "\n This product cannot be purchased");
                                 }
+
+                                Customer c = (Customer) dataManager.getCurrentUser();
+
+                                c.getIds().clear();
+                                c.getQuantities().clear();
                             }
                             break;
                         case 2:
@@ -306,7 +311,7 @@ public class Main3 {
         } else {
             System.out.println("Past transactions: ");
             for (int i = 0; i < dataManager.getPurchaseHistory().size(); i++) {
-                System.out.println(dataManager.getPurchaseHistory().get(i).toString());
+                System.out.println(dataManager.getPurchaseHistory().get(i).toString(dataManager));
             }
         }
     }
@@ -395,6 +400,7 @@ public class Main3 {
                 [2] Add new product
                 [3] Delete product
                 [4] Delete store
+                [5] Edit product
                 """);
         int option = Integer.parseInt(scan());
         String name;
@@ -440,6 +446,31 @@ public class Main3 {
                 break;
             case 4:
                 dataManager.deleteStore(storeId);
+                break;
+            case 5:
+                System.out.println("Select a product");
+                for (int j = 0; j < dataManager.getStoreProducts(currentStore).size(); j++) {
+                    System.out.println(dataManager.getStoreProducts(currentStore).get(j).toStringFormat());
+                }
+                System.out.println("Provide the ID of the product you wish to edit");
+                int editProductID = Integer.parseInt(scan());
+                scan();
+                System.out.println("Provide new NAME for the product:");
+                String newProductName = scan();
+                System.out.println("Provide new DESCRIPTION for the product");
+                String newProductDescription = scan();
+                System.out.println("Provide new QUANTITY for the product");
+                int newProductQuantity = Integer.parseInt(scan());
+                scan();
+                System.out.println("Provide new PRICE for the product");
+                double newProductPrice = Float.parseFloat(scan());
+                scan();
+                try {
+                    dataManager.editProduct(editProductID, newProductName, newProductDescription, newProductQuantity, newProductPrice);
+                    System.out.println("Edit SUCCESSFUL");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 System.out.println("Invalid input: please enter 1, 2, 3, or 4");

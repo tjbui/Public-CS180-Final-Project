@@ -59,8 +59,8 @@ public class Transaction {
    }
 
    public String toString(DataManager dm) {
-        return String.format("%s - %d items sold from %s at $.2f", dm.getProduct(productId), 
-        quantitySold, dm.getStore(storeId), price);
+        return String.format("%s - %d items sold from %s at $%.2f", 
+        dm.getProduct(productId).getName(), quantitySold, dm.getStore(storeId).getName(), price);
    }
 
    public String toStringFormat() {
