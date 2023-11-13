@@ -73,7 +73,7 @@ public class Main3 {
         System.out.println("Create a password:");
         String password = scan();
 
-        if (dataManager.getUser(email) == dataManager.dummyUser) {
+        if (dataManager.getUser(email).getEmail().equals("User not found")) {
             System.out.println("What kind of account do you want to create?\n" +
                     "[1] Seller \n[2] Customer\n[3] Back to menu");
             int input = Integer.parseInt(scan()); //not int error
