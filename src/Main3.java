@@ -20,7 +20,7 @@ public class Main3 {
         dataManager.logoutCurrentUser();
         System.out.println("Choose option:\n" +
                 "[1] Log in\n" +
-                "[2] Sign up\n" + 
+                "[2] Sign up\n" +
                 "[3] Exit");
         int input = Integer.parseInt(scan());
 
@@ -81,32 +81,37 @@ public class Main3 {
         if (dataManager.getUser(email).getEmail().equals("User not found")) {
             System.out.println("What kind of account do you want to create?\n" +
                     "[1] Seller \n[2] Customer\n[3] Back to menu");
-            int input = Integer.parseInt(scan()); //not int error
-            switch (input) {
-                case 1:
-                    ArrayList<Integer> storeIds = new ArrayList<>();
-                    Seller seller = new Seller(email, password, storeIds);
-                    dataManager.addUser(seller);
-                    dataManager.setCurrentUser(email);
-                    System.out.println("Seller account created and logged in!");
-                    seller();
-                    break;
-                case 2:
-                    ArrayList<Integer> ids = new ArrayList<>();
-                    ArrayList<Integer> quantities = new ArrayList<>();
-                    Customer customer = new Customer(email, password, ids, quantities);
-                    dataManager.addUser(customer);
-                    dataManager.setCurrentUser(email);
-                    System.out.println("Customer account created and logged in!");
-                    customer();
-                    break;
-                case 3:
-                    System.out.println("Account not created as seller or customer was not selected");
-                    initialize();
-                default:
-                    System.out.println("Please either 1, 2, or 3");
-                    signup();
-            }
+            try { // ADDDED CODE
+                int input = Integer.parseInt(scan()); //not int error: RESOLVED
+                switch (input) {
+                    case 1:
+                        ArrayList<Integer> storeIds = new ArrayList<>();
+                        Seller seller = new Seller(email, password, storeIds);
+                        dataManager.addUser(seller);
+                        dataManager.setCurrentUser(email);
+                        System.out.println("Seller account created and logged in!");
+                        seller();
+                        break;
+                    case 2:
+                        ArrayList<Integer> ids = new ArrayList<>();
+                        ArrayList<Integer> quantities = new ArrayList<>();
+                        Customer customer = new Customer(email, password, ids, quantities);
+                        dataManager.addUser(customer);
+                        dataManager.setCurrentUser(email);
+                        System.out.println("Customer account created and logged in!");
+                        customer();
+                        break;
+                    case 3:
+                        System.out.println("Account not created as seller or customer was not selected");
+                        initialize();
+                    default:
+                        System.out.println("Please either 1, 2, or 3");
+                        signup();
+                }
+            } catch (NumberFormatException e) { // ADDED CODE
+                System.out.println("Please either 1, 2, or 3"); // ADDED CODE
+                signup(); // ADDED CODE
+            } // ADDED CODE
         } else {
             System.out.println("Email already exists. Please use a new email");
             signup();
@@ -115,9 +120,9 @@ public class Main3 {
     public static void customer() throws InvalidQuantityError, InvalidPriceError {
         System.out.println(
                 "[1] Go to cart\n" +
-                "[2] Search products\n"+
-                "[3] See purchase history\n" +
-                "[4] Log out");
+                        "[2] Search products\n"+
+                        "[3] See purchase history\n" +
+                        "[4] Log out");
 
         int option = Integer.parseInt(scan());
         switch (option) {
@@ -167,16 +172,11 @@ public class Main3 {
                             for (int i = 0; i < ((Customer) dataManager.getCurrentUser()).getIds().size(); i++) {
                                 try {
                                     dataManager.makePurchase(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)), (((Customer) dataManager.getCurrentUser()).getQuantities().get(i)));
-                                    System.out.println(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).getName() + " purchase complete!");
+                                    System.out.println(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).getName() + "purchase complete!");
                                 } catch (InvalidQuantityError e) {
-                                    System.out.println("Quantity is too high for " + dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).getName()
+                                    System.out.println("Quantity is too high for " + dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i))
                                             + "\n This product cannot be purchased");
                                 }
-
-                                Customer c = (Customer) dataManager.getCurrentUser();
-
-                                c.getIds().clear();
-                                c.getQuantities().clear();
                             }
                             break;
                         case 2:
@@ -311,7 +311,7 @@ public class Main3 {
         } else {
             System.out.println("Past transactions: ");
             for (int i = 0; i < dataManager.getPurchaseHistory().size(); i++) {
-                System.out.println(dataManager.getPurchaseHistory().get(i).toString(dataManager));
+                System.out.println(dataManager.getPurchaseHistory().get(i).toString());
             }
         }
     }
@@ -400,7 +400,6 @@ public class Main3 {
                 [2] Add new product
                 [3] Delete product
                 [4] Delete store
-                [5] Edit product
                 """);
         int option = Integer.parseInt(scan());
         String name;
@@ -446,31 +445,6 @@ public class Main3 {
                 break;
             case 4:
                 dataManager.deleteStore(storeId);
-                break;
-            case 5:
-                System.out.println("Select a product");
-                for (int j = 0; j < dataManager.getStoreProducts(currentStore).size(); j++) {
-                    System.out.println(dataManager.getStoreProducts(currentStore).get(j).toStringFormat());
-                }
-                System.out.println("Provide the ID of the product you wish to edit");
-                int editProductID = Integer.parseInt(scan());
-                scan();
-                System.out.println("Provide new NAME for the product:");
-                String newProductName = scan();
-                System.out.println("Provide new DESCRIPTION for the product");
-                String newProductDescription = scan();
-                System.out.println("Provide new QUANTITY for the product");
-                int newProductQuantity = Integer.parseInt(scan());
-                scan();
-                System.out.println("Provide new PRICE for the product");
-                double newProductPrice = Float.parseFloat(scan());
-                scan();
-                try {
-                    dataManager.editProduct(editProductID, newProductName, newProductDescription, newProductQuantity, newProductPrice);
-                    System.out.println("Edit SUCCESSFUL");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 break;
             default:
                 System.out.println("Invalid input: please enter 1, 2, 3, or 4");
