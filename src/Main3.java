@@ -13,8 +13,9 @@ public class Main3 {
     }
     public static String scan() {
         Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
-
+        String line = scanner.nextLine();
+        scanner.close();
+        return line;
     }
     public static void initialize() throws InvalidQuantityError, InvalidPriceError {
         dataManager.logoutCurrentUser();
@@ -421,7 +422,6 @@ public class Main3 {
                     int quantity = Integer.parseInt(scan());
                     System.out.println("Price of product: ");
                     double price = Double.parseDouble(scan());
-                    int id = store.getId();
                     Product product = new Product(name, description, dataManager.getCurrentStoreId(),
                             quantity, price, storeId);
                     dataManager.addProduct(product);
@@ -448,23 +448,21 @@ public class Main3 {
                 dataManager.deleteStore(storeId);
                 break;
             case 5:
+                Store currentStore = dataManager.getStore(storeId);
                 System.out.println("Select a product");
                 for (int j = 0; j < dataManager.getStoreProducts(currentStore).size(); j++) {
                     System.out.println(dataManager.getStoreProducts(currentStore).get(j).toStringFormat());
                 }
                 System.out.println("Provide the ID of the product you wish to edit");
                 int editProductID = Integer.parseInt(scan());
-                scan();
                 System.out.println("Provide new NAME for the product:");
                 String newProductName = scan();
                 System.out.println("Provide new DESCRIPTION for the product");
                 String newProductDescription = scan();
                 System.out.println("Provide new QUANTITY for the product");
                 int newProductQuantity = Integer.parseInt(scan());
-                scan();
                 System.out.println("Provide new PRICE for the product");
                 double newProductPrice = Float.parseFloat(scan());
-                scan();
                 try {
                     dataManager.editProduct(editProductID, newProductName, newProductDescription, newProductQuantity, newProductPrice);
                     System.out.println("Edit SUCCESSFUL");
