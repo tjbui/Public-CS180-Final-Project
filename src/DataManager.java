@@ -46,7 +46,7 @@ public class DataManager {
             this.dummyProduct = new Product("Product not found",
                     "Product description not found", -1, 0, 0.0, -1);
         } catch (Exception e) {
-            System.out.println("File not found")
+            System.out.println("File not found");
         }
         this.dummyUser = new User("User not found", "");
         this.dummyStore = new Store(new ArrayList<Integer>(), "Store not found",
