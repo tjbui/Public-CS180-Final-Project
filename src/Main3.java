@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.io.*;
 
 /**
  * Project-04 – Main
@@ -154,8 +155,8 @@ public class Main3 {
                 "[1] Go to cart\n" +
                         "[2] Search products\n"+
                         "[3] See purchase history\n" +
-                        "[4] Log out" +
-                        "[5] Import products from a File");
+                        "[4] Log out\n" +
+                        "[5] Export transaction history");
         int option = 0;
         try {
             option = Integer.parseInt(scan());
@@ -181,6 +182,24 @@ public class Main3 {
                 dataManager.saveToFile();
                 initialize();
                 break;
+            case 5:
+                System.out.println("Enter the name of the file to which to export:");
+
+                String filename = scan();
+
+                try {
+                    PrintWriter pw = new PrintWriter(new File(filename));
+
+                    ArrayList<Transaction> transactions = dataManager.getPurchaseHistory();
+
+                    for (int i = 0; i < transactions.size(); i++) {
+                        pw.println(transactions.get(i).toString());
+                    }
+
+                    pw.close();
+                } catch (Exception e) {
+                    System.out.println("Error occurred during export");
+                }
             default:
                 System.out.println("Input invalid: please choose 1, 2, 3, or 4.");
                 customer();
@@ -394,7 +413,8 @@ public class Main3 {
                     [1] Stores Options
                     [2] View Data
                     [3] Import products from a File
-                    [4] Log Out
+                    [4] Export products to file
+                    [5] Log Out
                     """);
             int input = 1;
             try {
@@ -446,6 +466,28 @@ public class Main3 {
                     seller();
                     break;
                 case 4:
+                    System.out.println("Enter the name of the file to which to export:");
+                
+                    String filename = scan();
+
+                    try {
+                        PrintWriter pw = new PrintWriter(new File(filename));
+
+                        ArrayList<Product> products = dataManager.getProductList();
+
+                        for (int i = 0; i < products.size(); i++) {
+                            Product p = products.get(i);
+
+                            if (dataManager.getStore(p.getStoreId()).getSellerEmail().equals(dataManager.getCurrentUser().getEmail())) {
+                                pw.println(p.toString());
+                            }
+                        }
+
+                        pw.close();
+                } catch (Exception e) {
+                    System.out.println("Export failed");
+                }
+                case 5:
                     running = false;
                     dataManager.saveToFile();
                     initialize();
