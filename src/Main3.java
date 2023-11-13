@@ -64,7 +64,13 @@ public class Main3 {
                 System.out.println("Wrong email or password");
                 System.out.println("[1] Try again\n" +
                         "[2] Back");
-                int input = Integer.parseInt(scan());
+                int input = 0;
+                try {
+                    input = Integer.parseInt(scan());
+                } catch (NumberFormatException e) {
+                    System.out.println("input is invalid, please input 1 or 2");
+                    continue;
+                }
                 switch (input) {
                     case 1:
                         running = false;
@@ -76,6 +82,7 @@ public class Main3 {
                         break;
                     default:
                         System.out.println("input is invalid, please input 1 or 2");
+                        break;
                 }
             }
         }
@@ -199,7 +206,8 @@ public class Main3 {
                             int numberInCart = 0;
                             for (int i = 0; i < ((Customer) dataManager.getCurrentUser()).getIds().size(); i++) {
                                 numberInCart++;
-                                System.out.println("[" + (i + 1) + "] " + dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)));
+                                System.out.println("[" + (i + 1) + "] " + dataManager.getProduct(((Customer)
+                                        dataManager.getCurrentUser()).getIds().get(i)).toStringFormat());
                             }
                             int option = Integer.parseInt(scan());
                             if (option <= numberInCart && option > 0) {
