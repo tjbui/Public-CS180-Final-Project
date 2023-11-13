@@ -26,6 +26,8 @@ public class Main {
 
             } while (!(userStatus.equals("1")) && !(userStatus.equals("2")) && !(userStatus.equals("3")));
 
+            boolean repeat = true;
+
 
             if (userStatus.equals("1")) {
                 do {
@@ -65,12 +67,12 @@ public class Main {
                 dataManager.saveToFile();
                 System.out.println("Goodbye!");
                 run = false;
+                repeat = false;
             }
 
 
             dataManager.setCurrentUser(email);
             User currentUser = dataManager.getCurrentUser();
-            boolean repeat = false;
 
 
 
@@ -78,7 +80,7 @@ public class Main {
             Here starts options given if the user is a seller.
              */
 
-            do {
+            while (repeat) {
                 if (currentUser instanceof Seller) {
                     String sellerOption;
 
@@ -215,6 +217,7 @@ public class Main {
 
                     } else {
                         run = true;
+                        repeat = false;
                     }
 
                 }
@@ -287,11 +290,66 @@ public class Main {
 
                         if (customerOption.equals("4")) {
 
-                            //TODO missing edit shopping cart functions
+                            ArrayList<Integer> currentShoppingCartIDs = ((Customer) currentUser).getIds();
+                            ArrayList<Integer> currentShoppingCartQuantities = ((Customer) currentUser).getQuantities();
+                            String shoppingCartStatus = "";
+                            do {
+                                System.out.println("Current Shopping Cart List: ");
+                                for (int iii = 0; iii < currentShoppingCartIDs.size(); iii++) {
+                                    System.out.println(dataManager.getProduct(currentShoppingCartIDs.get(iii)).getName() + " : " + currentShoppingCartQuantities);
+                                }
+
+                                System.out.println("Press 1 to edit shopping cart, 2 to complete shopping cart");
+                                shoppingCartStatus = scanner.nextLine();
+
+                                if (shoppingCartStatus.equals("1")) {
+                                    System.out.println("Provide the id of the product: ");
+                                    int productID;
+                                    boolean productFound = false;
+                                    boolean cancelCode = false;
+                                    do {
+                                        productID = scanner.nextInt();
+                                        scanner.nextLine();
+                                        for (int findProduct = 0; findProduct < dataManager.getProductList().size(); findProduct++) {
+                                            if (dataManager.getProductList().get(findProduct).getId() == productID) {
+                                                productFound = true;
+                                            }
+                                        }
+
+                                        if (productID == 0) {
+                                            productFound = true;
+                                            cancelCode = true;
+                                        }
+
+                                        if (productFound == false) {
+                                            System.out.println("This is an invalid Product ID, provide a valid Product ID. Press 0 to cancel");
+                                        }
+                                    } while (!productFound);
+
+                                    if (!cancelCode) {
+                                        int indexProduct = ((Customer) currentUser).getIds().indexOf(productID);
+                                        System.out.println("Set a quantity");
+                                        int shopQuantity = scanner.nextInt();
+                                        scanner.nextLine();
+                                        if (indexProduct == -1) {
+                                            ((Customer) currentUser).addProduct(productID, shopQuantity);
+                                        } else {
+                                            ((Customer) currentUser).getQuantities().set(indexProduct, shopQuantity);
+                                        }
+                                    }
+                                }
+
+                            } while (!(shoppingCartStatus.equals("1")) && !(shoppingCartStatus.equals("2")));
                         }
 
                         if (customerOption.equals("5")) {
-                            //TODO purchase items listed on the shopping cart
+                            for (int cartList = 0; cartList < ((Customer) currentUser).getIds().size(); cartList++) {
+                                try {
+                                    dataManager.makePurchase(dataManager.getProduct(((Customer) currentUser).getIds().get(cartList)), ((Customer) currentUser).getQuantities().get(cartList));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
 
                         if (customerOption.equals("6")) {
@@ -322,11 +380,12 @@ public class Main {
 
                     } else {
                         run = true;
+                        repeat = false;
                     }
 
 
                 }
-            } while (repeat);
+            };
 
         } while (run);
 
