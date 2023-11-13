@@ -4,7 +4,7 @@ import java.util.Scanner;
 /**
  * Main method which is the UI for every user
  */
-public class Main3 {
+public class mymain {
     static DataManager dataManager = new DataManager();
     static Store currentStore;
 
@@ -80,37 +80,38 @@ public class Main3 {
         if (dataManager.getUser(email).getEmail().equals("User not found")) {
             System.out.println("What kind of account do you want to create?\n" +
                     "[1] Seller \n[2] Customer\n[3] Back to menu");
+            int input = 0;
             try { // ADDDED CODE
-                int input = Integer.parseInt(scan()); //not int error: RESOLVED
-                switch (input) {
-                    case 1:
-                        ArrayList<Integer> storeIds = new ArrayList<>();
-                        Seller seller = new Seller(email, password, storeIds);
-                        dataManager.addUser(seller);
-                        dataManager.setCurrentUser(email);
-                        System.out.println("Seller account created and logged in!");
-                        seller();
-                        break;
-                    case 2:
-                        ArrayList<Integer> ids = new ArrayList<>();
-                        ArrayList<Integer> quantities = new ArrayList<>();
-                        Customer customer = new Customer(email, password, ids, quantities);
-                        dataManager.addUser(customer);
-                        dataManager.setCurrentUser(email);
-                        System.out.println("Customer account created and logged in!");
-                        customer();
-                        break;
-                    case 3:
-                        System.out.println("Account not created as seller or customer was not selected");
-                        initialize();
-                    default:
-                        System.out.println("Please either 1, 2, or 3");
-                        signup();
-                }
+                input = Integer.parseInt(scan()); //not int error: RESOLVED
             } catch (NumberFormatException e) { // ADDED CODE
                 System.out.println("Please either 1, 2, or 3"); // ADDED CODE
                 signup(); // ADDED CODE
             } // ADDED CODE
+            switch (input) {
+                case 1:
+                    ArrayList<Integer> storeIds = new ArrayList<>();
+                    Seller seller = new Seller(email, password, storeIds);
+                    dataManager.addUser(seller);
+                    dataManager.setCurrentUser(email);
+                    System.out.println("Seller account created and logged in!");
+                    seller();
+                    break;
+                case 2:
+                    ArrayList<Integer> ids = new ArrayList<>();
+                    ArrayList<Integer> quantities = new ArrayList<>();
+                    Customer customer = new Customer(email, password, ids, quantities);
+                    dataManager.addUser(customer);
+                    dataManager.setCurrentUser(email);
+                    System.out.println("Customer account created and logged in!");
+                    customer();
+                    break;
+                case 3:
+                    System.out.println("Account not created as seller or customer was not selected");
+                    initialize();
+                default:
+                    System.out.println("Please either 1, 2, or 3");
+                    signup();
+            }
         } else {
             System.out.println("Email already exists. Please use a new email");
             signup();
@@ -122,8 +123,13 @@ public class Main3 {
                         "[2] Search products\n"+
                         "[3] See purchase history\n" +
                         "[4] Log out");
-
-        int option = Integer.parseInt(scan());
+        int option = 0;
+        try {
+            option = Integer.parseInt(scan());
+        } catch (NumberFormatException e) {
+            System.out.println("Input invalid: please choose 1, 2, 3, or 4.");
+            customer();
+        }
         switch (option) {
             case 1:
                 seeCart();
