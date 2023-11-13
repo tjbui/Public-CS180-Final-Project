@@ -11,6 +11,13 @@ public class Customer extends User {
         this.quantities = quantities;
     }
 
+    public void addProduct(int id, int quantity) {
+        ids.add(id);
+        quantities.add(quantity);
+    }
+
+
+
     public ArrayList<Integer> getIds() {
         return ids;
     }
