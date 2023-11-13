@@ -285,7 +285,13 @@ public class Main3 {
             case 2:
                 System.out.println("[1] Search by ascending prices\n" +
                         "[2] Search by descending prices");
-                int option = Integer.parseInt(scan());
+                int option = 0;
+                try {
+                    option = Integer.parseInt(scan());
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input");
+                    search();
+                }
                 switch (option) {
                     case 1:
                         if (dataManager.getProductList().isEmpty()) {
