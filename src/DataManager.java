@@ -67,7 +67,7 @@ public class DataManager {
 
             bfrProduct.close();
         } catch (Exception e) {
-            System.out.println("Error file not found")
+            System.out.println("Error file not found");
         }
 
         try {
@@ -91,7 +91,7 @@ public class DataManager {
 
             bfrUser.close();
         } catch (Exception e) {
-            
+            System.out.println("Error file not found");
         }
 
         try {
