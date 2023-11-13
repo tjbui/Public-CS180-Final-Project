@@ -10,6 +10,7 @@ import java.io.*;
  * @author Seth Hartzler
  * @version November 8, 2023
  */
+
 public class DataManager {
     private ArrayList<Product> products;
     private ArrayList<User> users;
@@ -20,8 +21,8 @@ public class DataManager {
     private int currentStoreId;
 
     private Product dummyProduct;
-    private User dummyUser;
-    private Store dummyStore;
+    public User dummyUser;
+    public Store dummyStore;
 
     private User currentUser;
 
@@ -42,12 +43,12 @@ public class DataManager {
         this.currentUser = null;
 
         try {
-            this.dummyProduct = new Product("Product not found", 
-            "Product description not found", -1, 0, 1.0, -1);
+            this.dummyProduct = new Product("Product not found",
+                    "Product description not found", -1, 0, 0.0, -1);
         } catch (Exception e) {}
         this.dummyUser = new User("User not found", "");
-        this.dummyStore = new Store(new ArrayList<Integer>(), "Store not found", 
-            "User not found", -1);
+        this.dummyStore = new Store(new ArrayList<Integer>(), "Store not found",
+                "User not found", -1);
 
         try {
             File fProduct = new File("products.csv");
@@ -195,7 +196,7 @@ public class DataManager {
     /**
      * Loads products from a CSV file. If any product entry has an id matching the id of an existing
      * product in the database, that product entry will nto be added.
-     * 
+     *
      * @param filename The file from which to load product data
      */
     public void loadProductsFromFile(String filename) {
@@ -204,28 +205,29 @@ public class DataManager {
                 File f = new File(filename);
                 FileReader fr = new FileReader(f);
                 BufferedReader bfr = new BufferedReader(fr);
-
                 String line = bfr.readLine();
 
                 while (line != null) {
                     Product product = Product.fromStringFormat(line);
 
                     if (this.getProduct(product.getId()) == this.dummyProduct &&
-                    this.getStore(product.getStoreId()).getSellerEmail()
-                    .equals(this.currentUser.getEmail())) {
+                            this.getStore(product.getStoreId()).getSellerEmail()
+                                    .equals(this.currentUser.getEmail())) {
                         this.products.add(product);
                     }
-                    line = bfr.readLine(); // TJ ADDED LINE
                 }
 
                 bfr.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("File not found");
+            }
         }
     }
 
     /**
      * Exports all transactions associated with the current user to a file at the given location.
-     * 
+     *
      * @param filename The file to which the transaction data will be written
      */
     public void exportPurchaseHistory(String filename) {
@@ -236,7 +238,7 @@ public class DataManager {
 
                 for (int i = 0; i < this.transactions.size(); i++) {
                     if (this.transactions.get(i).getCustomerEmail()
-                    .equals(this.currentUser.getEmail())) {
+                            .equals(this.currentUser.getEmail())) {
                         String line = this.transactions.get(i).toStringFormat();
 
                         pw.println(line);
@@ -250,7 +252,7 @@ public class DataManager {
 
     /**
      * Exports product data in CSV form to a given file source.
-     * 
+     *
      * @param filename The file to which the product data will be written
      */
     public void exportProductData(String filename) {
@@ -261,7 +263,7 @@ public class DataManager {
 
                 for (int i = 0; i < this.products.size(); i++) {
                     if (this.getStore(this.products.get(i).getStoreId()).getSellerEmail()
-                    .equals(this.currentUser.getEmail())) {
+                            .equals(this.currentUser.getEmail())) {
                         String formattedProduct = this.products.get(i).toStringFormat();
 
                         pw.println(formattedProduct);
@@ -274,7 +276,7 @@ public class DataManager {
     }
 
     /**
-     * 
+     *
      * @return The ID that will be assigned to the next created Store object
      */
     public int getCurrentStoreId() {
@@ -434,10 +436,10 @@ public class DataManager {
                     for (int i = 0; i < notSorted.size(); i++) {
                         Product product = notSorted.get(i);
 
-                        if ((sort == SORTED_ASC && product.getQuantity() <= current_threshold && 
-                        results.indexOf(product) == -1) ||
-                        (sort == SORTED_DESC && product.getQuantity() >= current_threshold && 
-                        results.indexOf(product) == -1)) {
+                        if ((sort == SORTED_ASC && product.getQuantity() <= current_threshold &&
+                                results.indexOf(product) == -1) ||
+                                (sort == SORTED_DESC && product.getQuantity() >= current_threshold &&
+                                        results.indexOf(product) == -1)) {
                             current_threshold = product.getQuantity();
                             current_threshold_index = i;
                         }
@@ -446,7 +448,7 @@ public class DataManager {
                     results.add(notSorted.get(current_threshold_index));
 
                     current_threshold = Integer.MAX_VALUE;
-                    
+
                     if (sort == SORTED_DESC) {
                         current_threshold = Integer.MIN_VALUE;
                     }
@@ -463,10 +465,10 @@ public class DataManager {
                     for (int i = 0; i < notSorted.size(); i++) {
                         Product product = notSorted.get(i);
 
-                        if ((sort == SORTED_ASC && product.getPrice() <= current_threshold && 
-                        results.indexOf(product) == -1) ||
-                        (sort == SORTED_DESC && product.getPrice() >= current_threshold && 
-                        results.indexOf(product) == -1)) {
+                        if ((sort == SORTED_ASC && product.getPrice() <= current_threshold &&
+                                results.indexOf(product) == -1) ||
+                                (sort == SORTED_DESC && product.getPrice() >= current_threshold &&
+                                        results.indexOf(product) == -1)) {
                             current_threshold = product.getPrice();
                             current_threshold_index = i;
                         }
@@ -508,7 +510,7 @@ public class DataManager {
      */
     public void addProduct(Product product) {
         if (this.currentUser != null && this.currentUser instanceof Seller) {
-            if (this.getProduct(product.getId()).getId() == this.dummyProduct.getId()) {
+            if (this.getProduct(product.getId()) == this.dummyProduct) {
                 this.products.add(product);
             }
         }
@@ -547,8 +549,8 @@ public class DataManager {
         if (this.currentUser != null && this.currentUser instanceof Seller) {
             Product product = this.getProduct(id);
 
-            if (product != this.dummyProduct && 
-            this.currentUserOwnsStore(this.getStore(product.getId()))) {
+            if (product != this.dummyProduct &&
+                    this.currentUserOwnsStore(this.getStore(product.getId()))) {
                 this.products.remove(product);
             }
         }
@@ -586,7 +588,7 @@ public class DataManager {
 
     public ArrayList<Product> getStoreProducts(Store store) {
         if (this.currentUser != null && this.currentUser instanceof Seller &&
-            store.getSellerEmail().equals(this.currentUser.getEmail())) {
+                store.getSellerEmail().equals(this.currentUser.getEmail())) {
             ArrayList<Product> results = new ArrayList<Product>();
 
             for (int i = 0; i < this.products.size(); i++) {
@@ -658,7 +660,7 @@ public class DataManager {
     /**
      * Searches the product list for products where the name, description, or store name contains
      * the search term.
-     * 
+     *
      * @param term The term to search by
      * @return An ArrayList of products which match the term
      */
@@ -679,7 +681,7 @@ public class DataManager {
 
     /**
      * Purchases a single item in the given quantity and creates a corresponding Transaction.
-     * 
+     *
      * @param product
      * @param quantity
      * @throws InvalidQuantityError Thrown if the quantity is negative or greater than the quantity
@@ -689,7 +691,7 @@ public class DataManager {
         if (product.checkQuantity(quantity)) {
             product.purchase(quantity);
             Transaction transaction = new Transaction(product.getId(), product.getStoreId(),
-                    this.currentUser.getEmail(), this.getStore(product.getStoreId()).getSellerEmail(), 
+                    this.currentUser.getEmail(), this.getStore(product.getStoreId()).getSellerEmail(),
                     quantity, product.getPrice());
             this.transactions.add(transaction);
         } else {
@@ -699,7 +701,7 @@ public class DataManager {
 
     /**
      * Gets the purchase history of the current user.
-     * 
+     *
      * @return A list of Transactions where the customer making the purchase equals the current user
      */
     public ArrayList<Transaction> getPurchaseHistory() {
@@ -723,7 +725,7 @@ public class DataManager {
      * as an ArrayList of String arrays. Each string array contains two entries. The first represents
      * the customer making the purchase, and the second represents the revenue made by that
      * transaction (formatted to two decimal places and prefixed with a dollar sign).
-     * 
+     *
      * @param store
      * @return An ArrayList of String arrays in the described format
      */
@@ -735,9 +737,9 @@ public class DataManager {
             for (int i = 0; i < this.transactions.size(); i++) {
                 if (this.transactions.get(i).getStoreId() == store.getId()) {
                     String[] datum = {this.transactions.get(i).getCustomerEmail(),
-                            String.format("$%.2f", 
-                            ((double) this.transactions.get(i).getQuantitySold())
-                            * this.transactions.get(i).getPrice())};
+                            String.format("$.2f",
+                                    ((double) this.transactions.get(i).getQuantitySold())
+                                            * this.transactions.get(i).getPrice())};
                     data.add(datum);
                 }
             }
@@ -750,11 +752,11 @@ public class DataManager {
 
     /**
      * Gets all products associated with the Seller currently logged in that are currently in
-     * users' shopping carts. Product information is formatted as an array of strings, with the 
-     * first string in the array containing the email of the customer, the second containing the 
-     * product name, the third containing the store name, and the fourth containing the quantity 
+     * users' shopping carts. Product information is formatted as an array of strings, with the
+     * first string in the array containing the email of the customer, the second containing the
+     * product name, the third containing the store name, and the fourth containing the quantity
      * of the product currently in the user's shopping cart.
-     *  
+     *
      * @return An ArrayList of String arrays in the specified format
      */
     public ArrayList<String[]> getSellerShoppingCartView() {
@@ -764,22 +766,22 @@ public class DataManager {
             for (int i = 0; i < this.users.size(); i++) {
                 if (this.users.get(i) instanceof Customer) {
                     ArrayList<Integer> productIds = ((Customer) this.users.get(i)).getIds();
-                    ArrayList<Integer> productQuantities = 
-                        ((Customer) this.users.get(i)).getQuantities();
+                    ArrayList<Integer> productQuantities =
+                            ((Customer) this.users.get(i)).getQuantities();
 
                     for (int j = 0; j < productIds.size(); j++) {
                         Product product = this.getProduct(((int) productIds.get(j)));
 
                         if (this.getStore(product.getStoreId()).getSellerEmail()
-                            .equals(this.currentUser.getEmail())) {
-                                String[] datum = {
+                                .equals(this.currentUser.getEmail())) {
+                            String[] datum = {
                                     this.users.get(i).getEmail(),
                                     this.getProduct(productIds.get(j)).getName(),
                                     this.getStore(product.getStoreId()).getName(),
                                     productQuantities.get(j).toString()
-                                };
+                            };
 
-                                data.add(datum);
+                            data.add(datum);
                         }
                     }
                 }
