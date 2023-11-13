@@ -13,9 +13,7 @@ public class Main3 {
     }
     public static String scan() {
         Scanner scanner = new Scanner(System.in);
-        String line = scanner.nextLine();
-        scanner.close();
-        return line;
+        return scanner.nextLine();
     }
     public static void initialize() throws InvalidQuantityError, InvalidPriceError {
         dataManager.logoutCurrentUser();
@@ -450,7 +448,7 @@ public class Main3 {
                 Store currentStore = dataManager.getStore(storeId);
                 System.out.println("Select a product");
                 for (int j = 0; j < dataManager.getStoreProducts(currentStore).size(); j++) {
-                    System.out.println(dataManager.getStoreProducts(currentStore).get(j).toStringFormat());
+                    System.out.println("[" + (j + 1) + "] " + dataManager.getStoreProducts(currentStore).get(j).toStringFormat());
                 }
                 System.out.println("Provide the ID of the product you wish to edit");
                 int editProductID = Integer.parseInt(scan());
