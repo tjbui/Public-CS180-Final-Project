@@ -1,3 +1,13 @@
+/**
+ * Project-04 – UserUnitTest
+ *
+ *
+ * @author Gunho Park, Seth Hartzler, Isaac Shane, Tru Bui; Lab - L16
+ *
+
+ * @version Nov. 13, 2023
+ *
+ */
 public class UserUnitTest {
    public static void main(String[] args) {
        User u = new User("email", "password");

@@ -1,4 +1,13 @@
+/**
+ * Project-04 – Product
+ *
+ *
+ * @author Gunho Park; Lab - L16
+ *
 
+ * @version Nov. 13, 2023
+ *
+ */
 public class Product {
 
     private String name;

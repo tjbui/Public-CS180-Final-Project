@@ -1,4 +1,13 @@
+/**
+ * Project-04 – CustomerUnitTest
+ *
+ *
+ * @author Gunho Park, Seth Hartzler, Isaac Shane, Tru Bui; Lab - L16
+ *
 
+ * @version Nov. 13, 2023
+ *
+ */
 public class ProductUnitTest {
     public static void main(String[] args) throws InvalidPriceError {
         Product p = new Product("Name", "Description", 0, 1, 1.0);

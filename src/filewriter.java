@@ -2,6 +2,16 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Project-04 – filewriter
+ *
+ *
+ * @author Gunho Park, Seth Hartzler, Isaac Shane, Tru Bui; Lab - L16
+ *
+
+ * @version Nov. 13, 2023
+ *
+ */
 public class filewriter {
     public filewriter(String fileName, String text) throws IOException {
         BufferedWriter br = new BufferedWriter(

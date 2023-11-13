@@ -1,3 +1,14 @@
+/**
+ * Project-04 – Transaction
+ *
+ *
+ * @author Gunho Park, Seth Hartzler, Isaac Shane, Tru Bui; Lab - L16
+ *
+
+ * @version Nov. 13, 2023
+ *
+ */
+
 public class Transaction {
     private int productId;
     private int storeId;

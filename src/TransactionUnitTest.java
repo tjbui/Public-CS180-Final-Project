@@ -1,3 +1,14 @@
+
+/**
+ * Project-04 – TransactionUnitTest
+ *
+ *
+ * @author Gunho Park, Seth Hartzler, Isaac Shane, Tru Bui; Lab - L16
+ *
+
+ * @version Nov. 13, 2023
+ *
+ */
 public class TransactionUnitTest {
    public static void main(String[] args) {
        Transaction t = new Transaction(0,1,"c email", "s email", 2, 1.10);

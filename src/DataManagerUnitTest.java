@@ -1,5 +1,16 @@
 import java.util.ArrayList;
 
+/**
+ * Project-04 – DataManagerUnitTest
+ *
+ *
+ * @author Gunho Park, Seth Hartzler, Isaac Shane, Tru Bui; Lab - L16
+ *
+
+ * @version Nov. 13, 2023
+ *
+ */
+
 public class DataManagerUnitTest {
     public static void main(String[] args) {
         DataManager dm = new DataManager();

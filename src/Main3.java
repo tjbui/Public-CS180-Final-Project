@@ -1,8 +1,16 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+
 /**
- * Main method which is the UI for every user
+ * Project-04 – Main
+ *
+ *
+ * @author Gunho Park, Seth Hartzler, Isaac Shane, Tru Bui; Lab - L16
+ *
+
+ * @version Nov. 13, 2023
+ *
  */
 public class Main3 {
     static DataManager dataManager = new DataManager();

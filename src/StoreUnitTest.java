@@ -1,5 +1,15 @@
 import java.util.ArrayList;
 
+/**
+ * Project-04 – StoreUnitTest
+ *
+ *
+ * @author Gunho Park, Seth Hartzler, Isaac Shane, Tru Bui; Lab - L16
+ *
+
+ * @version Nov. 13, 2023
+ *
+ */
 public class StoreUnitTest {
     public static void main(String[] args) {
         ArrayList<Integer> arr = new ArrayList<Integer>();
