@@ -58,6 +58,11 @@ public class Transaction {
        this.quantitySold = quantitySold;
    }
 
+   public String toString(DataManager dm) {
+        return String.format("%s - %d items sold from %s at $.2f", dm.getProduct(productId), 
+        quantitySold, dm.getStore(storeId), price);
+   }
+
    public String toStringFormat() {
         return String.format("%d,%d,%s,%s,%d,%.2f", productId, storeId, customerEmail, 
         sellerEmail, quantitySold, price);

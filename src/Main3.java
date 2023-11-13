@@ -20,7 +20,8 @@ public class Main3 {
         dataManager.logoutCurrentUser();
         System.out.println("Choose option:\n" +
                 "[1] Log in\n" +
-                "[2] Sign up");
+                "[2] Sign up\n" + 
+                "[3] Exit");
         int input = Integer.parseInt(scan());
 
         switch (input) {
@@ -29,6 +30,10 @@ public class Main3 {
                 break;
             case 2 :
                 signup();
+                break;
+            case 3:
+                dataManager.saveToFile();
+                System.exit(0);
         }
     }
     public static void login() throws InvalidQuantityError, InvalidPriceError {
@@ -146,7 +151,7 @@ public class Main3 {
             } else {
                 System.out.println("Items in cart - (quantities): ");
                 for (int i = 0; i < ((Customer) dataManager.getCurrentUser()).getIds().size(); i++) {
-                    System.out.println(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).toStringFormat() + " "
+                    System.out.println(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).getName() + " "
                             + "- (" + ((Customer) dataManager.getCurrentUser()).getQuantities().get(i) + ")");
                     //testing needed
                 }
@@ -162,7 +167,7 @@ public class Main3 {
                             for (int i = 0; i < ((Customer) dataManager.getCurrentUser()).getIds().size(); i++) {
                                 try {
                                     dataManager.makePurchase(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)), (((Customer) dataManager.getCurrentUser()).getQuantities().get(i)));
-                                    System.out.println(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).toStringFormat() + "purchase complete!");
+                                    System.out.println(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).getName() + "purchase complete!");
                                 } catch (InvalidQuantityError e) {
                                     System.out.println("Quantity is too high for " + dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i))
                                             + "\n This product cannot be purchased");
@@ -201,10 +206,20 @@ public class Main3 {
         }
     }
     public static void search() {
-        System.out.println("[1] Search by keywords\n" +
-                "[2] Sort all products by Price\n" +
-                "[3] Sort all products by Quantities");
-        int input = Integer.parseInt(scan());
+        boolean gotIntInput = false;
+        int input = 1;
+
+        do {
+            System.out.println("[1] Search by keywords\n" +
+                    "[2] Sort all products by Price\n" +
+                    "[3] Sort all products by Quantities");
+            try {
+                input = Integer.parseInt(scan());
+                gotIntInput = true;
+            } catch (Exception e) {
+                System.out.println("Enter an integer input!");
+            }
+        } while (!gotIntInput);
 
         switch (input) {
             case 1:
@@ -215,7 +230,7 @@ public class Main3 {
                 } else {
                     System.out.println("Results:");
                     for (int i = 0; i < dataManager.search(search).size(); i++) {
-                        System.out.println(dataManager.search(search).get(i).toStringFormat());
+                        System.out.println(dataManager.search(search).get(i).getName());
                     }
                 }
                 break;
@@ -229,7 +244,7 @@ public class Main3 {
                             System.out.println("No products listed");
                         } else {
                             for (int i = 0; i < dataManager.getProductList().size(); i++) {
-                                System.out.println(dataManager.getProductList(DataManager.BY_PRICE, DataManager.SORTED_ASC).get(i).toStringFormat());
+                                System.out.println(dataManager.getProductList(DataManager.BY_PRICE, DataManager.SORTED_ASC).get(i).getName());
                             }
                         }
                         break;
@@ -238,7 +253,7 @@ public class Main3 {
                             System.out.println("No products listed");
                         } else {
                             for (int i = 0; i < dataManager.getProductList().size(); i++) {
-                                System.out.println(dataManager.getProductList(DataManager.BY_PRICE, DataManager.SORTED_DESC).get(i).toStringFormat());
+                                System.out.println(dataManager.getProductList(DataManager.BY_PRICE, DataManager.SORTED_DESC).get(i).getName());
                             }
                         }
                         break;
@@ -259,7 +274,7 @@ public class Main3 {
                             System.out.println("No products listed");
                         } else {
                             for (int i = 0; i < dataManager.getProductList().size(); i++) {
-                                System.out.println(dataManager.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_ASC).get(i).toStringFormat());
+                                System.out.println(dataManager.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_ASC).get(i).getName());
                             }
                         }
                         break;
@@ -268,7 +283,7 @@ public class Main3 {
                             System.out.println("No products listed");
                         } else {
                             for (int i = 0; i < dataManager.getProductList().size(); i++) {
-                                System.out.println(dataManager.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_DESC).get(i).toStringFormat());
+                                System.out.println(dataManager.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_DESC).get(i).getName());
                             }
                         }
                         break;
@@ -291,7 +306,7 @@ public class Main3 {
         } else {
             System.out.println("Past transactions: ");
             for (int i = 0; i < dataManager.getPurchaseHistory().size(); i++) {
-                System.out.println(dataManager.getPurchaseHistory().get(i).toStringFormat());
+                System.out.println(dataManager.getPurchaseHistory().get(i).toString());
             }
         }
     }
@@ -358,7 +373,7 @@ public class Main3 {
             case 2:
                 System.out.println("Which store would you like to edit?");
                 for (int i = 0; i < dataManager.getOwnedStores().size(); i++) {
-                    System.out.println("[" + (i + 1) + "] " + dataManager.getOwnedStores().get(i).toStringFormat());
+                    System.out.println("[" + (i + 1) + "] " + dataManager.getOwnedStores().get(i).getName());
                 }
                 int indexOfStore = Integer.parseInt(scan()) - 1;
                 editStore(indexOfStore);
@@ -391,19 +406,23 @@ public class Main3 {
                 dataManager.editStore(storeId, name);
                 break;
             case 2:
-                System.out.println("Name of product: ");
-                name = scan();
-                System.out.println("Description of product: ");
-                String description = scan();
-                System.out.println("Quantity in stock: ");
-                int quantity = Integer.parseInt(scan());
-                System.out.println("Price of product: ");
-                double price = Double.parseDouble(scan());
-                int id = store.getId();
-                Product product = new Product(name, description, dataManager.getCurrentStoreId(),
-                        quantity, price, storeId);
-                dataManager.addProduct(product);
-                System.out.println("Product added!");
+                try {
+                    System.out.println("Name of product: ");
+                    name = scan();
+                    System.out.println("Description of product: ");
+                    String description = scan();
+                    System.out.println("Quantity in stock: ");
+                    int quantity = Integer.parseInt(scan());
+                    System.out.println("Price of product: ");
+                    double price = Double.parseDouble(scan());
+                    int id = store.getId();
+                    Product product = new Product(name, description, dataManager.getCurrentStoreId(),
+                            quantity, price, storeId);
+                    dataManager.addProduct(product);
+                    System.out.println("Product added!");
+                } catch (InvalidPriceError e) {
+                    System.out.println("Invalid price!");
+                }
                 seller();
                 break;
             case 3:
@@ -413,7 +432,7 @@ public class Main3 {
                 } else {
                     System.out.println("Which product would you like to delete?");
                     for (int i = 0; i < store.getProducts().size(); i++) {
-                        System.out.println("[" + (i + 1) + "] " + dataManager.getProduct(store.getProducts().get(i)).toStringFormat());
+                        System.out.println("[" + (i + 1) + "] " + dataManager.getProduct(store.getProducts().get(i)).getName());
                     }
                     int indexOfProduct = Integer.parseInt(scan());
                     dataManager.deleteProduct(store.getProducts().get(indexOfProduct - 1));
@@ -430,7 +449,7 @@ public class Main3 {
     public static void storeSalesData() {
         System.out.println("Select the store from which you want sales data:");
         for (int i = 0; i < dataManager.getOwnedStores().size(); i++) {
-            System.out.println("[" + (i + 1) + "] " + dataManager.getOwnedStores().get(i).toStringFormat());
+            System.out.println("[" + (i + 1) + "] " + dataManager.getOwnedStores().get(i).getName());
         }
         int indexOfStore = Integer.parseInt(scan()) - 1;
         ArrayList<String[]> salesData = dataManager.getSaleData(dataManager.getOwnedStores().get(indexOfStore));
@@ -460,13 +479,30 @@ public class Main3 {
             case 1:
                 System.out.println("Enter the name of the product which you would like to put in cart:");
                 String search = scan();
-                dataManager.search(search);
+                ArrayList<Product> results = dataManager.search(search);
+
+                if (results.size() == 0) {
+                    System.out.println("No such product found!");
+                    return;
+                }
+
                 System.out.println("Confirmation of the product which you would like to move to your cart:");
-                for (int i = 0; i < dataManager.search(search).size(); i++) {
-                    System.out.println("[" + (i + 1) + "] " + dataManager.search(search).get(i).toStringFormat());
+                for (int i = 0; i < results.size(); i++) {
+                    System.out.println("[" + (i + 1) + "] " + results.get(i).getName());
                 }
                 int quantity;
-                int index = Integer.parseInt(scan()) - 1;
+
+                boolean gotIntInput = false;
+                int index = 1;
+                do {
+                    try {
+                        index = Integer.parseInt(scan()) - 1;
+                        gotIntInput = true;
+                    } catch (Exception e) {
+                        System.out.println("Enter an integer input!");
+                    }
+                } while (!gotIntInput);
+
                 while (true) {
                     System.out.println("How many would you like to add to cart?");
                     quantity = Integer.parseInt(scan());
