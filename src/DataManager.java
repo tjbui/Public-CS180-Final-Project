@@ -90,7 +90,9 @@ public class DataManager {
             }
 
             bfrUser.close();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            
+        }
 
         try {
             File fStore = new File("stores.csv");
