@@ -508,7 +508,7 @@ public class DataManager {
      */
     public void addProduct(Product product) {
         if (this.currentUser != null && this.currentUser instanceof Seller) {
-            if (this.getProduct(product.getId()) == this.dummyProduct) {
+            if (this.getProduct(product.getId()).getId() == this.dummyProduct.getId()) {
                 this.products.add(product);
             }
         }

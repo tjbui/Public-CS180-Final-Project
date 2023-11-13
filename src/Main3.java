@@ -37,6 +37,7 @@ public class Main3 {
                 break;
             case 3:
                 dataManager.saveToFile();
+                System.exit(0);
                 break;
             default:
                 System.out.println("Invalid input");
@@ -462,8 +463,8 @@ public class Main3 {
                     int quantity = Integer.parseInt(scan());
                     System.out.println("Price of product: ");
                     double price = Double.parseDouble(scan());
-                    Product product = new Product(name, description, dataManager.getCurrentStoreId(),
-                            quantity, price, storeId);
+                    Product product = new Product(name, description, storeId,
+                            quantity, price);
                     dataManager.addProduct(product);
                     System.out.println("Product added!");
                 } catch (InvalidPriceError e) {
