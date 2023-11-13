@@ -48,14 +48,18 @@ public class DataManagerUnitTest {
         dm.setCurrentUser(s.getEmail());
 
         try {
-            Product p1 = new Product("product", "product", 0, 1, 
+            Product p1 = new Product("product1", "product", 0, 1, 
                 2.0, 0);
-            Product p2 = new Product("product", "product", 0, 2, 
+            Product p2 = new Product("product2", "product", 0, 2, 
                 1.0, 1);
 
             dm.addProduct(p1);
             dm.addProduct(p2);
         } catch (Exception e) {}
+
+        checkString(dm.getProduct(0).getName(), "product1");
+        checkString(dm.getProduct(1).getName(), "product2");
+        checkString(dm.getProduct(2).getName(), "Product not found");
 
         ArrayList<Product> l1 = dm.getProductList(DataManager.BY_PRICE, DataManager.SORTED_ASC);
         ArrayList<Product> l2 = dm.getProductList(DataManager.BY_PRICE, DataManager.SORTED_DESC);
@@ -73,6 +77,8 @@ public class DataManagerUnitTest {
 
         checkInt(l4.get(0).getId(), 1);
         checkInt(l4.get(1).getId(), 0);
+
+        checkBoolean(dm.currentUserOwnsStore(store), true);
     }
 
     public static void checkString(String s1, String s2) {
