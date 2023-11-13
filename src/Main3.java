@@ -186,7 +186,14 @@ public class Main3 {
                     System.out.println("[1] Buy all\n" +
                             "[2] Delete product from cart\n" +
                             "[3] Back to customer menu");
-                    int input = Integer.parseInt(scan());
+                    int input = 0;
+                    try {
+                        input = Integer.parseInt(scan());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input: please input 1, 2, or 3");
+                        running = true;
+                        continue;
+                    }
                     switch (input) {
                         case 1:
                             running = false;
