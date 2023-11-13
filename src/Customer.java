@@ -16,6 +16,11 @@ public class Customer extends User {
         quantities.add(quantity);
     }
 
+    public void removeProduct(int id) {
+        int index = ids.indexOf(id);
+        ids.remove(index);
+        quantities.remove(index);
+    }
 
 
     public ArrayList<Integer> getIds() {
@@ -52,8 +57,8 @@ public class Customer extends User {
             quantityIdString = "&";
         }
 
-        return String.format("c,%s,%s,%s,%s", this.getEmail(), this.getPassword(), productIdString, 
-        quantityIdString);
+        return String.format("c,%s,%s,%s,%s", this.getEmail(), this.getPassword(), productIdString,
+                quantityIdString);
     }
 
     public static Customer fromStringFormat(String raw) {
@@ -72,4 +77,5 @@ public class Customer extends User {
 
         return new Customer(parts[1], parts[2], productIds, productQuantities);
     }
+
 }
