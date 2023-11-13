@@ -209,18 +209,31 @@ public class Main3 {
                             break;
                         case 2:
                             running = false;
-                            System.out.println("Which product will you like to delete from cart?");
-                            int numberInCart = 0;
-                            for (int i = 0; i < ((Customer) dataManager.getCurrentUser()).getIds().size(); i++) {
-                                numberInCart++;
-                                System.out.println("[" + (i + 1) + "] " + dataManager.getProduct(((Customer)
-                                        dataManager.getCurrentUser()).getIds().get(i)).toStringFormat());
-                            }
-                            int option = Integer.parseInt(scan());
-                            if (option <= numberInCart && option > 0) {
-                                ((Customer) dataManager.getCurrentUser()).removeProduct(option - 1);
-                            } else {
-                                System.out.println("Error please input a valid number");
+                            boolean running2 = true;
+                            while (running2) {
+                                System.out.println("Which product will you like to delete from cart?");
+                                int numberInCart = 0;
+                                for (int i = 0; i < ((Customer) dataManager.getCurrentUser()).getIds().size(); i++) {
+                                    numberInCart++;
+                                    System.out.println("[" + (i + 1) + "] " + dataManager.getProduct(((Customer)
+                                            dataManager.getCurrentUser()).getIds().get(i)).toStringFormat());
+                                }
+                                int option = 0;
+                                try {
+                                    option = Integer.parseInt(scan()) - 1;
+                                } catch (NumberFormatException e) {
+                                    System.out.println("Error please input a valid number");
+                                    continue;
+                                }
+                                System.out.println( "numincart" + numberInCart);
+                                System.out.println( "pop" + option);
+
+                                if (option < numberInCart && option >= 0) {
+                                    ((Customer) dataManager.getCurrentUser()).removeProduct(option);
+                                    running2 = false;
+                                } else {
+                                    System.out.println("Error please input a valid number");
+                                }
                             }
                             break;
                         case 3:
