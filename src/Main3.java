@@ -73,7 +73,7 @@ public class Main3 {
         System.out.println("Create a password:");
         String password = scan();
 
-        if (dataManager.getCurrentUser() == null) {
+        if (dataManager.getUser(email) == dataManager.dummyUser) {
             System.out.println("What kind of account do you want to create?\n" +
                     "[1] Seller \n[2] Customer\n[3] Back to menu");
             int input = Integer.parseInt(scan()); //not int error
@@ -96,6 +96,7 @@ public class Main3 {
                     customer();
                     break;
                 case 3:
+                    System.out.println("Account not created as seller or customer was not selected");
                     initialize();
                 default:
                     System.out.println("Please either 1, 2, or 3");
