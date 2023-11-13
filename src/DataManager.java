@@ -215,6 +215,7 @@ public class DataManager {
                     .equals(this.currentUser.getEmail())) {
                         this.products.add(product);
                     }
+                    line = bfr.readLine(); // TJ ADDED LINE
                 }
 
                 bfr.close();
