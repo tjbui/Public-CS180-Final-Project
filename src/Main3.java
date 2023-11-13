@@ -21,8 +21,13 @@ public class Main3 {
                 "[1] Log in\n" +
                 "[2] Sign up\n" +
                 "[3] Exit");
-        int input = Integer.parseInt(scan());
-
+        int input = 0;
+        try {
+            input = Integer.parseInt(scan());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input");
+            initialize();
+        }
         switch (input) {
             case 1:
                 login();
@@ -32,7 +37,11 @@ public class Main3 {
                 break;
             case 3:
                 dataManager.saveToFile();
-                System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid input");
+                initialize();
+                break;
         }
     }
     public static void login() throws InvalidQuantityError, InvalidPriceError {
