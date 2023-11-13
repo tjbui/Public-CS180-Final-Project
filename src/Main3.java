@@ -162,6 +162,7 @@ public class Main3 {
                 customer();
                 break;
             case 4:
+                dataManager.saveToFile();
                 initialize();
                 break;
             default:
@@ -201,7 +202,7 @@ public class Main3 {
                             for (int i = 0; i < ((Customer) dataManager.getCurrentUser()).getIds().size(); i++) {
                                 try {
                                     dataManager.makePurchase(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)), (((Customer) dataManager.getCurrentUser()).getQuantities().get(i)));
-                                    System.out.println(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).getName() + "purchase complete!");
+                                    System.out.println(dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i)).getName() + " purchase complete!");
                                 } catch (InvalidQuantityError e) {
                                     System.out.println("Quantity is too high for " + dataManager.getProduct(((Customer) dataManager.getCurrentUser()).getIds().get(i))
                                             + "\n This product cannot be purchased");
@@ -366,7 +367,7 @@ public class Main3 {
         } else {
             System.out.println("Past transactions: ");
             for (int i = 0; i < dataManager.getPurchaseHistory().size(); i++) {
-                System.out.println(dataManager.getPurchaseHistory().get(i).toString());
+                System.out.println(dataManager.getPurchaseHistory().get(i).toString(dataManager));
             }
         }
     }
@@ -425,6 +426,7 @@ public class Main3 {
                     break;
                 case 3:
                     running = false;
+                    dataManager.saveToFile();
                     initialize();
                     break;
                 default:
