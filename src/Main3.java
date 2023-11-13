@@ -15,6 +15,13 @@ public class Main3 {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
+    public static void getProductsFromFile() {
+        System.out.println("What is the file name from which you would like to import products?");
+        String filename = scan();
+        dataManager.loadProductsFromFile(filename);
+        System.out.println("Products loaded!");
+    }
+
     public static void initialize() throws InvalidQuantityError, InvalidPriceError {
         dataManager.logoutCurrentUser();
         System.out.println("Choose option:\n" +
@@ -139,7 +146,8 @@ public class Main3 {
                 "[1] Go to cart\n" +
                         "[2] Search products\n"+
                         "[3] See purchase history\n" +
-                        "[4] Log out");
+                        "[4] Log out" +
+                        "[5] Import products from a File");
         int option = 0;
         try {
             option = Integer.parseInt(scan());
@@ -377,7 +385,8 @@ public class Main3 {
             System.out.println("""
                     [1] Stores Options
                     [2] View Data
-                    [3] Log Out
+                    [3] Import products from a File
+                    [4] Log Out
                     """);
             int input = 1;
             try {
@@ -425,6 +434,10 @@ public class Main3 {
                     running = false;
                     break;
                 case 3:
+                    getProductsFromFile();
+                    seller();
+                    break;
+                case 4:
                     running = false;
                     dataManager.saveToFile();
                     initialize();
@@ -588,8 +601,8 @@ public class Main3 {
                         editProductIndex = Integer.parseInt(scan()) - 1;
 
                         if (editProductIndex < 0 || editProductIndex >= storeProducts.size()) {
-                            System.out.printf("Enter a valid integer from 0-%d\n", 
-                                storeProducts.size() - 1);
+                            System.out.printf("Enter a valid integer from 0-%d\n",
+                                    storeProducts.size() - 1);
                             continue;
                         }
                         break;
