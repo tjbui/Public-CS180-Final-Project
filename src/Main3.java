@@ -321,7 +321,13 @@ public class Main3 {
             case 3:
                 System.out.println("[1] Search by ascending quantity\n" +
                         "[2] Search by descending quantity");
-                int option2 = Integer.parseInt(scan());
+                int option2 = 0;
+                try {
+                    option2 = Integer.parseInt(scan());
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input");
+                    search();
+                }
                 switch (option2) {
                     case 1:
                         if (dataManager.getProductList().isEmpty()) {
@@ -365,45 +371,58 @@ public class Main3 {
         }
     }
     public static void seller() throws InvalidQuantityError, InvalidPriceError {
-        System.out.println("""
-                [1] Stores Options
-                [2] View Data
-                [3] Log Out
-                """);
-        int input = Integer.parseInt(scan());
-        switch (input) {
-            case 1:
-                storeOptions();
-                seller();
-                break;
-            case 2:
-                System.out.println("""
-                        [1] View popular product data
-                            (Shows all your products which are in customer's shopping cart.
-                            Shows email of the customer, product, store, and quantity in cart)
-                        [2] View Store Sales
-                            (Gets sale data (receipts) for a particular store.
-                            Shows customer's email and how much they spent on the transaction)
-                        """);
-                int option = Integer.parseInt(scan());
-                switch (option) {
-                    case 1:
-                        productData();
-                        break;
-                    case 2:
-                        storeSalesData();
-                        break;
-                    default:
-                        System.out.println("Invalid input, please input 1 or 2");
-                        seller();
-                }
-                seller();
-                break;
-            case 3:
-                initialize();
-                break;
-            default:
+        boolean running = true;
+        while (running) {
+            System.out.println("""
+                    [1] Stores Options
+                    [2] View Data
+                    [3] Log Out
+                    """);
+            int input = 1;
+            try {
+                input = Integer.parseInt(scan());
+            } catch (NumberFormatException e) {
                 System.out.println("Invalid input: please enter 1, 2, or 3");
+                continue;
+            }
+            switch (input) {
+                case 1:
+                    storeOptions();
+                    seller();
+                    running = false;
+                    break;
+                case 2:
+                    System.out.println("""
+                            [1] View popular product data
+                                (Shows all your products which are in customer's shopping cart.
+                                Shows email of the customer, product, store, and quantity in cart)
+                            [2] View Store Sales
+                                (Gets sale data (receipts) for a particular store.
+                                Shows customer's email and how much they spent on the transaction)
+                            """);
+                    int option = Integer.parseInt(scan());
+                    switch (option) {
+                        case 1:
+                            productData();
+                            break;
+                        case 2:
+                            storeSalesData();
+                            break;
+                        default:
+                            System.out.println("Invalid input, please input 1 or 2");
+                            seller();
+                    }
+                    seller();
+                    running = false;
+                    break;
+                case 3:
+                    running = false;
+                    initialize();
+                    break;
+                default:
+                    System.out.println("Invalid input: please enter 1, 2, or 3");
+                    break;
+            }
         }
     }
     public static void storeOptions() throws InvalidQuantityError, InvalidPriceError {
