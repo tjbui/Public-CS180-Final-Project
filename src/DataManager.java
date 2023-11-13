@@ -735,7 +735,7 @@ public class DataManager {
             for (int i = 0; i < this.transactions.size(); i++) {
                 if (this.transactions.get(i).getStoreId() == store.getId()) {
                     String[] datum = {this.transactions.get(i).getCustomerEmail(),
-                            String.format("$.2f", 
+                            String.format("$%.2f", 
                             ((double) this.transactions.get(i).getQuantitySold())
                             * this.transactions.get(i).getPrice())};
                     data.add(datum);
