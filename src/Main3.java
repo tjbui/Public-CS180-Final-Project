@@ -400,7 +400,15 @@ public class Main3 {
                                 (Gets sale data (receipts) for a particular store.
                                 Shows customer's email and how much they spent on the transaction)
                             """);
-                    int option = Integer.parseInt(scan());
+                    int option = 1;
+                    do {
+                        try {
+                            input = Integer.parseInt(scan());
+                            break;
+                        } catch (Exception e) {
+                            System.out.println("Invalid input");
+                        }
+                    } while (true);
                     switch (option) {
                         case 1:
                             productData();
@@ -431,7 +439,17 @@ public class Main3 {
                 [2] Edit/Delete store
                 [3] Back to seller menu
                 """);
-        int input = Integer.parseInt(scan());
+
+        int input = 3;
+        do {
+            try {
+                input = Integer.parseInt(scan());
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid input");
+            }
+        } while (true);
+
         switch (input) {
             case 1:
                 System.out.println("Create store name: ");
@@ -448,7 +466,15 @@ public class Main3 {
                 for (int i = 0; i < dataManager.getOwnedStores().size(); i++) {
                     System.out.println("[" + (i + 1) + "] " + dataManager.getOwnedStores().get(i).getName());
                 }
-                int indexOfStore = Integer.parseInt(scan()) - 1;
+                int indexOfStore = 0;
+                do {
+                    try {
+                        indexOfStore = Integer.parseInt(scan()) - 1;
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Invalid input");
+                    }
+                } while (true);
                 editStore(indexOfStore);
                 break;
             case 3:
@@ -468,8 +494,18 @@ public class Main3 {
                 [2] Add new product
                 [3] Delete product
                 [4] Delete store
+                [5] Edit product
                 """);
-        int option = Integer.parseInt(scan());
+        int option = 1;
+
+        do {
+            try {
+                option = Integer.parseInt(scan());
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid input");
+            }
+        } while (true);
         String name;
         switch (option) {
             case 1:
@@ -485,7 +521,16 @@ public class Main3 {
                     System.out.println("Description of product: ");
                     String description = scan();
                     System.out.println("Quantity in stock: ");
-                    int quantity = Integer.parseInt(scan());
+                    int quantity = 1;
+
+                    do {
+                        try {
+                            quantity = Integer.parseInt(scan());
+                            break;
+                        } catch (Exception e) {
+                            System.out.println("Invalid input");
+                        }
+                    } while (true);
                     System.out.println("Price of product: ");
                     double price = Double.parseDouble(scan());
                     Product product = new Product(name, description, storeId,
@@ -507,6 +552,14 @@ public class Main3 {
                         System.out.println("[" + (i + 1) + "] " + dataManager.getProduct(store.getProducts().get(i)).getName());
                     }
                     int indexOfProduct = Integer.parseInt(scan());
+                    do {
+                        try {
+                            indexOfProduct = Integer.parseInt(scan());
+                            break;
+                        } catch (Exception e) {
+                            System.out.println("Invalid input");
+                        }
+                    } while (true);
                     dataManager.deleteProduct(store.getProducts().get(indexOfProduct - 1));
                 }
                 break;
@@ -515,25 +568,74 @@ public class Main3 {
                 break;
             case 5:
                 Store currentStore = dataManager.getStore(storeId);
+                ArrayList<Product> storeProducts = dataManager.getStoreProducts(currentStore);
+
+                if (storeProducts.size() == 0) {
+                    System.out.println("No products currently associated with this store");
+                    return;
+                }
                 System.out.println("Select a product");
                 for (int j = 0; j < dataManager.getStoreProducts(currentStore).size(); j++) {
-                    System.out.println("[" + (j + 1) + "] " + dataManager.getStoreProducts(currentStore).get(j).toStringFormat());
+                    System.out.println("[" + (j + 1) + "] " + storeProducts.get(j).getName());
                 }
-                System.out.println("Provide the ID of the product you wish to edit");
-                int editProductID = Integer.parseInt(scan());
+                System.out.println("Which product do you want to edit?");
+                int editProductIndex = 0;
+
+                do {
+                    try {
+                        editProductIndex = Integer.parseInt(scan()) - 1;
+
+                        if (editProductIndex < 0 || editProductIndex >= storeProducts.size()) {
+                            System.out.printf("Enter a valid integer from 0-%d\n", 
+                                storeProducts.size() - 1);
+                            continue;
+                        }
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Enter a valid integer input");
+                    }
+                } while (true);
+
+                int editProductID = storeProducts.get(editProductIndex).getId();
                 System.out.println("Provide new NAME for the product:");
                 String newProductName = scan();
                 System.out.println("Provide new DESCRIPTION for the product");
                 String newProductDescription = scan();
                 System.out.println("Provide new QUANTITY for the product");
-                int newProductQuantity = Integer.parseInt(scan());
+                int newProductQuantity = 1;
+
+                do {
+                    try {
+                        newProductQuantity = Integer.parseInt(scan());
+
+                        if (newProductQuantity < 0) {
+                            System.out.println("Invalid quantity");
+                        }
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Invalid input");
+                    }
+                } while (true);
                 System.out.println("Provide new PRICE for the product");
-                double newProductPrice = Float.parseFloat(scan());
+                double newProductPrice = 1.0;
+                do {
+                    try {
+                        newProductPrice = Float.parseFloat(scan());
+
+                        if (newProductPrice <= 0.0) {
+                            System.out.println("Invalid price");
+                            continue;
+                        }
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("Invalid input");
+                    }
+                } while (true);
                 try {
                     dataManager.editProduct(editProductID, newProductName, newProductDescription, newProductQuantity, newProductPrice);
                     System.out.println("Edit SUCCESSFUL");
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    System.out.println("Error occurred while editing product");
                 }
                 break;
             default:
@@ -546,7 +648,16 @@ public class Main3 {
         for (int i = 0; i < dataManager.getOwnedStores().size(); i++) {
             System.out.println("[" + (i + 1) + "] " + dataManager.getOwnedStores().get(i).getName());
         }
-        int indexOfStore = Integer.parseInt(scan()) - 1;
+        int indexOfStore = 1;
+
+        do {
+            try {
+                indexOfStore = Integer.parseInt(scan()) - 1;
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid input");
+            }
+        } while (true);
         ArrayList<String[]> salesData = dataManager.getSaleData(dataManager.getOwnedStores().get(indexOfStore));
         System.out.println("Past transactions:");
         for (int i = 0; i < salesData.size(); i++) {
@@ -569,7 +680,17 @@ public class Main3 {
         System.out.println("Would you like to put an item in your cart?");
         System.out.println("[1] Yes" +
                 "\n[2] No");
-        int input = Integer.parseInt(scan());
+        int input = 2;
+
+        do {
+            try {
+                input = Integer.parseInt(scan());
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid input");
+            }
+        } while (true);
+
         switch (input) {
             case 1:
                 System.out.println("Enter the name of the product which you would like to put in cart:");
@@ -600,11 +721,13 @@ public class Main3 {
 
                 while (true) {
                     System.out.println("How many would you like to add to cart?");
-                    quantity = Integer.parseInt(scan());
-                    if (quantity > 0) {
-                        break;
-                    }
-                    System.out.println("Please enter a quantity which is greater than 0");
+                    try {
+                        quantity = Integer.parseInt(scan());
+                        if (quantity > 0) {
+                            break;
+                        }
+                    } catch (Exception e) {}
+                    System.out.println("Please enter an integer quantity which is greater than 0");
                 }
                 Product product = dataManager.search(search).get(index);
                 if (dataManager.getCurrentUser() instanceof Customer) {
