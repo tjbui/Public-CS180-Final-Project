@@ -34,6 +34,8 @@ public class DataManager {
     public static final int SORTED_ASC = 1;
     public static final int SORTED_DESC = 2;
 
+    private static Object gatekeeper = new Object();
+
     public DataManager() {
         this.products = new ArrayList<Product>();
         this.users = new ArrayList<User>();
@@ -295,7 +297,9 @@ public class DataManager {
      * function.
      */
     public void incrementCurrentStoreId() {
-        this.currentStoreId++;
+        synchronized(gatekeeper) {
+            this.currentStoreId++;
+        }
     }
 
     /**
@@ -330,6 +334,7 @@ public class DataManager {
      * @param email The email of the new currentUser
      * @return Whether or not the operation was successful
      */
+    //TODO: remove currentUser
     public boolean setCurrentUser(String email) {
         User user = this.getUser(email);
 
@@ -367,6 +372,7 @@ public class DataManager {
     /**
      * Deletes the current user from the system if the user is logged in.
      */
+    //TODO: remove currentUser variable
     public void deleteCurrentUser() {
         if (this.currentUser != null) {
             this.users.remove(this.currentUser);
@@ -385,7 +391,7 @@ public class DataManager {
 
         if (existingUser == this.dummyUser) {
             this.users.add(user);
-            this.setCurrentUser(user.getEmail());
+            //this.setCurrentUser(user.getEmail());
         }
     }
 
@@ -395,6 +401,7 @@ public class DataManager {
      * @param newEmail
      * @param newPassword
      */
+    //TODO: remove currentUser
     public void editCurrentUser(String newEmail, String newPassword) {
         if (this.currentUser != null) {
             this.currentUser.setEmail(newEmail);
@@ -405,6 +412,7 @@ public class DataManager {
     /**
      * Logs out the current user.
      */
+    //TODO: remove currentUser
     public void logoutCurrentUser() {
         this.currentUser = null;
     }
@@ -514,6 +522,7 @@ public class DataManager {
      *
      * @param product
      */
+    //TODO: remove currentUser
     public void addProduct(Product product) {
         if (this.currentUser != null && this.currentUser instanceof Seller) {
             if (this.getProduct(product.getId()) == this.dummyProduct) {
@@ -531,6 +540,7 @@ public class DataManager {
      * @param quantity
      * @param price
      */
+    //TODO: remove currentUser
     public void editProduct(int id, String name, String description, int quantity, double price) {
         if (this.currentUser != null && this.currentUser instanceof Seller) {
             Product product = this.getProduct(id);
@@ -551,6 +561,7 @@ public class DataManager {
      *
      * @param id The id of the product
      */
+    //TODO: remove currentUser
     public void deleteProduct(int id) {
         if (this.currentUser != null && this.currentUser instanceof Seller) {
             Product product = this.getProduct(id);
@@ -566,6 +577,7 @@ public class DataManager {
      * @return An ArrayList of Stores for which the Seller associated with each store is the current
      * user
      */
+    //TODO: remove currentUser
     public ArrayList<Store> getOwnedStores() {
         ArrayList<Store> results = new ArrayList<Store>();
 
@@ -582,6 +594,7 @@ public class DataManager {
      * @param store
      * @return true if the current user owns the given store, false otherwise
      */
+    //TODO: remove currentUser
     public boolean currentUserOwnsStore(Store store) {
         if (this.currentUser != null) {
             if (store.getSellerEmail().equals(this.currentUser.getEmail())) {
@@ -592,6 +605,7 @@ public class DataManager {
         return false;
     }
 
+    //TODO: remove currentUser
     public ArrayList<Product> getStoreProducts(Store store) {
         if (this.currentUser != null && this.currentUser instanceof Seller &&
                 store.getSellerEmail().equals(this.currentUser.getEmail())) {
@@ -629,10 +643,12 @@ public class DataManager {
      * @param store
      */
     public void addStore(Store store) {
-        Store existingStore = this.getStore(store.getId());
+        synchronized(gatekeeper) {
+            Store existingStore = this.getStore(store.getId());
 
-        if (existingStore == this.dummyStore) {
-            this.stores.add(store);
+            if (existingStore == this.dummyStore) {
+                this.stores.add(store);
+            }
         }
     }
 
@@ -641,11 +657,14 @@ public class DataManager {
      *
      * @param id
      */
+    //TODO: remove currentUser
     public void deleteStore(int id) {
-        Store existingStore = this.getStore(id);
+        synchronized(gatekeeper) {
+            Store existingStore = this.getStore(id);
 
-        if (existingStore != this.dummyStore && this.currentUserOwnsStore(existingStore)) {
-            this.stores.remove(existingStore);
+            if (existingStore != this.dummyStore && this.currentUserOwnsStore(existingStore)) {
+                this.stores.remove(existingStore);
+            }
         }
     }
 
@@ -656,10 +675,12 @@ public class DataManager {
      * @param name
      */
     public void editStore(int id, String name) {
-        Store store = this.getStore(id);
+        synchronized(gatekeeper) {
+            Store store = this.getStore(id);
 
-        if (store != this.dummyStore) {
-            store.setName(name);
+            if (store != this.dummyStore) {
+                store.setName(name);
+            }
         }
     }
 
@@ -693,15 +714,19 @@ public class DataManager {
      * @throws InvalidQuantityError Thrown if the quantity is negative or greater than the quantity
      * of the Product currently in stock
      */
+    //TODO: remove currentUser
     public void makePurchase(Product product, int quantity) throws InvalidQuantityError {
-        if (product.checkQuantity(quantity)) {
-            product.purchase(quantity);
-            Transaction transaction = new Transaction(product.getId(), product.getStoreId(),
-                    this.currentUser.getEmail(), this.getStore(product.getStoreId()).getSellerEmail(),
-                    quantity, product.getPrice());
-            this.transactions.add(transaction);
-        } else {
-            throw new InvalidQuantityError("Invalid purchase quantity");
+        synchronized(gatekeeper) {
+            if (product.checkQuantity(quantity)) {
+                product.purchase(quantity);
+                Transaction transaction = new Transaction(product.getId(), product.getStoreId(),
+                        this.currentUser.getEmail(), 
+                        this.getStore(product.getStoreId()).getSellerEmail(),
+                        quantity, product.getPrice());
+                this.transactions.add(transaction);
+            } else {
+                throw new InvalidQuantityError("Invalid purchase quantity");
+            }
         }
     }
 
@@ -710,6 +735,7 @@ public class DataManager {
      *
      * @return A list of Transactions where the customer making the purchase equals the current user
      */
+    //TODO: remove currentUser
     public ArrayList<Transaction> getPurchaseHistory() {
         if (this.currentUser != null && this.currentUser instanceof Customer) {
             ArrayList<Transaction> results = new ArrayList<Transaction>();
@@ -735,6 +761,7 @@ public class DataManager {
      * @param store
      * @return An ArrayList of String arrays in the described format
      */
+    //TODO: remove currentUser
     public ArrayList<String[]> getSaleData(Store store) {
         if (this.currentUser != null && this.currentUser instanceof Seller &&
                 store.getSellerEmail().equals(this.currentUser.getEmail())) {
@@ -765,6 +792,7 @@ public class DataManager {
      *
      * @return An ArrayList of String arrays in the specified format
      */
+    //TODO: remove currentUser
     public ArrayList<String[]> getSellerShoppingCartView() {
         if (this.currentUser != null && this.currentUser instanceof Seller) {
             ArrayList<String[]> data = new ArrayList<String[]>();
