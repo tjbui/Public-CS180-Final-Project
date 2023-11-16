@@ -24,8 +24,6 @@ public class DataManager {
     public User dummyUser;
     public Store dummyStore;
 
-    private User currentUser;
-
     public static final int BY_NOTHING = 0;
     public static final int BY_QUANTITY = 1;
     public static final int BY_PRICE = 2;
@@ -41,8 +39,6 @@ public class DataManager {
         this.users = new ArrayList<User>();
         this.stores = new ArrayList<Store>();
         this.transactions = new ArrayList<Transaction>();
-
-        this.currentUser = null;
 
         try {
             this.dummyProduct = new Product("Product not found",
@@ -207,8 +203,8 @@ public class DataManager {
      *
      * @param filename The file from which to load product data
      */
-    public void loadProductsFromFile(String filename) {
-        if (this.currentUser != null && this.currentUser instanceof Seller) {
+    public void loadProductsFromFile(User currentUser, String filename) {
+        if (currentUser != null && currentUser instanceof Seller) {
             try {
                 File f = new File(filename);
                 FileReader fr = new FileReader(f);
@@ -220,7 +216,7 @@ public class DataManager {
 
                     if (this.getProduct(product.getId()) == this.dummyProduct &&
                             this.getStore(product.getStoreId()).getSellerEmail()
-                                    .equals(this.currentUser.getEmail())) {
+                                    .equals(currentUser.getEmail())) {
                         this.products.add(product);
                     }
                 }
@@ -238,15 +234,15 @@ public class DataManager {
      *
      * @param filename The file to which the transaction data will be written
      */
-    public void exportPurchaseHistory(String filename) {
-        if (this.currentUser != null && this.currentUser instanceof Customer) {
+    public void exportPurchaseHistory(User currentUser, String filename) {
+        if (currentUser != null && currentUser instanceof Customer) {
             try {
                 File f = new File(filename);
                 PrintWriter pw = new PrintWriter(f);
 
                 for (int i = 0; i < this.transactions.size(); i++) {
                     if (this.transactions.get(i).getCustomerEmail()
-                            .equals(this.currentUser.getEmail())) {
+                            .equals(currentUser.getEmail())) {
                         String line = this.transactions.get(i).toStringFormat();
 
                         pw.println(line);
@@ -263,15 +259,15 @@ public class DataManager {
      *
      * @param filename The file to which the product data will be written
      */
-    public void exportProductData(String filename) {
-        if (this.currentUser != null && this.currentUser instanceof Seller) {
+    public void exportProductData(User currentUser, String filename) {
+        if (currentUser != null && currentUser instanceof Seller) {
             try {
                 File f = new File(filename);
                 PrintWriter pw = new PrintWriter(f);
 
                 for (int i = 0; i < this.products.size(); i++) {
                     if (this.getStore(this.products.get(i).getStoreId()).getSellerEmail()
-                            .equals(this.currentUser.getEmail())) {
+                            .equals(currentUser.getEmail())) {
                         String formattedProduct = this.products.get(i).toStringFormat();
 
                         pw.println(formattedProduct);
@@ -303,15 +299,6 @@ public class DataManager {
     }
 
     /**
-     * Returns the current user.
-     *
-     * @return The User currently logged in
-     */
-    public User getCurrentUser() {
-        return this.currentUser;
-    }
-
-    /**
      * Returns the user with the specified email, if the user exists.
      *
      * @param email
@@ -325,25 +312,6 @@ public class DataManager {
         }
 
         return this.dummyUser;
-    }
-
-    /**
-     * Attempts to log in a user. If a user with the specified email is present in the system, the
-     * currentUser field is updated to equal that user. Otherwise, the field is not updated.
-     *
-     * @param email The email of the new currentUser
-     * @return Whether or not the operation was successful
-     */
-    //TODO: remove currentUser
-    public boolean setCurrentUser(String email) {
-        User user = this.getUser(email);
-
-        if (user.getEmail().equals("User not found")) {
-            return false;
-        } else {
-            this.currentUser = user;
-            return true;
-        }
     }
 
     /**
@@ -372,11 +340,10 @@ public class DataManager {
     /**
      * Deletes the current user from the system if the user is logged in.
      */
-    //TODO: remove currentUser variable
-    public void deleteCurrentUser() {
-        if (this.currentUser != null) {
-            this.users.remove(this.currentUser);
-            this.currentUser = null;
+    public void deleteCurrentUser(User currentUser) {
+        if (currentUser != null) {
+            this.users.remove(currentUser);
+            currentUser = null;
         }
     }
 
@@ -401,20 +368,11 @@ public class DataManager {
      * @param newEmail
      * @param newPassword
      */
-    //TODO: remove currentUser
-    public void editCurrentUser(String newEmail, String newPassword) {
-        if (this.currentUser != null) {
-            this.currentUser.setEmail(newEmail);
-            this.currentUser.setPassword(newPassword);
+    public void editCurrentUser(User currentUser, String newEmail, String newPassword) {
+        if (currentUser != null) {
+            currentUser.setEmail(newEmail);
+            currentUser.setPassword(newPassword);
         }
-    }
-
-    /**
-     * Logs out the current user.
-     */
-    //TODO: remove currentUser
-    public void logoutCurrentUser() {
-        this.currentUser = null;
     }
 
     /**
@@ -522,9 +480,8 @@ public class DataManager {
      *
      * @param product
      */
-    //TODO: remove currentUser
-    public void addProduct(Product product) {
-        if (this.currentUser != null && this.currentUser instanceof Seller) {
+    public void addProduct(User currentUser, Product product) {
+        if (currentUser != null && currentUser instanceof Seller) {
             if (this.getProduct(product.getId()) == this.dummyProduct) {
                 this.products.add(product);
             }
@@ -540,12 +497,12 @@ public class DataManager {
      * @param quantity
      * @param price
      */
-    //TODO: remove currentUser
-    public void editProduct(int id, String name, String description, int quantity, double price) {
-        if (this.currentUser != null && this.currentUser instanceof Seller) {
+    public void editProduct(User currentUser, int id, String name, String description, int quantity, 
+    double price) {
+        if (currentUser != null && currentUser instanceof Seller) {
             Product product = this.getProduct(id);
 
-            if (this.currentUserOwnsStore(this.getStore(product.getId()))) {
+            if (this.currentUserOwnsStore(currentUser, this.getStore(product.getId()))) {
                 product.setName(name);
                 product.setDescription(description);
                 product.setQuantity(quantity);
@@ -561,13 +518,12 @@ public class DataManager {
      *
      * @param id The id of the product
      */
-    //TODO: remove currentUser
-    public void deleteProduct(int id) {
-        if (this.currentUser != null && this.currentUser instanceof Seller) {
+    public void deleteProduct(User currentUser, int id) {
+        if (currentUser != null && currentUser instanceof Seller) {
             Product product = this.getProduct(id);
 
             if (product != this.dummyProduct &&
-                    this.currentUserOwnsStore(this.getStore(product.getId()))) {
+                    this.currentUserOwnsStore(currentUser, this.getStore(product.getId()))) {
                 this.products.remove(product);
             }
         }
@@ -577,12 +533,11 @@ public class DataManager {
      * @return An ArrayList of Stores for which the Seller associated with each store is the current
      * user
      */
-    //TODO: remove currentUser
-    public ArrayList<Store> getOwnedStores() {
+    public ArrayList<Store> getOwnedStores(User currentUser) {
         ArrayList<Store> results = new ArrayList<Store>();
 
         for (int i = 0; i < this.stores.size(); i++) {
-            if (this.currentUserOwnsStore(this.stores.get(i))) {
+            if (this.currentUserOwnsStore(currentUser, this.stores.get(i))) {
                 results.add(this.stores.get(i));
             }
         }
@@ -594,10 +549,9 @@ public class DataManager {
      * @param store
      * @return true if the current user owns the given store, false otherwise
      */
-    //TODO: remove currentUser
-    public boolean currentUserOwnsStore(Store store) {
-        if (this.currentUser != null) {
-            if (store.getSellerEmail().equals(this.currentUser.getEmail())) {
+    public boolean currentUserOwnsStore(User currentUser, Store store) {
+        if (currentUser != null) {
+            if (store.getSellerEmail().equals(currentUser.getEmail())) {
                 return true;
             }
         }
@@ -605,10 +559,14 @@ public class DataManager {
         return false;
     }
 
-    //TODO: remove currentUser
-    public ArrayList<Product> getStoreProducts(Store store) {
-        if (this.currentUser != null && this.currentUser instanceof Seller &&
-                store.getSellerEmail().equals(this.currentUser.getEmail())) {
+    /**
+     * @param currentUser
+     * @param store
+     * @return The list of products associated with the given store
+     */
+    public ArrayList<Product> getStoreProducts(User currentUser, Store store) {
+        if (currentUser != null && currentUser instanceof Seller &&
+                store.getSellerEmail().equals(currentUser.getEmail())) {
             ArrayList<Product> results = new ArrayList<Product>();
 
             for (int i = 0; i < this.products.size(); i++) {
@@ -657,12 +615,12 @@ public class DataManager {
      *
      * @param id
      */
-    //TODO: remove currentUser
-    public void deleteStore(int id) {
+    public void deleteStore(User currentUser, int id) {
         synchronized(gatekeeper) {
             Store existingStore = this.getStore(id);
 
-            if (existingStore != this.dummyStore && this.currentUserOwnsStore(existingStore)) {
+            if (existingStore != this.dummyStore && 
+            this.currentUserOwnsStore(currentUser, existingStore)) {
                 this.stores.remove(existingStore);
             }
         }
@@ -714,13 +672,13 @@ public class DataManager {
      * @throws InvalidQuantityError Thrown if the quantity is negative or greater than the quantity
      * of the Product currently in stock
      */
-    //TODO: remove currentUser
-    public void makePurchase(Product product, int quantity) throws InvalidQuantityError {
+    public void makePurchase(User currentUser, Product product, int quantity) 
+    throws InvalidQuantityError {
         synchronized(gatekeeper) {
             if (product.checkQuantity(quantity)) {
                 product.purchase(quantity);
                 Transaction transaction = new Transaction(product.getId(), product.getStoreId(),
-                        this.currentUser.getEmail(), 
+                        currentUser.getEmail(), 
                         this.getStore(product.getStoreId()).getSellerEmail(),
                         quantity, product.getPrice());
                 this.transactions.add(transaction);
@@ -735,13 +693,12 @@ public class DataManager {
      *
      * @return A list of Transactions where the customer making the purchase equals the current user
      */
-    //TODO: remove currentUser
-    public ArrayList<Transaction> getPurchaseHistory() {
-        if (this.currentUser != null && this.currentUser instanceof Customer) {
+    public ArrayList<Transaction> getPurchaseHistory(User currentUser) {
+        if (currentUser != null && currentUser instanceof Customer) {
             ArrayList<Transaction> results = new ArrayList<Transaction>();
 
             for (int i = 0; i < this.transactions.size(); i++) {
-                if (this.transactions.get(i).getCustomerEmail().equals(this.currentUser.getEmail())) {
+                if (this.transactions.get(i).getCustomerEmail().equals(currentUser.getEmail())) {
                     results.add(this.transactions.get(i));
                 }
             }
@@ -761,10 +718,9 @@ public class DataManager {
      * @param store
      * @return An ArrayList of String arrays in the described format
      */
-    //TODO: remove currentUser
-    public ArrayList<String[]> getSaleData(Store store) {
-        if (this.currentUser != null && this.currentUser instanceof Seller &&
-                store.getSellerEmail().equals(this.currentUser.getEmail())) {
+    public ArrayList<String[]> getSaleData(User currentUser, Store store) {
+        if (currentUser != null && currentUser instanceof Seller &&
+                store.getSellerEmail().equals(currentUser.getEmail())) {
             ArrayList<String[]> data = new ArrayList<String[]>();
 
             for (int i = 0; i < this.transactions.size(); i++) {
@@ -792,9 +748,8 @@ public class DataManager {
      *
      * @return An ArrayList of String arrays in the specified format
      */
-    //TODO: remove currentUser
-    public ArrayList<String[]> getSellerShoppingCartView() {
-        if (this.currentUser != null && this.currentUser instanceof Seller) {
+    public ArrayList<String[]> getSellerShoppingCartView(User currentUser) {
+        if (currentUser != null && currentUser instanceof Seller) {
             ArrayList<String[]> data = new ArrayList<String[]>();
 
             for (int i = 0; i < this.users.size(); i++) {
@@ -807,7 +762,7 @@ public class DataManager {
                         Product product = this.getProduct(((int) productIds.get(j)));
 
                         if (this.getStore(product.getStoreId()).getSellerEmail()
-                                .equals(this.currentUser.getEmail())) {
+                                .equals(currentUser.getEmail())) {
                             String[] datum = {
                                     this.users.get(i).getEmail(),
                                     this.getProduct(productIds.get(j)).getName(),
