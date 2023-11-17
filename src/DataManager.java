@@ -345,7 +345,6 @@ public class DataManager {
     public void deleteCurrentUser(User currentUser) {
         if (currentUser != null) {
             this.users.remove(currentUser);
-            currentUser = null;
         }
     }
 
@@ -360,7 +359,6 @@ public class DataManager {
 
         if (existingUser == this.dummyUser) {
             this.users.add(user);
-            //this.setCurrentUser(user.getEmail());
         }
     }
 

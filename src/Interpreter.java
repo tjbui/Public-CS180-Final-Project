@@ -27,4 +27,8 @@ public class Interpreter {
             System.out.println("Disconnection error encountered");
         }
     }
+
+    public void save() {
+        this.pw.println("save");
+    }
 }
