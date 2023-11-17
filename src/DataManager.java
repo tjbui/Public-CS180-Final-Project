@@ -146,55 +146,57 @@ public class DataManager {
      * program so that data is not lost.
      */
     public void saveToFile() {
-        try {
-            File fProduct = new File("products.csv");
-            PrintWriter pwProduct = new PrintWriter(fProduct);
+        synchronized(gatekeeper) {
+            try {
+                File fProduct = new File("products.csv");
+                PrintWriter pwProduct = new PrintWriter(fProduct);
 
-            for (int i = 0; i < this.products.size(); i++) {
-                String line = this.products.get(i).toStringFormat();
-                pwProduct.println(line);
-            }
+                for (int i = 0; i < this.products.size(); i++) {
+                    String line = this.products.get(i).toStringFormat();
+                    pwProduct.println(line);
+                }
 
-            pwProduct.close();
+                pwProduct.close();
 
-            File fUser = new File("users.csv");
-            PrintWriter pwUser = new PrintWriter(fUser);
+                File fUser = new File("users.csv");
+                PrintWriter pwUser = new PrintWriter(fUser);
 
-            for (int i = 0; i < this.users.size(); i++) {
-                String line = this.users.get(i).toStringFormat();
-                pwUser.println(line);
-            }
+                for (int i = 0; i < this.users.size(); i++) {
+                    String line = this.users.get(i).toStringFormat();
+                    pwUser.println(line);
+                }
 
-            pwUser.close();
+                pwUser.close();
 
-            File fStore = new File("stores.csv");
-            PrintWriter pwStore = new PrintWriter(fStore);
+                File fStore = new File("stores.csv");
+                PrintWriter pwStore = new PrintWriter(fStore);
 
-            for (int i = 0; i < this.stores.size(); i++) {
-                String line = this.stores.get(i).toStringFormat();
-                pwStore.println(line);
-            }
+                for (int i = 0; i < this.stores.size(); i++) {
+                    String line = this.stores.get(i).toStringFormat();
+                    pwStore.println(line);
+                }
 
-            pwStore.close();
+                pwStore.close();
 
-            File fTransaction = new File("transactions.csv");
-            PrintWriter pwTransaction = new PrintWriter(fTransaction);
+                File fTransaction = new File("transactions.csv");
+                PrintWriter pwTransaction = new PrintWriter(fTransaction);
 
-            for (int i = 0; i < this.transactions.size(); i++) {
-                String line = this.transactions.get(i).toStringFormat();
-                pwTransaction.println(line);
-            }
+                for (int i = 0; i < this.transactions.size(); i++) {
+                    String line = this.transactions.get(i).toStringFormat();
+                    pwTransaction.println(line);
+                }
 
-            pwTransaction.close();
+                pwTransaction.close();
 
-            File fCurrentIds = new File("ids.txt");
-            PrintWriter pwCurrentIds = new PrintWriter(fCurrentIds);
+                File fCurrentIds = new File("ids.txt");
+                PrintWriter pwCurrentIds = new PrintWriter(fCurrentIds);
 
-            pwCurrentIds.println(Product.getCount());
-            pwCurrentIds.println(this.currentStoreId);
+                pwCurrentIds.println(Product.getCount());
+                pwCurrentIds.println(this.currentStoreId);
 
-            pwCurrentIds.close();
-        } catch (Exception e) {}
+                pwCurrentIds.close();
+            } catch (Exception e) {}
+        }
     }
 
     /**
