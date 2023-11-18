@@ -369,7 +369,8 @@ public class DataManager {
      * @param newPassword
      */
     public void editCurrentUser(User currentUser, String newEmail, String newPassword) {
-        if (currentUser != null) {
+        if (currentUser != null && 
+        this.getUser(newEmail).getEmail().equals(this.dummyUser.getEmail())) {
             currentUser.setEmail(newEmail);
             currentUser.setPassword(newPassword);
         }
