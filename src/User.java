@@ -33,13 +33,23 @@ public class User {
         this.password = password;
     }
 
+    public String toString() {
+        return this.email;
+    }
+
     public String toStringFormat() {
         return String.format("%s,%s", this.email, this.password);
     }
 
     public static User fromStringFormat(String raw) {
-        String[] parts = raw.split(",");
+        if (raw.charAt(0) == 's') {
+            return Seller.fromStringFormat(raw);
+        } else if (raw.charAt(0) == 'c') {
+            return Customer.fromStringFormat(raw);
+        } else {
+            String[] parts = raw.split(",");
 
-        return new User(parts[0], parts[1]);
+            return new User(parts[0], parts[1]);
+        }
     }
 }

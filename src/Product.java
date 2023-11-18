@@ -102,6 +102,10 @@ public class Product {
         this.quantity -= quantity;
     }
 
+    public String toString() {
+        return this.name;
+    }
+
     public String toStringFormat() {
         return String.format("%s,%s,%d,%d,%.2f,%d", this.name, this.description, this.storeId, 
         this.quantity, this.price, this.id);

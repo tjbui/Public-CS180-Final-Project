@@ -49,6 +49,10 @@ public class Store {
         this.id = id;
     }
 
+    public String toString() {
+        return this.name;
+    }
+
     public String toStringFormat() {
         String productIdString = "";
 
