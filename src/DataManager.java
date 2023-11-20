@@ -343,8 +343,10 @@ public class DataManager {
      * Deletes the current user from the system if the user is logged in.
      */
     public void deleteCurrentUser(User currentUser) {
-        if (currentUser != null) {
-            this.users.remove(currentUser);
+        synchronized (gatekeeper) {
+            if (currentUser != null) {
+                this.users.remove(currentUser);
+            }
         }
     }
 
@@ -358,7 +360,9 @@ public class DataManager {
         User existingUser = this.getUser(user.getEmail());
 
         if (existingUser == this.dummyUser) {
-            this.users.add(user);
+            synchronized (gatekeeper) {
+                this.users.add(user);
+            }
         }
     }
 
@@ -371,8 +375,10 @@ public class DataManager {
     public void editCurrentUser(User currentUser, String newEmail, String newPassword) {
         if (currentUser != null && 
         this.getUser(newEmail).getEmail().equals(this.dummyUser.getEmail())) {
-            currentUser.setEmail(newEmail);
-            currentUser.setPassword(newPassword);
+            synchronized (gatekeeper) {
+                currentUser.setEmail(newEmail);
+                currentUser.setPassword(newPassword);
+            }
         }
     }
 
@@ -484,7 +490,9 @@ public class DataManager {
     public void addProduct(User currentUser, Product product) {
         if (currentUser != null && currentUser instanceof Seller) {
             if (this.getProduct(product.getId()) == this.dummyProduct) {
-                this.products.add(product);
+                synchronized (gatekeeper) {
+                    this.products.add(product);
+                }
             }
         }
     }
@@ -504,12 +512,14 @@ public class DataManager {
             Product product = this.getProduct(id);
 
             if (this.currentUserOwnsStore(currentUser, this.getStore(product.getId()))) {
-                product.setName(name);
-                product.setDescription(description);
-                product.setQuantity(quantity);
-                try {
-                    product.setPrice(price);
-                } catch (Exception e) {}
+                synchronized (gatekeeper) {
+                    product.setName(name);
+                    product.setDescription(description);
+                    product.setQuantity(quantity);
+                    try {
+                        product.setPrice(price);
+                    } catch (Exception e) {}
+                }
             }
         }
     }
@@ -525,7 +535,9 @@ public class DataManager {
 
             if (product != this.dummyProduct &&
                     this.currentUserOwnsStore(currentUser, this.getStore(product.getId()))) {
-                this.products.remove(product);
+                synchronized (gatekeeper) {
+                    this.products.remove(product);
+                }
             }
         }
     }
@@ -539,7 +551,9 @@ public class DataManager {
 
         for (int i = 0; i < this.stores.size(); i++) {
             if (this.currentUserOwnsStore(currentUser, this.stores.get(i))) {
-                results.add(this.stores.get(i));
+                synchronized (gatekeeper) {
+                    results.add(this.stores.get(i));
+                }
             }
         }
 
@@ -606,7 +620,9 @@ public class DataManager {
             Store existingStore = this.getStore(store.getId());
 
             if (existingStore == this.dummyStore) {
-                this.stores.add(store);
+                synchronized (gatekeeper) {
+                    this.stores.add(store);
+                }
             }
         }
     }
@@ -622,7 +638,9 @@ public class DataManager {
 
             if (existingStore != this.dummyStore && 
             this.currentUserOwnsStore(currentUser, existingStore)) {
-                this.stores.remove(existingStore);
+                synchronized (gatekeeper) {
+                    this.stores.remove(existingStore);
+                }
             }
         }
     }
@@ -677,12 +695,14 @@ public class DataManager {
     throws InvalidQuantityError {
         synchronized(gatekeeper) {
             if (product.checkQuantity(quantity)) {
-                product.purchase(quantity);
-                Transaction transaction = new Transaction(product.getId(), product.getStoreId(),
-                        currentUser.getEmail(), 
-                        this.getStore(product.getStoreId()).getSellerEmail(),
-                        quantity, product.getPrice());
-                this.transactions.add(transaction);
+                synchronized (gatekeeper) {
+                    product.purchase(quantity);
+                    Transaction transaction = new Transaction(product.getId(), product.getStoreId(),
+                            currentUser.getEmail(), 
+                            this.getStore(product.getStoreId()).getSellerEmail(),
+                            quantity, product.getPrice());
+                    this.transactions.add(transaction);
+                }
             } else {
                 throw new InvalidQuantityError("Invalid purchase quantity");
             }
