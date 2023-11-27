@@ -5,7 +5,6 @@ import java.net.Socket;
 public class Server {
     public static void main(String[] args) {
         try {
-            // Initialize your server socket here, e.g., ServerSocket serverSocket = new ServerSocket(port);
             int port = 12345;
 
             ServerSocket serverSocket = new ServerSocket(port);
