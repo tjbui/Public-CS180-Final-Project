@@ -14,7 +14,8 @@ public class tjmain {
         String filename = JOptionPane.showInputDialog(null, "What is the file name from which you would like to import products?",
                 "File Name", JOptionPane.QUESTION_MESSAGE);
         dataManager.loadProductsFromFile(filename);
-        System.out.println("Products loaded!");
+        JOptionPane.showMessageDialog(null, "Products loaded!", "Loaded message",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
