@@ -11,10 +11,10 @@ public class Server implements Runnable {
         try {
             // Initialize your server socket here, e.g., ServerSocket serverSocket = new ServerSocket(port);
             int port = 12345;
+
+            ServerSocket serverSocket = new ServerSocket(port);
+
             while (true) {
-
-
-                ServerSocket serverSocket = new ServerSocket(port);
                 Socket clientSocket = serverSocket.accept();
 
                 // Create a ServerThread for each client connection
@@ -22,10 +22,7 @@ public class Server implements Runnable {
                 serverThread.start();
             }
         } catch (IOException e) {
-            // Handle exceptions here, e.g., log the error
             e.printStackTrace();
-        } finally {
-            // Close resources (e.g., serverSocket) if needed
         }
     }
 }
