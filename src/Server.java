@@ -9,7 +9,6 @@ public class Server implements Runnable {
     @Override
     public void run() {
         try {
-            // Initialize your server socket here, e.g., ServerSocket serverSocket = new ServerSocket(port);
             int port = 12345;
 
             ServerSocket serverSocket = new ServerSocket(port);
@@ -17,7 +16,7 @@ public class Server implements Runnable {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
 
-                // Create a ServerThread for each client connection
+          
                 ServerThread serverThread = new ServerThread(clientSocket, Main3.dataManager);
                 serverThread.start();
             }
