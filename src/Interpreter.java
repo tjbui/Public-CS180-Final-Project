@@ -74,7 +74,6 @@ public class Interpreter {
 
     public boolean checkUserLogin(String email, String password) {
         this.pw.println("userLogin");
-
         this.pw.println(email);
         this.pw.println(password);
 
