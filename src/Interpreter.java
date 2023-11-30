@@ -80,6 +80,18 @@ public class Interpreter {
         return Boolean.parseBoolean(this.s.nextLine());
     }
 
+    public User getCurrentUser() {
+        this.pw.println("getCurrentUser");
+
+        User user = User.fromStringFormat(this.s.nextLine());
+
+        if (user.getEmail().equals("User not found")) {
+            return null;
+        } else {
+            return user;
+        }
+    }
+
     public void deleteCurrentUser() {
         this.pw.println("deleteCurrentUser");
     }
