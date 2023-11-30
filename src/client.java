@@ -1,150 +1,194 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.io.*;
 
-public class client extends JComponent implements Runnable {
+public class client {
+    static Interpreter interpreter;
 
-    private Image image; // the canvas
-    private int curX; // current mouse x coordinate
-    private int curY; // current mouse y coordinate
-    private int oldX; // previous mouse x coordinate
-    private int oldY; // previous mouse y coordinate
-
-    JButton loginButton;
-    JButton signInButton;
-    JButton signOutButton;
-
-    client client;
-
-    ActionListener actionListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-            if (e.getSource() == loginButton) {
+    /**
+     * The main method takes the hostname and port number, then initializes the static Interpreter with the new socket. Then it runs the initialize() method
+     *
+     */
+    public static void main(String[] args) throws InvalidQuantityError, InvalidPriceError {
+        String hostname = JOptionPane.showInputDialog(null, "What is the host name of the server you would like to connect to",
+                "Host Name", JOptionPane.QUESTION_MESSAGE);
+        int port = Integer.parseInt(JOptionPane.showInputDialog(null, "What is the port number of the server you would like to connect to",
+                "Host Name", JOptionPane.QUESTION_MESSAGE));
+        try {
+            Socket socket = new Socket(hostname, port);
+            interpreter = new Interpreter(socket);
+            JOptionPane.showMessageDialog(null, "Connection successful!", "successful message",
+                    JOptionPane.INFORMATION_MESSAGE);
+            initialize();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Invalid host", "Error message",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    /**
+     * ??? DOES IT NEED TO LOGOUT CURRENT USER ??? ~ commented out datamanger method since it doesn't exist.
+     * There is no logout method in Interpreter so I'm not sure
+     */
+    private static final String[] loginOptions = {"Log in", "Sign up", "Exit"};
+    public static void initialize() throws InvalidQuantityError, InvalidPriceError {
+        // DataManager.logoutCurrentUser();
+        String option = (String) JOptionPane.showInputDialog(null, "Choose option",
+                "Options", JOptionPane.QUESTION_MESSAGE, null, loginOptions,
+                loginOptions[0]);
+        switch (option) {
+            case "Log in":
                 login();
-            }
-
-            if (e.getSource() == signInButton) {
-                signIn();
-            }
-
-            if (e.getSource() == signOutButton) {
-                signOut();
-            }
-
+                break;
+            case "Sign up":
+                signup();
+                break;
+            case "Exit":
+                interpreter.save();
+                System.exit(0);
+                break;
+            default:
+                JOptionPane.showMessageDialog(null, "Invalid input", "Error message",
+                        JOptionPane.ERROR_MESSAGE);
+                initialize();
+                break;
         }
-    };
-
-    public String[] login() {
-
-        String email = JOptionPane.showInputDialog(null, "Enter Email: ",
-                "Login", JOptionPane.QUESTION_MESSAGE);
-        /*
-        if (true) {  //TODO when email exists, ask for password
-            String password = JOptionPane.showInputDialog(null, "Enter Password: ",
-                    "Login", JOptionPane.QUESTION_MESSAGE);
-        }
-        */
-
-        if ((email == null) || (email.length() == 0)) {
-            return null;
-        }
-
-        String password = JOptionPane.showInputDialog(null, "Enter Password: ",
-                "Login", JOptionPane.QUESTION_MESSAGE);
-
-        String[] loginInfo = new String[2];
-        loginInfo[0] = email;
-        loginInfo[1] = password;
-
-        return loginInfo;
-
     }
-
-    public String[] signIn() {
-
-        String email = JOptionPane.showInputDialog(null, "Enter Email: ",
-                "Sign In", JOptionPane.QUESTION_MESSAGE);
-
-        String password = JOptionPane.showInputDialog(null, "Enter Password: ",
-                "Sign In", JOptionPane.QUESTION_MESSAGE);
-
-        String[] signInInfo = new String[2];
-        signInInfo[0] = email;
-        signInInfo[1] = password;
-
-        return signInInfo;
-
-    }
-
-    public void signOut() {
-
-
-    }
-
-
-    public client() {
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                /* set oldX and oldY coordinates to beginning mouse press*/
-                oldX = e.getX();
-                oldY = e.getY();
-
+    /**
+     * LOGIN DOESN'T WORK:
+     *      - checkUserLogin() doesn't return anything ??? Tried debugging but not sure how the implementation works
+     */
+    private static final String[] tryAgainOptions = {"Try Again", "Back"};
+    public static void login() throws InvalidQuantityError, InvalidPriceError {
+        String email = JOptionPane.showInputDialog(null, "Enter email",
+                "Email", JOptionPane.QUESTION_MESSAGE);
+        String password = JOptionPane.showInputDialog(null, "Enter password",
+                "Password", JOptionPane.QUESTION_MESSAGE);
+        //System.out.println(interpreter.checkUserLogin(email, password));
+        if (interpreter.checkUserLogin(email, password)) {
+            //System.out.println("test");
+            interpreter.editCurrentUser(email, password);
+            JOptionPane.showMessageDialog(null, "Login successful!", "successful message",
+                    JOptionPane.INFORMATION_MESSAGE);
+            if (interpreter.getUser(email) instanceof Seller) {
+                //seller();
+            } else {
+                //customer();
             }
-        });
-
-        addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                /* set current coordinates to where mouse is being dragged*/
-                curX = e.getX();
-                curY = e.getY();
-
-                /* draw the line between old coordinates and new ones */
-
-                /* refresh frame and reset old coordinates */
-                repaint();
-                oldX = curX;
-                oldY = curY;
-
+        } else {
+            //System.out.println("test 2");
+            boolean running = true;
+            while (running) {
+                JOptionPane.showMessageDialog(null, "Wrong email or password", "Wrong login message",
+                        JOptionPane.ERROR_MESSAGE);
+                String option = (String) JOptionPane.showInputDialog(null, "Choose option",
+                        "Options", JOptionPane.QUESTION_MESSAGE, null, tryAgainOptions,
+                        tryAgainOptions[0]);
+                switch (option) {
+                    case "Try Again":
+                        running = false;
+                        login();
+                        break;
+                    case "Back":
+                        running = false;
+                        initialize();
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(null, "Invalid input", "Error message",
+                                JOptionPane.ERROR_MESSAGE);
+                        break;
+                }
             }
-        });
+        }
     }
 
+    /**
+     * Problem with interpreter.getUser(email): does not return anything
+     */
+    private static final String[] accountCreateOptions = {"Seller", "Customer", "Back"};
+    public static void signup() throws InvalidQuantityError, InvalidPriceError {
+        String email = JOptionPane.showInputDialog(null, "Enter a new email",
+                "Email", JOptionPane.QUESTION_MESSAGE);
+        String password = JOptionPane.showInputDialog(null, "Create a password",
+                "Password", JOptionPane.QUESTION_MESSAGE);
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new client());
+        System.out.println(interpreter.getUser(email)); // doesn't return anything. it just keeps running infinitely. need to debug getUser() ????
+
+        if (interpreter.getUser(email).getEmail().equals("User not found")) {
+            String option = (String) JOptionPane.showInputDialog(null, "Choose option",
+                    "Options", JOptionPane.QUESTION_MESSAGE, null, accountCreateOptions,
+            @@ -132,7 +139,7 @@ public static void signup() throws InvalidQuantityError, InvalidPriceError {
+                interpreter.editCurrentUser(email, password); // supposed to be setCurrentUser() but there is no method
+                JOptionPane.showMessageDialog(null, "Customer account created and logged in!", "successful message",
+                        JOptionPane.INFORMATION_MESSAGE);
+                //customer();
+                customer();
+                break;
+                case "Back":
+                    JOptionPane.showMessageDialog(null, "Account not created as seller or customer was not selected", "Error message",
+                            JOptionPane.ERROR_MESSAGE);
+                    initialize();
+                default:
+                    JOptionPane.showMessageDialog(null, "Invalid input", "Error message",
+                            JOptionPane.ERROR_MESSAGE);
+                    signup();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Email already exists. Try again", "Email exists message",
+                    JOptionPane.ERROR_MESSAGE);
+            signup();
+        }
     }
 
-    public void run() {
-        /* set up JFrame */
-        JFrame frame = new JFrame("Project 5");
-        Container content = frame.getContentPane();
-        content.setLayout(new BorderLayout());
-        client = new client();
-        content.add(client, BorderLayout.CENTER);
+    /**
+     * Not tested
+     */
+    private static final String[] customerOptions = {"Go to cart", "Search products", "See purchase history", "Log out", "Export transaction history"};
+    public static void customer() throws InvalidQuantityError, InvalidPriceError {
+        String option = (String) JOptionPane.showInputDialog(null, "Choose option",
+                "Options", JOptionPane.QUESTION_MESSAGE, null, customerOptions,
+                customerOptions[0]);
+        switch (option) {
+            case "Go to cart":
+                //seeCart();
+                customer();
+                break;
+            case "Search products":
+                //search();
+                //putInCart();
+                customer();
+                break;
+            case "See purchase history":
+                //seeCustomerPurchaseHistory();
+                customer();
+                break;
+            case "Log out":
+                interpreter.save();
+                initialize();
+                break;
+            case "Export transaction history":
+                String filename = JOptionPane.showInputDialog(null, "Enter the name of the file to which to export:",
+                        "File", JOptionPane.QUESTION_MESSAGE);
+                try {
+                    PrintWriter pw = new PrintWriter(new File(filename));
 
+                    ArrayList<Transaction> transactions = interpreter.getPurchaseHistory();
 
-        frame.setSize(600, 400);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+                    for (int i = 0; i < transactions.size(); i++) {
+                        pw.println(transactions.get(i).toString());
+                    }
 
-        loginButton = new JButton("Login");
-        signInButton = new JButton("Sign In");
-        signOutButton = new JButton("Sign Out");
-
-        JPanel loginPanel = new JPanel();;
-        loginPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        loginPanel.add(loginButton);
-        loginButton.addActionListener(actionListener);
-        loginPanel.add(signInButton);
-        signInButton.addActionListener(actionListener);
-        loginPanel.add(signOutButton);
-        signOutButton.addActionListener(actionListener);
-
-        content.add(loginPanel, BorderLayout.NORTH);
+                    pw.close();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error occured during export", "Export error message",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            default:
+                JOptionPane.showMessageDialog(null, "Invalid input", "Invalid input error message",
+                        JOptionPane.ERROR_MESSAGE);
+                customer();
+                break;
+        }
     }
-
 }
