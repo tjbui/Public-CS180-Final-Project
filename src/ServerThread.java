@@ -75,6 +75,8 @@ public class ServerThread extends Thread {
                 }
 
                 this.pw.println(success);
+            } else if (command.equals("getCurrentUser")) {
+                this.pw.println(this.currentUser.toStringFormat());
             } else if (command.equals("deleteCurrentUser")) {
                 this.dm.deleteCurrentUser(this.currentUser);
 
