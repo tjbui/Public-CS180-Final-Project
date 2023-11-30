@@ -32,12 +32,11 @@ public class ServerThread extends Thread {
         return this.running;
     }
     
+    @Override
     public void run() {
-        String command = "";
+        String command = this.s.nextLine();
 
         do {
-            command = this.s.nextLine();
-
             if (command.equals("save")) {
                 this.dm.saveToFile();
             } else if (command.equals("loadProducts")) {
@@ -245,7 +244,12 @@ public class ServerThread extends Thread {
                 }
 
                 this.pw.println("END");
+            } else if (command.equals("quit")) {
+                break;
             }
+
+            this.pw.flush();
+            command = this.s.nextLine();
         } while (!command.equals("quit"));
 
         System.out.println("Closing connection...");

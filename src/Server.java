@@ -5,7 +5,7 @@ import java.net.Socket;
 public class Server {
     public static void main(String[] args) {
         try {
-            int port = 12345;
+            int port = 4242;
 
             ServerSocket serverSocket = new ServerSocket(port);
             DataManager dm = new DataManager();

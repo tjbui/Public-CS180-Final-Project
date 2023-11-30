@@ -22,6 +22,7 @@ public class Interpreter {
 
     public void close() {
         this.pw.println("quit");
+        this.pw.flush();
 
         try {
             this.socket.close();
@@ -32,44 +33,59 @@ public class Interpreter {
 
     public void save() {
         this.pw.println("save");
+        this.pw.flush();
     }
 
     public void loadProducts(String filename) {
         this.pw.println("loadProducts");
 
         this.pw.println(filename);
+
+        this.pw.flush();
     }
 
     public void exportPurchases(String filename) {
         this.pw.println("exportPurchases");
 
         this.pw.println(filename);
+
+        this.pw.flush();
     }
 
     public void exportProducts(String filename) {
         this.pw.println("exportProducts");
 
         this.pw.println(filename);
+
+        this.pw.flush();
     }
 
     public int getCurrentStoreId() {
         this.pw.println("getCurrentStoreId");
+
+        this.pw.flush();
 
         return Integer.parseInt(this.s.nextLine());
     }
 
     public void incrementCurrentStoreId() {
         this.pw.println("incrementCurrentStoreId");
+
+        this.pw.flush();
     }
 
     public void logout() {
         this.pw.println("logout");
+
+        this.pw.flush();
     }
 
     public User getUser(String email) {
         this.pw.println("getUser");
 
         this.pw.println(email);
+
+        this.pw.flush();
 
         User user = User.fromStringFormat(this.s.nextLine());
 
@@ -81,11 +97,15 @@ public class Interpreter {
         this.pw.println(email);
         this.pw.println(password);
 
+        this.pw.flush();
+
         return Boolean.parseBoolean(this.s.nextLine());
     }
 
     public User getCurrentUser() {
         this.pw.println("getCurrentUser");
+
+        this.pw.flush();
 
         String line = this.s.nextLine();
 
@@ -98,12 +118,16 @@ public class Interpreter {
 
     public void deleteCurrentUser() {
         this.pw.println("deleteCurrentUser");
+
+        this.pw.flush();
     }
 
     public void addUser(User user) {
         this.pw.println("addUser");
 
         this.pw.println(user.toStringFormat());
+
+        this.pw.flush();
     }
 
     public void editCurrentUser(String email, String password) {
@@ -111,6 +135,8 @@ public class Interpreter {
 
         this.pw.println(email);
         this.pw.println(password);
+
+        this.pw.flush();
     }
 
     public ArrayList<Product> getProductList(int by, int sort) {
@@ -120,6 +146,8 @@ public class Interpreter {
 
         this.pw.println(by);
         this.pw.println(sort);
+
+        this.pw.flush();
 
         String line = this.s.nextLine();
 
@@ -141,6 +169,8 @@ public class Interpreter {
 
         this.pw.println(id);
 
+        this.pw.flush();
+
         try {
             return Product.fromStringFormat(this.s.nextLine());
         } catch (Exception e) {
@@ -152,6 +182,8 @@ public class Interpreter {
         this.pw.println("addProduct");
 
         this.pw.println(product.toStringFormat());
+
+        this.pw.flush();
     }
 
     public void editProduct(int id, String name, String description, int quantity, double price) {
@@ -162,16 +194,22 @@ public class Interpreter {
         this.pw.println(description);
         this.pw.println(quantity);
         this.pw.println(price);
+
+        this.pw.flush();
     }
 
     public void deleteProduct(int id) {
         this.pw.println("deleteProduct");
 
         this.pw.println(id);
+
+        this.pw.flush();
     }
 
     public ArrayList<Store> getOwnedStores() {
         this.pw.println("getOwnedStores");
+
+        this.pw.flush();
 
         ArrayList<Store> stores = new ArrayList<Store>();
 
@@ -193,6 +231,8 @@ public class Interpreter {
 
         this.pw.println(store.toStringFormat());
 
+        this.pw.flush();
+
         return Boolean.parseBoolean(this.s.nextLine());
     }
 
@@ -200,6 +240,8 @@ public class Interpreter {
         this.pw.println("getStoreProducts");
 
         this.pw.println(store.toStringFormat());
+
+        this.pw.flush();
 
         ArrayList<Product> products = new ArrayList<Product>();
 
@@ -223,6 +265,8 @@ public class Interpreter {
 
         this.pw.println(id);
 
+        this.pw.flush();
+
         return Store.fromStringFormat(this.s.nextLine());
     }
 
@@ -230,12 +274,16 @@ public class Interpreter {
         this.pw.println("addStore");
 
         this.pw.println(store.toStringFormat());
+
+        this.pw.flush();
     }
 
     public void deleteStore(int id) {
         this.pw.println("deleteStore");
 
         this.pw.println(id);
+
+        this.pw.flush();
     }
 
     public void editStore(int id, String name) {
@@ -243,12 +291,16 @@ public class Interpreter {
 
         this.pw.println(id);
         this.pw.println(name);
+
+        this.pw.flush();
     }
 
     public ArrayList<Product> search(String term) {
         this.pw.println("search");
 
         this.pw.println(term);
+
+        this.pw.flush();
 
         ArrayList<Product> results = new ArrayList<Product>();
 
@@ -273,6 +325,8 @@ public class Interpreter {
         this.pw.println(product.toStringFormat());
         this.pw.println(quantity);
 
+        this.pw.flush();
+
         String result = this.s.nextLine();
 
         if (result.equals("SUCCESS")) {
@@ -284,6 +338,8 @@ public class Interpreter {
 
     public ArrayList<Transaction> getPurchaseHistory() {
         this.pw.println("getPurchaseHistory");
+
+        this.pw.flush();
 
         ArrayList<Transaction> data = new ArrayList<Transaction>();
 
@@ -305,6 +361,8 @@ public class Interpreter {
 
         this.pw.println(store.toStringFormat());
 
+        this.pw.flush();
+
         ArrayList<String[]> data = new ArrayList<String[]>();
 
         String line = this.s.nextLine();
@@ -320,6 +378,8 @@ public class Interpreter {
 
     public ArrayList<String[]> getSellerShoppingCartView() {
         this.pw.println("getSellerShoppingCartView");
+
+        this.pw.flush();
 
         ArrayList<String[]> data = new ArrayList<String[]>();
 
