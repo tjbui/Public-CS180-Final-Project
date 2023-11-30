@@ -62,6 +62,10 @@ public class Interpreter {
         this.pw.println("incrementCurrentStoreId");
     }
 
+    public void logout() {
+        this.pw.println("logout");
+    }
+
     public User getUser(String email) {
         this.pw.println("getUser");
 
@@ -83,12 +87,12 @@ public class Interpreter {
     public User getCurrentUser() {
         this.pw.println("getCurrentUser");
 
-        User user = User.fromStringFormat(this.s.nextLine());
+        String line = this.s.nextLine();
 
-        if (user.getEmail().equals("User not found")) {
+        if (line.equals("NONE")) {
             return null;
         } else {
-            return user;
+            return User.fromStringFormat(line);
         }
     }
 
