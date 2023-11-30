@@ -118,13 +118,28 @@ public class client {
         if (interpreter.getUser(email).getEmail().equals("User not found")) {
             String option = (String) JOptionPane.showInputDialog(null, "Choose option",
                     "Options", JOptionPane.QUESTION_MESSAGE, null, accountCreateOptions,
-            @@ -132,7 +139,7 @@ public static void signup() throws InvalidQuantityError, InvalidPriceError {
-                interpreter.editCurrentUser(email, password); // supposed to be setCurrentUser() but there is no method
-                JOptionPane.showMessageDialog(null, "Customer account created and logged in!", "successful message",
-                        JOptionPane.INFORMATION_MESSAGE);
-                //customer();
-                customer();
-                break;
+                    accountCreateOptions[0]);
+            switch (option) {
+                case "Seller":
+                    ArrayList<Integer> storeIds = new ArrayList<>();
+                    Seller seller = new Seller(email, password, storeIds);
+                    interpreter.addUser(seller);
+                    interpreter.editCurrentUser(email, password); // supposed to be setCurrentUser() but there is no method
+                    JOptionPane.showMessageDialog(null, "Seller account created and logged in!", "successful message",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    //seller();
+                    break;
+                case "Customer":
+                    ArrayList<Integer> ids = new ArrayList<>();
+                    ArrayList<Integer> quantities = new ArrayList<>();
+                    Customer customer = new Customer(email, password, ids, quantities);
+                    interpreter.addUser(customer);
+                    interpreter.editCurrentUser(email, password); // supposed to be setCurrentUser() but there is no method
+                    JOptionPane.showMessageDialog(null, "Customer account created and logged in!", "successful message",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    //customer();
+                    customer();
+                    break;
                 case "Back":
                     JOptionPane.showMessageDialog(null, "Account not created as seller or customer was not selected", "Error message",
                             JOptionPane.ERROR_MESSAGE);
