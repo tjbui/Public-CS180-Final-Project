@@ -303,7 +303,7 @@ public class client {
      */
     private static final String[] searchOptions = {"Search by keywords", "Sort all products by Price","Sort all products by Quantities"};
     private static final String[] priceSortOptions = {"Search by ascending price", "Search by descending prices"};
-    private static final String[] quantitySortOptions = {"Search by keywords", "Sort all products by Price","Sort all products by Quantities"};
+    private static final String[] quantitySortOptions = {"Search by ascending price", "Search by descending prices"};
 
 
     public static void search() {
@@ -331,23 +331,23 @@ public class client {
                         "Options", JOptionPane.QUESTION_MESSAGE, null, priceSortOptions,
                         priceSortOptions[0]);
                 switch (sortPriceOption) {
-                    case 1:
-                        if (interpreter.getProductList().isEmpty()) {
+                    case "Search by ascending price":
+                        if (interpreter.getProductList(0,0).isEmpty()) { //Not sure about getProductList() arguments
                             JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
-                            for (int i = 0; i < interpreter.getProductList().size(); i++) {
+                            for (int i = 0; i < interpreter.getProductList(0,0).size(); i++) {
                                 System.out.println(interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_ASC).get(i).getName());
                             }
                         }
                         break;
-                    case 2:
-                        if (interpreter.getProductList().isEmpty()) {
+                    case "Search by descending prices":
+                        if (interpreter.getProductList(0,0).isEmpty()) {
                             JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
                             String mes = "";
-                            for (int i = 0; i < interpreter.getProductList().size(); i++) {
+                            for (int i = 0; i < interpreter.getProductList(0,0).size(); i++) {
                                 mes += (interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_DESC).get(i).getName()); // idk if this will work
                             }
                             JOptionPane.showMessageDialog(null, mes, "Search message",
@@ -367,26 +367,26 @@ public class client {
                         "Options", JOptionPane.QUESTION_MESSAGE, null, quantitySortOptions,
                         quantitySortOptions[0]);
                 switch (sortQuantityOption) {
-                    case 1:
-                        if (interpreter.getProductList().isEmpty()) {
+                    case "Search by ascending price":
+                        if (interpreter.getProductList(0,0).isEmpty()) {
                             JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
-                            String mes = ""
-                            for (int i = 0; i < interpreter.getProductList().size(); i++) {
+                            String mes = "";
+                            for (int i = 0; i < interpreter.getProductList(0,0).size(); i++) {
                                 mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_ASC).get(i).getName());
                             }
                             JOptionPane.showMessageDialog(null, mes, "Search message",
                                     JOptionPane.INFORMATION_MESSAGE);
                         }
                         break;
-                    case 2:
-                        if (interpreter.getProductList().isEmpty()) {
+                    case "Search by descending prices":
+                        if (interpreter.getProductList(0,0).isEmpty()) {
                             JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
                             String mes = "";
-                            for (int i = 0; i < interpreter.getProductList().size(); i++) {
+                            for (int i = 0; i < interpreter.getProductList(0,0).size(); i++) {
                                 mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_DESC).get(i).getName());
                             }
                             JOptionPane.showMessageDialog(null, mes, "Search message",
