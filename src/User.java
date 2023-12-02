@@ -48,8 +48,10 @@ public class User {
             return Customer.fromStringFormat(raw);
         } else {
             String[] parts = raw.split(",");
-
-            return new User(parts[0], parts[1]);
+            if (parts.length == 2) { // NECESSARY CAUSE IF NOT FOUND, raw will be "User not found," which will make parts length 1
+                return new User(parts[0], parts[1]);
+            }
+            return new User(parts[0],"password");
         }
     }
 }

@@ -56,8 +56,9 @@ public class client {
         }
     }
     /**
-     * LOGIN DOESN'T WORK:
-     *      - checkUserLogin() doesn't return anything ??? Tried debugging but not sure how the implementation works
+     *
+     * checkUserLogin() doesn't return anything ??? Tried debugging but not sure how the implementation works **RESOLVED**
+     * works**
      */
     private static final String[] tryAgainOptions = {"Try Again", "Back"};
     public static void login() throws InvalidQuantityError, InvalidPriceError {
@@ -65,9 +66,7 @@ public class client {
                 "Email", JOptionPane.QUESTION_MESSAGE);
         String password = JOptionPane.showInputDialog(null, "Enter password",
                 "Password", JOptionPane.QUESTION_MESSAGE);
-        //System.out.println(interpreter.checkUserLogin(email, password));
         if (interpreter.checkUserLogin(email, password)) {
-            //System.out.println("test");
             interpreter.editCurrentUser(email, password);
             JOptionPane.showMessageDialog(null, "Login successful!", "successful message",
                     JOptionPane.INFORMATION_MESSAGE);
@@ -77,7 +76,6 @@ public class client {
                 //customer();
             }
         } else {
-            //System.out.println("test 2");
             boolean running = true;
             while (running) {
                 JOptionPane.showMessageDialog(null, "Wrong email or password", "Wrong login message",
@@ -104,7 +102,7 @@ public class client {
     }
 
     /**
-     * Problem with interpreter.getUser(email): does not return anything
+     * Problem with interpreter.getUser(email): does not return anything **RESOLVED**
      */
     private static final String[] accountCreateOptions = {"Seller", "Customer", "Back"};
     public static void signup() throws InvalidQuantityError, InvalidPriceError {
@@ -113,7 +111,7 @@ public class client {
         String password = JOptionPane.showInputDialog(null, "Create a password",
                 "Password", JOptionPane.QUESTION_MESSAGE);
 
-        System.out.println(interpreter.getUser(email)); // doesn't return anything. it just keeps running infinitely. need to debug getUser() ????
+        System.out.println(interpreter.getUser(email)); // doesn't return anything. it just keeps running infinitely. need to debug getUser() ???? **RESOLVED**
 
         if (interpreter.getUser(email).getEmail().equals("User not found")) {
             String option = (String) JOptionPane.showInputDialog(null, "Choose option",
@@ -141,8 +139,8 @@ public class client {
                     customer();
                     break;
                 case "Back":
-                    JOptionPane.showMessageDialog(null, "Account not created as seller or customer was not selected", "Error message",
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Account not created as seller or customer was not selected", "Back message",
+                            JOptionPane.INFORMATION_MESSAGE);
                     initialize();
                 default:
                     JOptionPane.showMessageDialog(null, "Invalid input", "Error message",
@@ -205,5 +203,219 @@ public class client {
                 customer();
                 break;
         }
+    }
+
+    /**
+     * Untested (needs other methods for testing)
+     * delete products to do, idk how to implement that ill figure it out
+     * @throws InvalidQuantityError
+     * @throws InvalidPriceError
+     */
+    private static final String[] cartOptions = {"Buy all", "Delete product from cart","Back to customer menu"};
+    public static void seeCart() throws InvalidQuantityError, InvalidPriceError {
+        if (interpreter.getCurrentUser() instanceof Customer) {
+            if (((Customer) interpreter.getCurrentUser()).getIds().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Cart is empty", "Empty cart message",
+                        JOptionPane.INFORMATION_MESSAGE);
+                customer();
+            } else {
+                JOptionPane.showMessageDialog(null, "Items in cart - (quantities): ", "Cart message",
+                        JOptionPane.INFORMATION_MESSAGE);
+                for (int i = 0; i < ((Customer) interpreter.getCurrentUser()).getIds().size(); i++) {
+                    JOptionPane.showMessageDialog(null, interpreter.getProduct(((Customer) interpreter.getCurrentUser()).getIds().get(i)).getName() + " "
+                                    + "- (" + ((Customer) interpreter.getCurrentUser()).getQuantities().get(i) + ")", "Cart message",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    // ****** TESTING NEEDED ******
+                }
+                boolean running;
+                do {//fix
+                    String option = (String) JOptionPane.showInputDialog(null, "Choose option",
+                            "Options", JOptionPane.QUESTION_MESSAGE, null, cartOptions,
+                            cartOptions[0]);
+                    switch (option) {
+                        case "Buy all":
+                            running = false;
+                            for (int i = 0; i < ((Customer) interpreter.getCurrentUser()).getIds().size(); i++) {
+                                try {
+                                    interpreter.makePurchase(interpreter.getProduct(((Customer) interpreter.getCurrentUser()).getIds().get(i)), (((Customer) interpreter.getCurrentUser()).getQuantities().get(i)));
+                                    String mes = interpreter.getProduct(((Customer) interpreter.getCurrentUser()).getIds().get(i)).getName() + " purchase complete!";
+                                    JOptionPane.showMessageDialog(null, mes, "Cart message",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                                } catch (InvalidQuantityError e) {
+                                    String mes = ("Quantity is too high for " + interpreter.getProduct(((Customer) interpreter.getCurrentUser()).getIds().get(i))
+                                            + "\n This product cannot be purchased");
+                                    JOptionPane.showMessageDialog(null, mes, "Quantity too high message",
+                                            JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+                            break;
+                            //TODO
+//                        case "Delete product from cart":
+//                            running = false;
+//                            boolean running2 = true;
+//                            while (running2) {
+//                                System.out.println("Which product will you like to delete from cart?");
+//                                int numberInCart = 0;
+//                                for (int i = 0; i < ((Customer) dataManager.getCurrentUser()).getIds().size(); i++) {
+//                                    numberInCart++;
+//                                    System.out.println("[" + (i + 1) + "] " + dataManager.getProduct(((Customer)
+//                                            dataManager.getCurrentUser()).getIds().get(i)).toStringFormat());
+//                                }
+//                                int option = 0;
+//                                try {
+//                                    option = Integer.parseInt(scan()) - 1;
+//                                } catch (NumberFormatException e) {
+//                                    System.out.println("Error please input a valid number");
+//                                    continue;
+//                                }
+//                                System.out.println( "numincart" + numberInCart);
+//                                System.out.println( "pop" + option);
+//
+//                                if (option < numberInCart && option >= 0) {
+//                                    ((Customer) dataManager.getCurrentUser()).removeProduct(option);
+//                                    running2 = false;
+//                                } else {
+//                                    System.out.println("Error please input a valid number");
+//                                }
+//                            }
+//                            break;
+                        case "Back to customer menu":
+                            running = false;
+                            customer();
+                            break;
+                        default:
+                            JOptionPane.showMessageDialog(null, "Invalid input", "Error message",
+                                    JOptionPane.ERROR_MESSAGE);
+                            running = true;
+                            break;
+                    }
+                } while (running);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "error current user is not a customer. Sorry error has occurred please re-login",
+                    "Error message", JOptionPane.ERROR_MESSAGE);
+            initialize();
+        }
+    }
+
+    /**
+     * not tested
+     */
+    private static final String[] searchOptions = {"Search by keywords", "Sort all products by Price","Sort all products by Quantities"};
+    private static final String[] priceSortOptions = {"Search by ascending price", "Search by descending prices"};
+    private static final String[] quantitySortOptions = {"Search by keywords", "Sort all products by Price","Sort all products by Quantities"};
+
+
+    public static void search() {
+        String option = (String) JOptionPane.showInputDialog(null, "Choose option",
+                "Options", JOptionPane.QUESTION_MESSAGE, null, searchOptions,
+                searchOptions[0]);
+        switch (option) {
+            case "Search by keywords":
+                String search = JOptionPane.showInputDialog(null, "Input search word(s)",
+                        "Email", JOptionPane.QUESTION_MESSAGE);
+                if (interpreter.search(search).isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "No results from search", "Search message",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    String message = "Results:\n";
+                    for (int i = 0; i < interpreter.search(search).size(); i++) {
+                        message += interpreter.search(search).get(i).getName() + "\n";
+                    }
+                    JOptionPane.showMessageDialog(null, message, "Search message",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+                break;
+            case "Sort all products by Price":
+                String sortPriceOption = (String) JOptionPane.showInputDialog(null, "Choose option",
+                        "Options", JOptionPane.QUESTION_MESSAGE, null, priceSortOptions,
+                        priceSortOptions[0]);
+                switch (sortPriceOption) {
+                    case 1:
+                        if (interpreter.getProductList().isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            for (int i = 0; i < interpreter.getProductList().size(); i++) {
+                                System.out.println(interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_ASC).get(i).getName());
+                            }
+                        }
+                        break;
+                    case 2:
+                        if (interpreter.getProductList().isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            String mes = "";
+                            for (int i = 0; i < interpreter.getProductList().size(); i++) {
+                                mes += (interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_DESC).get(i).getName()); // idk if this will work
+                            }
+                            JOptionPane.showMessageDialog(null, mes, "Search message",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(null, "Invalid input",
+                                "Invalid input error message", JOptionPane.ERROR_MESSAGE);
+                        search();
+                        break;
+                }
+                break;
+
+            case "Sort all products by Quantities":
+                String sortQuantityOption = (String) JOptionPane.showInputDialog(null, "Choose option",
+                        "Options", JOptionPane.QUESTION_MESSAGE, null, quantitySortOptions,
+                        quantitySortOptions[0]);
+                switch (sortQuantityOption) {
+                    case 1:
+                        if (interpreter.getProductList().isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            String mes = ""
+                            for (int i = 0; i < interpreter.getProductList().size(); i++) {
+                                mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_ASC).get(i).getName());
+                            }
+                            JOptionPane.showMessageDialog(null, mes, "Search message",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        break;
+                    case 2:
+                        if (interpreter.getProductList().isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            String mes = "";
+                            for (int i = 0; i < interpreter.getProductList().size(); i++) {
+                                mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_DESC).get(i).getName());
+                            }
+                            JOptionPane.showMessageDialog(null, mes, "Search message",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(null, "Invalid input",
+                                "Error message", JOptionPane.ERROR_MESSAGE);
+                        search();
+                        break;
+                }
+                break;
+            default:
+                JOptionPane.showMessageDialog(null, "Invalid input",
+                        "Error message", JOptionPane.ERROR_MESSAGE);
+                search();
+                break;
+        }
+    }
+
+    /**
+     * Not tested
+     */
+    public static void getProductsFromFile() {
+        String fileName = JOptionPane.showInputDialog(null, "What is the file name from which you would like to import products?",
+                "File name", JOptionPane.QUESTION_MESSAGE);
+        interpreter.loadProducts(fileName);
+        JOptionPane.showMessageDialog(null, "Products loaded!", "Products loaded message",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 }

@@ -319,7 +319,7 @@ public class Interpreter {
         return results;
     }
 
-    public boolean makePurchase(Product product, int quantity) {
+    public boolean makePurchase(Product product, int quantity) throws InvalidQuantityError { //THROWS INVALID QUANTITY ERROR
         this.pw.println("makePurchase");
 
         this.pw.println(product.toStringFormat());
