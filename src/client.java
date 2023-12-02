@@ -164,11 +164,11 @@ public class client {
                 customerOptions[0]);
         switch (option) {
             case "Go to cart":
-                //seeCart();
+                seeCart();
                 customer();
                 break;
             case "Search products":
-                //search();
+                search();
                 //putInCart();
                 customer();
                 break;
@@ -213,7 +213,7 @@ public class client {
      */
     private static final String[] cartOptions = {"Buy all", "Delete product from cart","Back to customer menu"};
     public static void seeCart() throws InvalidQuantityError, InvalidPriceError {
-        if (interpreter.getCurrentUser() instanceof Customer) {
+        if (interpreter.getCurrentUser() instanceof Customer) { //doesn't work for some reason so it always thinks not costumer ??
             if (((Customer) interpreter.getCurrentUser()).getIds().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Cart is empty", "Empty cart message",
                         JOptionPane.INFORMATION_MESSAGE);
