@@ -411,6 +411,23 @@ public class client {
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
+    public static void seeCustomerPurchaseHistory() {
+        String purchaseHistory = "";
+
+        if (interpreter.getPurchaseHistory().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "You have no past transactions", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } else {
+            for (int i = 0; i < interpreter.getPurchaseHistory().size(); i++) {
+                purchaseHistory += interpreter.getPurchaseHistory().get(i).toString();
+                purchaseHistory += "\n";
+            }
+            JOptionPane.showMessageDialog(null, purchaseHistory,"Purchase History",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        }
+    }
+
 
 
 
@@ -432,7 +449,7 @@ public class client {
 
             switch (option) {
                 case "Stores Options":
-                    //storeOptions();
+                    storeOptions();
                     seller();
                     running = false;
                     break;
@@ -443,10 +460,10 @@ public class client {
                             viewDataOptions[0]);
                     switch (viewDataOption) {
                         case "View popular product data":
-                            //productData();
+                            productData();
                             break;
                         case "View Store Sales":
-                            //storeSalesData();
+                            storeSalesData();
                             break;
                     }
                     seller();
@@ -455,7 +472,7 @@ public class client {
 
 
                 case "Import products from a File":
-                    //getProductsFromFile();
+                    getProductsFromFile();
                     seller();
                     break;
 
@@ -650,6 +667,7 @@ public class client {
 
                 int indexOfProduct = Arrays.binarySearch(productList, deleteProductOption);
 
+                int editProductID = interpreter.getStoreProducts(currentStore).get(indexOfProduct).getId();
 
                 String newProductName = JOptionPane.showInputDialog(null, "Provide new NAME for the product",
                         "Edit Product", JOptionPane.QUESTION_MESSAGE);
