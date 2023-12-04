@@ -35,7 +35,7 @@ public class client {
     private static final String[] loginOptions = {"Log in", "Sign up", "Exit"};
     private static final String[] sellerOptions = {"Stores Options", "View Data", "Import products from a File", "Export products to file", "Log Out"};
     public static void initialize() throws InvalidQuantityError, InvalidPriceError {
-        // DataManager.logoutCurrentUser();
+        interpreter.logout();
         String option = (String) JOptionPane.showInputDialog(null, "Choose option",
                 "Options", JOptionPane.QUESTION_MESSAGE, null, loginOptions,
                 loginOptions[0]);
@@ -73,9 +73,9 @@ public class client {
             JOptionPane.showMessageDialog(null, "Login successful!", "successful message",
                     JOptionPane.INFORMATION_MESSAGE);
             if (interpreter.getUser(email) instanceof Seller) {
-                //seller();
+                seller();
             } else {
-                //customer();
+                customer();
             }
         } else {
             boolean running = true;
@@ -127,7 +127,7 @@ public class client {
                     interpreter.checkUserLogin(email, password); // supposed to be setCurrentUser() but there is no method **RESOLVED**
                     JOptionPane.showMessageDialog(null, "Seller account created and logged in!", "successful message",
                             JOptionPane.INFORMATION_MESSAGE);
-                    //seller();
+                    seller();
                     break;
                 case "Customer":
                     ArrayList<Integer> ids = new ArrayList<>();
@@ -170,11 +170,11 @@ public class client {
                 break;
             case "Search products":
                 search();
-                //putInCart();
+                putInCart();
                 customer();
                 break;
             case "See purchase history":
-                //seeCustomerPurchaseHistory();
+                seeCustomerPurchaseHistory();
                 customer();
                 break;
             case "Log out":
