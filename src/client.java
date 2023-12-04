@@ -67,7 +67,7 @@ public class client {
         String password = JOptionPane.showInputDialog(null, "Enter password",
                 "Password", JOptionPane.QUESTION_MESSAGE);
         if (interpreter.checkUserLogin(email, password)) {
-            interpreter.editCurrentUser(email, password);
+            interpreter.checkUserLogin(email, password);
             JOptionPane.showMessageDialog(null, "Login successful!", "successful message",
                     JOptionPane.INFORMATION_MESSAGE);
             if (interpreter.getUser(email) instanceof Seller) {
@@ -122,7 +122,7 @@ public class client {
                     ArrayList<Integer> storeIds = new ArrayList<>();
                     Seller seller = new Seller(email, password, storeIds);
                     interpreter.addUser(seller);
-                    interpreter.editCurrentUser(email, password); // supposed to be setCurrentUser() but there is no method
+                    interpreter.checkUserLogin(email, password); // supposed to be setCurrentUser() but there is no method **RESOLVED**
                     JOptionPane.showMessageDialog(null, "Seller account created and logged in!", "successful message",
                             JOptionPane.INFORMATION_MESSAGE);
                     //seller();
@@ -132,10 +132,9 @@ public class client {
                     ArrayList<Integer> quantities = new ArrayList<>();
                     Customer customer = new Customer(email, password, ids, quantities);
                     interpreter.addUser(customer);
-                    interpreter.editCurrentUser(email, password); // supposed to be setCurrentUser() but there is no method
+                    interpreter.checkUserLogin(email, password); // supposed to be setCurrentUser() but there is no method **RESOLVED**
                     JOptionPane.showMessageDialog(null, "Customer account created and logged in!", "successful message",
                             JOptionPane.INFORMATION_MESSAGE);
-                    //customer();
                     customer();
                     break;
                 case "Back":
@@ -249,36 +248,29 @@ public class client {
                                 }
                             }
                             break;
-                            //TODO
-//                        case "Delete product from cart":
-//                            running = false;
-//                            boolean running2 = true;
-//                            while (running2) {
-//                                System.out.println("Which product will you like to delete from cart?");
-//                                int numberInCart = 0;
-//                                for (int i = 0; i < ((Customer) dataManager.getCurrentUser()).getIds().size(); i++) {
-//                                    numberInCart++;
-//                                    System.out.println("[" + (i + 1) + "] " + dataManager.getProduct(((Customer)
-//                                            dataManager.getCurrentUser()).getIds().get(i)).toStringFormat());
-//                                }
-//                                int option = 0;
-//                                try {
-//                                    option = Integer.parseInt(scan()) - 1;
-//                                } catch (NumberFormatException e) {
-//                                    System.out.println("Error please input a valid number");
-//                                    continue;
-//                                }
-//                                System.out.println( "numincart" + numberInCart);
-//                                System.out.println( "pop" + option);
-//
-//                                if (option < numberInCart && option >= 0) {
-//                                    ((Customer) dataManager.getCurrentUser()).removeProduct(option);
-//                                    running2 = false;
-//                                } else {
-//                                    System.out.println("Error please input a valid number");
-//                                }
-//                            }
-//                            break;
+                            // NOT TESTED
+                        case "Delete product from cart":
+                            running = false;
+                            int numberInCart = 0;
+                            for (int i = 0; i < ((Customer) interpreter.getCurrentUser()).getIds().size(); i++) {
+                                numberInCart++;
+                            }
+                            String[] products = new String[numberInCart];
+                            for (int i = 0; i < ((Customer) interpreter.getCurrentUser()).getIds().size(); i++) {
+                                products[i] = interpreter.getProduct(((Customer)
+                                        interpreter.getCurrentUser()).getIds().get(i)).toStringFormat();
+                            }
+                            String product = (String) JOptionPane.showInputDialog(null, "Which product will you like to delete from cart?",
+                                    "Options", JOptionPane.QUESTION_MESSAGE, null, products,
+                                    products[0]);
+                            int indexOfProduct = 0;
+                            for (int i = 0; i < ((Customer) interpreter.getCurrentUser()).getIds().size(); i++) {
+                                if ((interpreter.getProduct(((Customer) interpreter.getCurrentUser()).getIds().get(i)).toStringFormat()).equals(product)) {
+                                    indexOfProduct = i;
+                                }
+                            }
+                            ((Customer) interpreter.getCurrentUser()).removeProduct(indexOfProduct);
+                            break;
                         case "Back to customer menu":
                             running = false;
                             customer();
@@ -304,8 +296,6 @@ public class client {
     private static final String[] searchOptions = {"Search by keywords", "Sort all products by Price","Sort all products by Quantities"};
     private static final String[] priceSortOptions = {"Search by ascending price", "Search by descending prices"};
     private static final String[] quantitySortOptions = {"Search by ascending price", "Search by descending prices"};
-
-
     public static void search() {
         String option = (String) JOptionPane.showInputDialog(null, "Choose option",
                 "Options", JOptionPane.QUESTION_MESSAGE, null, searchOptions,
