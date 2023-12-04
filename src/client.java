@@ -104,7 +104,7 @@ public class client {
     }
 
     /**
-     * Problem with interpreter.getUser(email): does not return anything **RESOLVED**
+     *
      */
     private static final String[] accountCreateOptions = {"Seller", "Customer", "Back"};
     public static void signup() throws InvalidQuantityError, InvalidPriceError {
@@ -112,10 +112,11 @@ public class client {
                 "Email", JOptionPane.QUESTION_MESSAGE);
         String password = JOptionPane.showInputDialog(null, "Create a password",
                 "Password", JOptionPane.QUESTION_MESSAGE);
-
-        System.out.println(interpreter.getUser(email)); // doesn't return anything. it just keeps running infinitely. need to debug getUser() ???? **RESOLVED**
-
-        if (interpreter.getUser(email).getEmail().equals("User not found")) {
+        if (email.isEmpty() || password.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Email or password is empty. Please try again", "Email empty message",
+                    JOptionPane.ERROR_MESSAGE);
+            signup();
+        } else if (interpreter.getUser(email).getEmail().equals("User not found")) {
             String option = (String) JOptionPane.showInputDialog(null, "Choose option",
                     "Options", JOptionPane.QUESTION_MESSAGE, null, accountCreateOptions,
                     accountCreateOptions[0]);
@@ -163,46 +164,51 @@ public class client {
         String option = (String) JOptionPane.showInputDialog(null, "Choose option",
                 "Options", JOptionPane.QUESTION_MESSAGE, null, customerOptions,
                 customerOptions[0]);
-        switch (option) {
-            case "Go to cart":
-                seeCart();
-                customer();
-                break;
-            case "Search products":
-                search();
-                putInCart();
-                customer();
-                break;
-            case "See purchase history":
-                seeCustomerPurchaseHistory();
-                customer();
-                break;
-            case "Log out":
-                interpreter.save();
-                initialize();
-                break;
-            case "Export transaction history":
-                String filename = JOptionPane.showInputDialog(null, "Enter the name of the file to which to export:",
-                        "File", JOptionPane.QUESTION_MESSAGE);
-                try {
-                    PrintWriter pw = new PrintWriter(new File(filename));
+        try { // Catches nullpointerexception and saves if user closes gui
+            switch (option) {
+                case "Go to cart":
+                    seeCart();
+                    customer();
+                    break;
+                case "Search products":
+                    search();
+                    putInCart();
+                    customer();
+                    break;
+                case "See purchase history":
+                    seeCustomerPurchaseHistory();
+                    customer();
+                    break;
+                case "Log out":
+                    interpreter.save();
+                    initialize();
+                    break;
+                case "Export transaction history":
+                    String filename = JOptionPane.showInputDialog(null, "Enter the name of the file to which to export:",
+                            "File", JOptionPane.QUESTION_MESSAGE);
+                    try {
+                        PrintWriter pw = new PrintWriter(new File(filename));
 
-                    ArrayList<Transaction> transactions = interpreter.getPurchaseHistory();
+                        ArrayList<Transaction> transactions = interpreter.getPurchaseHistory();
 
-                    for (int i = 0; i < transactions.size(); i++) {
-                        pw.println(transactions.get(i).toString());
+                        for (int i = 0; i < transactions.size(); i++) {
+                            pw.println(transactions.get(i).toString());
+                        }
+
+                        pw.close();
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Error occured during export", "Export error message",
+                                JOptionPane.ERROR_MESSAGE);
                     }
-
-                    pw.close();
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Error occured during export", "Export error message",
+                default:
+                    JOptionPane.showMessageDialog(null, "Invalid input", "Invalid input error message",
                             JOptionPane.ERROR_MESSAGE);
-                }
-            default:
-                JOptionPane.showMessageDialog(null, "Invalid input", "Invalid input error message",
-                        JOptionPane.ERROR_MESSAGE);
-                customer();
-                break;
+                    customer();
+                    break;
+            }
+        } catch (NullPointerException e) {
+            interpreter.save();
+            System.out.println("User closed GUI");
         }
     }
 
