@@ -3,6 +3,14 @@ import java.util.Scanner;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+/**
+ * The ServerThread is a Thread that gets started to handle the Server's interaction with 
+ * a single Client. It does so by receiving commands via the text input stream from a Socket
+ * and returning any return data as text on that Socket's output stream.
+ * 
+ * @author Seth Hartzler
+ * @version December 5, 2023
+ */
 public class ServerThread extends Thread {
     private Socket socket;
     private DataManager dm;
@@ -28,6 +36,9 @@ public class ServerThread extends Thread {
         this.running = true;
     }
 
+    /**
+     * @return Whether or not this thread is running (i.e., connection not closed)
+     */
     public boolean isRunning() {
         return this.running;
     }

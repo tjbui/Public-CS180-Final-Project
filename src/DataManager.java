@@ -234,6 +234,7 @@ public class DataManager {
     /**
      * Exports all transactions associated with the current user to a file at the given location.
      *
+     * @param currentUser
      * @param filename The file to which the transaction data will be written
      */
     public void exportPurchaseHistory(User currentUser, String filename) {
@@ -259,6 +260,7 @@ public class DataManager {
     /**
      * Exports product data in CSV form to a given file source.
      *
+     * @param currentUser
      * @param filename The file to which the product data will be written
      */
     public void exportProductData(User currentUser, String filename) {
@@ -282,7 +284,6 @@ public class DataManager {
     }
 
     /**
-     *
      * @return The ID that will be assigned to the next created Store object
      */
     public int getCurrentStoreId() {
@@ -369,6 +370,7 @@ public class DataManager {
     /**
      * If a User is logged in, sets the currentUser's email and password to the given parameters
      *
+     * @param currentUser
      * @param newEmail
      * @param newPassword
      */
@@ -527,6 +529,7 @@ public class DataManager {
     /**
      * Deletes a product. This is permitted only if the given product belongs to the current user.
      *
+     * @param currentUser
      * @param id The id of the product
      */
     public void deleteProduct(User currentUser, int id) {
@@ -543,6 +546,7 @@ public class DataManager {
     }
 
     /**
+     * @param currentUser
      * @return An ArrayList of Stores for which the Seller associated with each store is the current
      * user
      */
@@ -561,6 +565,7 @@ public class DataManager {
     }
 
     /**
+     * @param currentUser
      * @param store
      * @return true if the current user owns the given store, false otherwise
      */
@@ -630,6 +635,7 @@ public class DataManager {
     /**
      * Deletes the store with the given id. Permitted only if the current user owns the store.
      *
+     * @param currentUser
      * @param id
      */
     public void deleteStore(User currentUser, int id) {
@@ -646,7 +652,7 @@ public class DataManager {
     }
 
     /**
-     * Edits the store with the given id. Permitted only if the current user owns the store.
+     * Edits the store with the given id.
      *
      * @param id
      * @param name
@@ -686,6 +692,7 @@ public class DataManager {
     /**
      * Purchases a single item in the given quantity and creates a corresponding Transaction.
      *
+     * @param currentUser
      * @param product
      * @param quantity
      * @throws InvalidQuantityError Thrown if the quantity is negative or greater than the quantity
@@ -712,6 +719,7 @@ public class DataManager {
     /**
      * Gets the purchase history of the current user.
      *
+     * @param currentUser
      * @return A list of Transactions where the customer making the purchase equals the current user
      */
     public ArrayList<Transaction> getPurchaseHistory(User currentUser) {
@@ -736,6 +744,7 @@ public class DataManager {
      * the customer making the purchase, and the second represents the revenue made by that
      * transaction (formatted to two decimal places and prefixed with a dollar sign).
      *
+     * @param currentUser
      * @param store
      * @return An ArrayList of String arrays in the described format
      */
@@ -767,6 +776,7 @@ public class DataManager {
      * product name, the third containing the store name, and the fourth containing the quantity
      * of the product currently in the user's shopping cart.
      *
+     * @param currentUser
      * @return An ArrayList of String arrays in the specified format
      */
     public ArrayList<String[]> getSellerShoppingCartView(User currentUser) {
