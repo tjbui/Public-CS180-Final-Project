@@ -39,22 +39,26 @@ public class client {
         String option = (String) JOptionPane.showInputDialog(null, "Choose option",
                 "Options", JOptionPane.QUESTION_MESSAGE, null, loginOptions,
                 loginOptions[0]);
-        switch (option) {
-            case "Log in":
-                login();
-                break;
-            case "Sign up":
-                signup();
-                break;
-            case "Exit":
-                interpreter.save();
-                System.exit(0);
-                break;
-            default:
-                JOptionPane.showMessageDialog(null, "Invalid input", "Error message",
-                        JOptionPane.ERROR_MESSAGE);
-                initialize();
-                break;
+        try {
+            switch (option) {
+                case "Log in":
+                    login();
+                    break;
+                case "Sign up":
+                    signup();
+                    break;
+                case "Exit":
+                    interpreter.save();
+                    System.exit(0);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Invalid input", "Error message",
+                            JOptionPane.ERROR_MESSAGE);
+                    initialize();
+                    break;
+            }
+        } catch (NullPointerException e) {
+            System.out.println("User canceled");
         }
     }
     /**
@@ -214,7 +218,6 @@ public class client {
 
     /**
      * Untested (needs other methods for testing)
-     * delete products to do, idk how to implement that ill figure it out
      * @throws InvalidQuantityError
      * @throws InvalidPriceError
      */
@@ -433,91 +436,66 @@ public class client {
 
         }
     }
-
-
-
-
-
-
-
-
     public static void seller() throws InvalidQuantityError, InvalidPriceError {
         boolean running = true;
-        while (running) {
-            String option = (String) JOptionPane.showInputDialog(null, "Choose option",
-                    "Options", JOptionPane.QUESTION_MESSAGE, null, sellerOptions,
-                    sellerOptions[0]);
-
-
-
-
-
-
-            switch (option) {
-                case "Stores Options":
-                    storeOptions();
-                    seller();
-                    running = false;
-                    break;
-                case "View Data":
-                    String[] viewDataOptions = {"View popular product data", "View Store Sales"};
-                    String viewDataOption = (String) JOptionPane.showInputDialog(null, "Choose option",
-                            "Options", JOptionPane.QUESTION_MESSAGE, null, viewDataOptions,
-                            viewDataOptions[0]);
-                    switch (viewDataOption) {
-                        case "View popular product data":
-                            productData();
-                            break;
-                        case "View Store Sales":
-                            storeSalesData();
-                            break;
-                    }
-                    seller();
-                    running = false;
-                    break;
-
-
-                case "Import products from a File":
-                    getProductsFromFile();
-                    seller();
-                    break;
-
-
-                case "Export products to file":
-                    String filename = JOptionPane.showInputDialog(null, "Enter the name of the file to which to export",
-                            "File Name", JOptionPane.QUESTION_MESSAGE);
-
-
-                    try {
-                        PrintWriter pw = new PrintWriter(new File(filename));
-
-
-                        ArrayList<Product> products = interpreter.getProductList(0,0);
-
-
-                        for (int i = 0; i < products.size(); i++) {
-                            Product p = products.get(i);
-
-
-                            if (interpreter.getStore(p.getStoreId()).getSellerEmail().equals(interpreter.getCurrentUser().getEmail())) { //TODO
-                                pw.println(p.toStringFormat());
-                            }
+        try { // Try to catch nullpointerexception if user closes gui
+            while (running) {
+                String option = (String) JOptionPane.showInputDialog(null, "Choose option",
+                        "Options", JOptionPane.QUESTION_MESSAGE, null, sellerOptions,
+                        sellerOptions[0]);
+                switch (option) {
+                    case "Stores Options":
+                        storeOptions();
+                        seller();
+                        running = false;
+                        break;
+                    case "View Data":
+                        String[] viewDataOptions = {"View popular product data", "View Store Sales"};
+                        String viewDataOption = (String) JOptionPane.showInputDialog(null, "Choose option",
+                                "Options", JOptionPane.QUESTION_MESSAGE, null, viewDataOptions,
+                                viewDataOptions[0]);
+                        switch (viewDataOption) {
+                            case "View popular product data":
+                                productData();
+                                break;
+                            case "View Store Sales":
+                                storeSalesData();
+                                break;
                         }
-                    } catch (Exception e) {
-                        JOptionPane.showMessageDialog(null, "Export failed", "Error message", JOptionPane.ERROR_MESSAGE);
-                    }
+                        seller();
+                        running = false;
+                        break;
+                    case "Import products from a File":
+                        getProductsFromFile();
+                        seller();
+                        break;
+                    case "Export products to file":
+                        String filename = JOptionPane.showInputDialog(null, "Enter the name of the file to which to export",
+                                "File Name", JOptionPane.QUESTION_MESSAGE);
+                        try {
+                            PrintWriter pw = new PrintWriter(new File(filename));
+                            ArrayList<Product> products = interpreter.getProductList(0, 0);
+                            for (int i = 0; i < products.size(); i++) {
+                                Product p = products.get(i);
 
 
-                case "Log Out":
-                    running = false;
-                    interpreter.save();
-                    initialize();
-                    break;
-
-
+                                if (interpreter.getStore(p.getStoreId()).getSellerEmail().equals(interpreter.getCurrentUser().getEmail())) { //TODO
+                                    pw.println(p.toStringFormat());
+                                }
+                            }
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, "Export failed", "Error message", JOptionPane.ERROR_MESSAGE);
+                        }
+                    case "Log Out":
+                        running = false;
+                        interpreter.save();
+                        initialize();
+                        break;
+                }
             }
-
-
+        } catch (NullPointerException e) {
+            interpreter.save();
+            System.out.println("User closed GUI");
         }
     }
 
