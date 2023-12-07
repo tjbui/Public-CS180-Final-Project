@@ -622,14 +622,12 @@ public class DataManager {
      * @param store
      */
     public void addStore(Store store) {
-        synchronized(gatekeeper) {
-            Store existingStore = this.getStore(store.getId());
+        Store existingStore = this.getStore(store.getId());
 
             if (existingStore == this.dummyStore) {
                 synchronized (gatekeeper) {
                     this.stores.add(store);
                 }
-            }
         }
     }
 
@@ -640,14 +638,12 @@ public class DataManager {
      * @param id
      */
     public void deleteStore(User currentUser, int id) {
-        synchronized(gatekeeper) {
-            Store existingStore = this.getStore(id);
+        Store existingStore = this.getStore(id);
 
-            if (existingStore != this.dummyStore && 
-            this.currentUserOwnsStore(currentUser, existingStore)) {
-                synchronized (gatekeeper) {
-                    this.stores.remove(existingStore);
-                }
+        if (existingStore != this.dummyStore && 
+        this.currentUserOwnsStore(currentUser, existingStore)) {
+            synchronized (gatekeeper) {
+                this.stores.remove(existingStore);
             }
         }
     }
@@ -701,19 +697,17 @@ public class DataManager {
      */
     public void makePurchase(User currentUser, Product product, int quantity) 
     throws InvalidQuantityError {
-        synchronized(gatekeeper) {
-            if (product.checkQuantity(quantity)) {
-                synchronized (gatekeeper) {
-                    product.purchase(quantity);
-                    Transaction transaction = new Transaction(product.getId(), product.getStoreId(),
-                            currentUser.getEmail(), 
-                            this.getStore(product.getStoreId()).getSellerEmail(),
-                            quantity, product.getPrice());
-                    this.transactions.add(transaction);
-                }
-            } else {
-                throw new InvalidQuantityError("Invalid purchase quantity");
+        if (product.checkQuantity(quantity)) {
+            synchronized (gatekeeper) {
+                product.purchase(quantity);
+                Transaction transaction = new Transaction(product.getId(), product.getStoreId(),
+                        currentUser.getEmail(), 
+                        this.getStore(product.getStoreId()).getSellerEmail(),
+                        quantity, product.getPrice());
+                this.transactions.add(transaction);
             }
+        } else {
+            throw new InvalidQuantityError("Invalid purchase quantity");
         }
     }
 
