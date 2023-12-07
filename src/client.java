@@ -13,17 +13,20 @@ public class client {
      *
      */
     public static void main(String[] args) throws InvalidQuantityError, InvalidPriceError {
-        String hostname = JOptionPane.showInputDialog(null, "What is the host name of the server you would like to connect to",
-                "Host Name", JOptionPane.QUESTION_MESSAGE);
-        int port = Integer.parseInt(JOptionPane.showInputDialog(null, "What is the port number of the server you would like to connect to",
-                "Host Name", JOptionPane.QUESTION_MESSAGE));
         try {
+            String hostname = JOptionPane.showInputDialog(null, "What is the host name of the server you would like to connect to",
+                    "Host Name", JOptionPane.QUESTION_MESSAGE);
+            int port = Integer.parseInt(JOptionPane.showInputDialog(null, "What is the port number of the server you would like to connect to",
+                    "Host Name", JOptionPane.QUESTION_MESSAGE));
             Socket socket = new Socket(hostname, port);
             interpreter = new Interpreter(socket);
             JOptionPane.showMessageDialog(null, "Connection successful!", "successful message",
                     JOptionPane.INFORMATION_MESSAGE);
             initialize();
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Invalid host", "Error message",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Invalid host", "Error message",
                     JOptionPane.ERROR_MESSAGE);
         }
