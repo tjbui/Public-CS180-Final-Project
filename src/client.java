@@ -613,7 +613,10 @@ public class client {
                     JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
                 }
 
+                break;
+
             case "Delete product":
+                System.out.println(store.getProducts().size());
                 if (store.getProducts().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "No products in Store", "Error message", JOptionPane.ERROR_MESSAGE);
                     seller();
