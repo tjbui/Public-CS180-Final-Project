@@ -42,7 +42,7 @@ public class DataManager {
 
         try {
             this.dummyProduct = new Product("Product not found",
-                    "Product description not found", -1, 0, 0.0, -1);
+                    "Product description not found", -1, 1, 1.0, -1);
         } catch (Exception e) {
             System.out.println("File not found");
         }
