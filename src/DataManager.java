@@ -494,6 +494,7 @@ public class DataManager {
             if (this.getProduct(product.getId()) == this.dummyProduct) {
                 synchronized (gatekeeper) {
                     this.products.add(product);
+                    this.getStore(product.getStoreId()).getProducts().add(product.getId());
                 }
             }
         }
