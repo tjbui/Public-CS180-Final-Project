@@ -664,7 +664,7 @@ public class client {
                 for (int i = 0; i < currentStore.getProducts().size(); i++) {
                     productList[i] = (interpreter.getProduct(currentStore.getProducts().get(i)).getName());
                 }
-                String deleteProductOption = (String) JOptionPane.showInputDialog(null, "Which product would you like to delete?",
+                String deleteProductOption = (String) JOptionPane.showInputDialog(null, "Which product would you like to edit?",
                         "Options", JOptionPane.QUESTION_MESSAGE, null, productList,
                         productList[0]);
 
@@ -686,13 +686,15 @@ public class client {
                     try {
                         newProductQuantity = Integer.parseInt(newProductQuantityString);
 
-                        if (newProductQuantity < 0) {
-                            JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
+                        if (newProductQuantity >= 0) {
+                            break;
                         }
-                        break;
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
                     }
+
+                    newProductQuantityString = JOptionPane.showInputDialog(null, "Enter an integer greater than or equal to 0:",
+                        "Edit Store", JOptionPane.QUESTION_MESSAGE);
                 } while (true);
 
 
@@ -704,14 +706,15 @@ public class client {
                     try {
                         newProductPrice = Double.parseDouble(newProductPriceString);
 
-                        if (newProductPrice <= 0) {
-                            JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
-                            continue;
+                        if (newProductPrice > 0) {
+                            break;
                         }
-                        break;
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
                     }
+
+                    newProductPriceString = JOptionPane.showInputDialog(null, "Enter a decimal greater than 0:",
+                        "Edit Store", JOptionPane.QUESTION_MESSAGE);
                 } while (true);
 
                 try {
