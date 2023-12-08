@@ -605,7 +605,8 @@ public class client {
                         }
                     } while (true);
 
-                    Product product = new Product(productName, description, storeId, quantity, priceProduct);
+                    Product product = new Product(productName, description, storeId, quantity, priceProduct, interpreter.getCurrentProductId());
+                    interpreter.incrementCurrentProductId();
                     interpreter.addProduct(product);
                     JOptionPane.showMessageDialog(null, "Product added!", "successful message",
                             JOptionPane.INFORMATION_MESSAGE);

@@ -302,6 +302,24 @@ public class DataManager {
     }
 
     /**
+     * @return The ID that will be assigned to the next created Product object
+     */
+    public int getCurrentProductId() {
+        return this.currentProductId;
+    }
+
+    /**
+     * Increments the ID that will be assigned to the next created Store object. This function
+     * should always be called after creating a new Store object that uses the getCurrentStoreId()
+     * function.
+     */
+    public void incrementCurrentProductId() {
+        synchronized(gatekeeper) {
+            this.currentProductId++;
+        }
+    }
+
+    /**
      * Returns the user with the specified email, if the user exists.
      *
      * @param email
