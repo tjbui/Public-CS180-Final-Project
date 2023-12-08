@@ -586,10 +586,16 @@ public class client {
                     do {
                         try {
                             quantity = Integer.parseInt(quantityString);
-                            break;
+
+                            if (quantity >= 0) {
+                                break;
+                            }
                         } catch (Exception e) {
                             JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
                         }
+
+                        quantityString = JOptionPane.showInputDialog(null, "Enter an integer greater than or equal to 0:",
+                            "Edit Store", JOptionPane.QUESTION_MESSAGE);
                     } while (true);
 
                     String priceProductString = JOptionPane.showInputDialog(null, "Price of product",
@@ -599,10 +605,16 @@ public class client {
                     do {
                         try {
                             priceProduct = Double.parseDouble(priceProductString);
-                            break;
+
+                            if (priceProduct > 0.0) {
+                                break;
+                            }
                         } catch (Exception e) {
                             JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
                         }
+
+                        priceProductString = JOptionPane.showInputDialog(null, "Enter a decimal greater than 0:",
+                            "Edit Store", JOptionPane.QUESTION_MESSAGE);
                     } while (true);
 
                     Product product = new Product(productName, description, storeId, quantity, priceProduct, interpreter.getCurrentProductId());
