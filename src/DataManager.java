@@ -559,6 +559,7 @@ public class DataManager {
                     this.currentUserOwnsStore(currentUser, this.getStore(product.getId()))) {
                 synchronized (gatekeeper) {
                     this.products.remove(product);
+                    this.getStore(product.getStoreId()).getProducts().remove(product.getId());
                 }
             }
         }
