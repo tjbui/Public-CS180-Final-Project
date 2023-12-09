@@ -261,6 +261,11 @@ public class ServerThread extends Thread {
                 }
 
                 this.pw.println("END");
+            } else if (command.equals("addToCart")) {
+                int productId = Integer.parseInt(this.s.nextLine());
+                int quantity = Integer.parseInt(this.s.nextLine());
+
+                this.dm.addToCart(currentUser, productId, quantity);
             } else if (command.equals("quit")) {
                 break;
             }
