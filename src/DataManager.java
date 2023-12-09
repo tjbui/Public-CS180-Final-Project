@@ -607,18 +607,26 @@ public class DataManager {
     public ArrayList<Product> getStoreProducts(User currentUser, Store store) {
         if (currentUser != null && currentUser instanceof Seller &&
                 store.getSellerEmail().equals(currentUser.getEmail())) {
+            ArrayList<Integer> resultsInt = getStore(store.getId()).getProducts();
+
             ArrayList<Product> results = new ArrayList<Product>();
 
-            for (int i = 0; i < this.products.size(); i++) {
-                if (this.products.get(i).getStoreId() == store.getId()) {
-                    results.add(products.get(i));
-                }
+            for (int i = 0; i < resultsInt.size(); i++) {
+                results.add(getProduct(resultsInt.get(i)));
             }
 
             return results;
         }
 
         return null;
+    }
+
+    public void emptyCart(User currentUser) {
+        if (currentUser != null && currentUser instanceof Customer) {
+            Customer c = (Customer) getUser(currentUser.getEmail());
+
+            c.emptyCart();
+        }
     }
 
     /**
@@ -707,7 +715,7 @@ public class DataManager {
 
     public void addToCart(User currentUser, int productId, int quantity) {
         Product product = getProduct(productId);
-        
+
         if (product.checkQuantity(quantity)) {
             if (currentUser != null && currentUser instanceof Customer) {
                 Customer current = (Customer) currentUser;

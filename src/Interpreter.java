@@ -598,4 +598,8 @@ public class Interpreter {
         this.pw.println(product.getId());
         this.pw.println(quantity);
     }
+
+    public void emptyCart() {
+        this.pw.println("emptyCart");
+    }
 }

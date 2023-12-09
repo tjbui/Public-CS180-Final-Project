@@ -266,6 +266,8 @@ public class ServerThread extends Thread {
                 int quantity = Integer.parseInt(this.s.nextLine());
 
                 this.dm.addToCart(currentUser, productId, quantity);
+            } else if (command.equals("emptyCart")) {
+                this.dm.emptyCart(currentUser);
             } else if (command.equals("quit")) {
                 break;
             }
