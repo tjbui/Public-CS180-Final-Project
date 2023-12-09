@@ -592,4 +592,10 @@ public class Interpreter {
 
         return data;
     }
+
+    public void addToCart(Product product, int quantity) {
+        this.pw.println("addToCart");
+        this.pw.println(product.getId());
+        this.pw.println(quantity);
+    }
 }

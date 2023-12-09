@@ -559,6 +559,7 @@ public class DataManager {
                     this.currentUserOwnsStore(currentUser, this.getStore(product.getId()))) {
                 synchronized (gatekeeper) {
                     this.products.remove(product);
+                    this.getStore(product.getStoreId()).getProducts().remove(product.getId());
                 }
             }
         }
@@ -702,6 +703,18 @@ public class DataManager {
         }
 
         return results;
+    }
+
+    public void addToCart(User currentUser, int productId, int quantity) {
+        Product product = getProduct(productId);
+        
+        if (product.checkQuantity(quantity)) {
+            if (currentUser != null && currentUser instanceof Customer) {
+                Customer current = (Customer) currentUser;
+
+                current.addProduct(product.getId(), quantity);
+            }
+        }
     }
 
     /**
