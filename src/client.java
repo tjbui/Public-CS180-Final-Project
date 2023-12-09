@@ -657,6 +657,8 @@ public class client {
                     Product product = new Product(productName, description, storeId, quantity, priceProduct, interpreter.getCurrentProductId());
                     interpreter.incrementCurrentProductId();
                     interpreter.addProduct(product);
+                    store = interpreter.getStore(storeId);
+                    System.out.println(store.toStringFormat());
                     JOptionPane.showMessageDialog(null, "Product added!", "successful message",
                             JOptionPane.INFORMATION_MESSAGE);
                 } catch (InvalidPriceError e) {
@@ -666,6 +668,7 @@ public class client {
                 break;
 
             case "Delete product":
+                store = interpreter.getStore(storeId);
                 System.out.println(store.getProducts().size());
                 if (store.getProducts().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "No products in Store", "Error message", JOptionPane.ERROR_MESSAGE);
