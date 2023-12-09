@@ -68,6 +68,12 @@ public class ServerThread extends Thread {
                 this.pw.println(currentStoreId);
             } else if (command.equals("incrementCurrentStoreId")) {
                 this.dm.incrementCurrentStoreId();
+            } else if (command.equals("getCurrentProductId")) {
+                int currentProductId = this.dm.getCurrentProductId();
+
+                this.pw.println(currentProductId);
+            } else if (command.equals("incrementCurrentProductId")) {
+                this.dm.incrementCurrentProductId();
             } else if (command.equals("getUser")) {
                 String email = this.s.nextLine();
 

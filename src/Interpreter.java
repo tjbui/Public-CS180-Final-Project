@@ -114,6 +114,28 @@ public class Interpreter {
     }
 
     /**
+     * @return The ID that will be assigned to the next created Product object
+     */
+    public int getCurrentProductId() {
+        this.pw.println("getCurrentProductId");
+
+        this.pw.flush();
+
+        return Integer.parseInt(this.s.nextLine());
+    }
+
+    /**
+     * Increments the ID that will be assigned to the next created Product object. This function
+     * should always be called after creating a new Store object that uses the getCurrentStoreId()
+     * function.
+     */
+    public void incrementCurrentProductId() {
+        this.pw.println("incrementCurrentProductId");
+
+        this.pw.flush();
+    }
+
+    /**
      * Log out the current user.
      */
     public void logout() {

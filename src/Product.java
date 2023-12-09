@@ -32,7 +32,9 @@ public class Product {
     }
 
     public Product(String name, String description, int storeId, int quantity, double price) throws InvalidPriceError {
-        this(name, description, storeId, quantity, price, count++);
+        this(name, description, storeId, quantity, price, Product.count);
+
+        Product.count++;
     }
 
     public String getName() {

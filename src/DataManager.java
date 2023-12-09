@@ -42,7 +42,7 @@ public class DataManager {
 
         try {
             this.dummyProduct = new Product("Product not found",
-                    "Product description not found", -1, 0, 0.0, -1);
+                    "Product description not found", -1, 1, 1.0, -1);
         } catch (Exception e) {
             System.out.println("File not found");
         }
@@ -298,6 +298,24 @@ public class DataManager {
     public void incrementCurrentStoreId() {
         synchronized(gatekeeper) {
             this.currentStoreId++;
+        }
+    }
+
+    /**
+     * @return The ID that will be assigned to the next created Product object
+     */
+    public int getCurrentProductId() {
+        return this.currentProductId;
+    }
+
+    /**
+     * Increments the ID that will be assigned to the next created Store object. This function
+     * should always be called after creating a new Store object that uses the getCurrentStoreId()
+     * function.
+     */
+    public void incrementCurrentProductId() {
+        synchronized(gatekeeper) {
+            this.currentProductId++;
         }
     }
 

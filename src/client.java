@@ -1,8 +1,9 @@
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.io.*;
 import java.util.Arrays;
 
 public class client {
@@ -519,12 +520,18 @@ public class client {
 
         switch (storeOption) {
             case "Create new store":
+
                 String storeName = JOptionPane.showInputDialog(null, "Create store name",
                         "Store Name", JOptionPane.QUESTION_MESSAGE);
+                if (storeName.equals("") || storeName.isEmpty()) {
+                    storeOptions();
+                    break;
+                }
+
                 ArrayList<Integer> empty = new ArrayList<>();
                 interpreter.addStore(new Store(empty, storeName, interpreter.getCurrentUser().getEmail(), interpreter.getCurrentStoreId())); //TODO
                 interpreter.incrementCurrentStoreId();
-                JOptionPane.showMessageDialog(null, "Store has been created/n If you would like to add products go to edit store", "successful message",
+                JOptionPane.showMessageDialog(null, "Store has been created. If you would like to add products go to edit store", "successful message",
                         JOptionPane.INFORMATION_MESSAGE);
                 seller();
                 break;
@@ -532,9 +539,17 @@ public class client {
 
             case "Edit/Delete store":
                 String[] viewStoreNames = new String[interpreter.getOwnedStores().size()]; //TODO
+                ArrayList<String> storeNamesArrayList = new ArrayList<String>();
+
                 for (int i = 0; i < viewStoreNames.length; i++) {
                     viewStoreNames[i] = interpreter.getOwnedStores().get(i).getName();
                 }
+
+                for (int q = 0; q < viewStoreNames.length; q++) {
+                    storeNamesArrayList.add(viewStoreNames[q]);
+                }
+
+
 
 
                 String storeNameForConversion = (String) JOptionPane.showInputDialog(null, "Choose option",
@@ -542,8 +557,9 @@ public class client {
                         viewStoreNames[0]);
 
 
-                editStore(Arrays.binarySearch(viewStoreNames, storeNameForConversion));
-                //editStore(viewStoreNames.indexOf(storeNameForConversion));
+                editStore(storeNamesArrayList.indexOf(storeNameForConversion));
+                //editStore(Arrays.binarySearch(viewStoreNames, storeNameForConversion));
+
                 break;
 
 
@@ -574,6 +590,11 @@ public class client {
             case "Change store name":
                 String storeName = JOptionPane.showInputDialog(null, "Enter new store name:",
                         "Store Name", JOptionPane.QUESTION_MESSAGE);
+
+                if (storeName.equals("") || storeName.isEmpty()) {
+                    editStore(indexOfStore);
+                    break;
+                }
                 interpreter.editStore(storeId, storeName);
                 break;
 
@@ -581,8 +602,18 @@ public class client {
                 try {
                     String productName = JOptionPane.showInputDialog(null, "Name of product",
                             "Edit Store", JOptionPane.QUESTION_MESSAGE);
+
+                    if (productName.equals("") || productName.isEmpty()) {
+                        editStore(indexOfStore);
+                        break;
+                    }
                     String description = JOptionPane.showInputDialog(null, "Description of product",
                             "Edit Store", JOptionPane.QUESTION_MESSAGE);
+
+                    if (description.equals("") || description.isEmpty()) {
+                        editStore(indexOfStore);
+                        break;
+                    }
 
                     String quantityString = JOptionPane.showInputDialog(null, "Quantity in stock",
                             "Edit Store", JOptionPane.QUESTION_MESSAGE);
@@ -591,10 +622,16 @@ public class client {
                     do {
                         try {
                             quantity = Integer.parseInt(quantityString);
-                            break;
+
+                            if (quantity >= 0) {
+                                break;
+                            }
                         } catch (Exception e) {
                             JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
                         }
+
+                        quantityString = JOptionPane.showInputDialog(null, "Enter an integer greater than or equal to 0:",
+                            "Edit Store", JOptionPane.QUESTION_MESSAGE);
                     } while (true);
 
                     String priceProductString = JOptionPane.showInputDialog(null, "Price of product",
@@ -604,13 +641,20 @@ public class client {
                     do {
                         try {
                             priceProduct = Double.parseDouble(priceProductString);
-                            break;
+
+                            if (priceProduct > 0.0) {
+                                break;
+                            }
                         } catch (Exception e) {
                             JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
                         }
+
+                        priceProductString = JOptionPane.showInputDialog(null, "Enter a decimal greater than 0:",
+                            "Edit Store", JOptionPane.QUESTION_MESSAGE);
                     } while (true);
 
-                    Product product = new Product(productName, description, storeId, quantity, priceProduct);
+                    Product product = new Product(productName, description, storeId, quantity, priceProduct, interpreter.getCurrentProductId());
+                    interpreter.incrementCurrentProductId();
                     interpreter.addProduct(product);
                     JOptionPane.showMessageDialog(null, "Product added!", "successful message",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -630,12 +674,21 @@ public class client {
                     for (int i = 0; i < store.getProducts().size(); i++) {
                         productList[i] = (interpreter.getProduct(store.getProducts().get(i)).getName());
                     }
+
+                    ArrayList<String> productArrayList = new ArrayList<String>();
+                    for (int w = 0; w < productList.length; w++) {
+                        productArrayList.add(productList[w]);
+                    }
                     String deleteProductOption = (String) JOptionPane.showInputDialog(null, "Which product would you like to delete?",
                             "Options", JOptionPane.QUESTION_MESSAGE, null, productList,
                             productList[0]);
 
-                    int indexOfProduct = Arrays.binarySearch(productList, deleteProductOption);
-                    interpreter.deleteProduct(indexOfProduct);
+                    int indexOfProduct = productArrayList.indexOf(deleteProductOption);
+                    System.out.println("index of deleting product:" + indexOfProduct);
+                    System.out.println(store.getProducts().toString());
+                    int id = store.getProducts().get(indexOfProduct);
+                    System.out.println("id of product deleting:" + id);
+                    interpreter.deleteProduct(id);
                 }
 
                 break;
@@ -656,19 +709,34 @@ public class client {
                 for (int i = 0; i < currentStore.getProducts().size(); i++) {
                     productList[i] = (interpreter.getProduct(currentStore.getProducts().get(i)).getName());
                 }
-                String deleteProductOption = (String) JOptionPane.showInputDialog(null, "Which product would you like to delete?",
+                String deleteProductOption = (String) JOptionPane.showInputDialog(null, "Which product would you like to edit?",
                         "Options", JOptionPane.QUESTION_MESSAGE, null, productList,
                         productList[0]);
 
-                int indexOfProduct = Arrays.binarySearch(productList, deleteProductOption);
+                ArrayList<String> productArrayList = new ArrayList<String>();
+                for (int e = 0; e < productList.length; e++) {
+                    productArrayList.add(productList[e]);
+                }
+
+                int indexOfProduct = productArrayList.indexOf(deleteProductOption);
 
                 int editProductID = interpreter.getStoreProducts(currentStore).get(indexOfProduct).getId();
 
                 String newProductName = JOptionPane.showInputDialog(null, "Provide new NAME for the product",
                         "Edit Product", JOptionPane.QUESTION_MESSAGE);
 
+                if (newProductName.equals("") || newProductName.isEmpty()) {
+                    editStore(indexOfStore);
+                    break;
+                }
+
                 String newProductDescription = JOptionPane.showInputDialog(null, "Provide new DESCRIPTION for the product",
                         "Edit Product", JOptionPane.QUESTION_MESSAGE);
+
+                if (newProductDescription.equals("") || newProductDescription.isEmpty()) {
+                    editStore(indexOfStore);
+                    break;
+                }
 
                 String newProductQuantityString = JOptionPane.showInputDialog(null, "Provide new QUANTITY for the product",
                         "Edit Store", JOptionPane.QUESTION_MESSAGE);
@@ -678,13 +746,15 @@ public class client {
                     try {
                         newProductQuantity = Integer.parseInt(newProductQuantityString);
 
-                        if (newProductQuantity < 0) {
-                            JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
+                        if (newProductQuantity >= 0) {
+                            break;
                         }
-                        break;
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
                     }
+
+                    newProductQuantityString = JOptionPane.showInputDialog(null, "Enter an integer greater than or equal to 0:",
+                        "Edit Store", JOptionPane.QUESTION_MESSAGE);
                 } while (true);
 
 
@@ -696,14 +766,15 @@ public class client {
                     try {
                         newProductPrice = Double.parseDouble(newProductPriceString);
 
-                        if (newProductPrice <= 0) {
-                            JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
-                            continue;
+                        if (newProductPrice > 0) {
+                            break;
                         }
-                        break;
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(null, "Invalid input", "Error message", JOptionPane.ERROR_MESSAGE);
                     }
+
+                    newProductPriceString = JOptionPane.showInputDialog(null, "Enter a decimal greater than 0:",
+                        "Edit Store", JOptionPane.QUESTION_MESSAGE);
                 } while (true);
 
                 try {
@@ -751,7 +822,7 @@ public class client {
         ArrayList<String[]> totalData = interpreter.getSellerShoppingCartView();
 
         String viewProductData = "";
-        viewProductData += "Data format:\nCustomer email, product name, store name, quantity sold.";
+        viewProductData += "Data format: Customer email, product name, store name, quantity sold.";
         viewProductData += "\n";
 
         for (int i = 0; i < totalData.size(); i++) {
