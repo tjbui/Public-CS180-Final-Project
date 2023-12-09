@@ -191,7 +191,7 @@ public class DataManager {
                 File fCurrentIds = new File("ids.txt");
                 PrintWriter pwCurrentIds = new PrintWriter(fCurrentIds);
 
-                pwCurrentIds.println(Product.getCount());
+                pwCurrentIds.println(this.currentProductId);
                 pwCurrentIds.println(this.currentStoreId);
 
                 pwCurrentIds.close();
