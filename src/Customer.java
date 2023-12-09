@@ -49,6 +49,11 @@ public class Customer extends User {
         this.quantities = quantities;
     }
 
+    public void emptyCart() {
+        this.ids.clear();
+        this.quantities.clear();
+    }
+
     @Override
     public String toStringFormat() {
         String productIdString = "";
