@@ -257,6 +257,7 @@ public class client {
                                     String mes = interpreter.getProduct(((Customer) interpreter.getCurrentUser()).getIds().get(i)).getName() + " purchase complete!";
                                     JOptionPane.showMessageDialog(null, mes, "Cart message",
                                             JOptionPane.INFORMATION_MESSAGE);
+                                    interpreter.emptyCart();
                                 } catch (InvalidQuantityError e) {
                                     String mes = ("Quantity is too high for " + interpreter.getProduct(((Customer) interpreter.getCurrentUser()).getIds().get(i))
                                             + "\n This product cannot be purchased");
@@ -882,7 +883,8 @@ public class client {
 
             Product product = interpreter.search(search).get(index);
             if (interpreter.getCurrentUser() instanceof Customer) {
-                ((Customer) interpreter.getCurrentUser()).addProduct(product.getId(), quantity);
+                interpreter.addToCart(product, quantity);
+                System.out.println(((Customer) interpreter.getCurrentUser()).getIds());
                 JOptionPane.showMessageDialog(null, "Item successfully added", "Cart",
                         JOptionPane.INFORMATION_MESSAGE);
             }
