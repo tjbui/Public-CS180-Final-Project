@@ -300,6 +300,14 @@ public class Interpreter {
         this.pw.flush();
     }
 
+    public String formatTransaction(Transaction transaction) {
+        this.pw.println(transaction.toStringFormat());
+
+        this.pw.flush();
+
+        return this.s.nextLine();
+    }
+
     /**
      * Edits a product. This is permitted only if the given product belongs to the current user.
      *

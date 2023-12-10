@@ -224,6 +224,7 @@ public class DataManager {
                     if (this.getStore(product.getStoreId()).getSellerEmail()
                                     .equals(currentUser.getEmail())) {
                         this.products.add(product);
+                        this.getStore(product.getStoreId()).getProducts().add(product.getId());
                     }
 
                     line = bfr.readLine();
@@ -538,7 +539,7 @@ public class DataManager {
         if (currentUser != null && currentUser instanceof Seller) {
             Product product = this.getProduct(id);
 
-            if (this.currentUserOwnsStore(currentUser, this.getStore(product.getId()))) {
+            if (this.currentUserOwnsStore(currentUser, this.getStore(product.getStoreId()))) {
                 synchronized (gatekeeper) {
                     product.setName(name);
                     product.setDescription(description);
@@ -562,10 +563,10 @@ public class DataManager {
             Product product = this.getProduct(id);
 
             if (product != this.dummyProduct &&
-                    this.currentUserOwnsStore(currentUser, this.getStore(product.getId()))) {
+                    this.currentUserOwnsStore(currentUser, this.getStore(product.getStoreId()))) {
                 synchronized (gatekeeper) {
                     this.products.remove(product);
-                    this.getStore(product.getStoreId()).getProducts().remove(product.getId());
+                    this.getStore(product.getStoreId()).getProducts().remove(Integer.valueOf(product.getId()));
                 }
             }
         }
@@ -722,6 +723,8 @@ public class DataManager {
     public void addToCart(User currentUser, int productId, int quantity) {
         Product product = getProduct(productId);
 
+        System.out.println(product.toStringFormat());
+
         if (product.checkQuantity(quantity)) {
             if (currentUser != null && currentUser instanceof Customer) {
                 Customer current = (Customer) currentUser;
@@ -729,6 +732,10 @@ public class DataManager {
                 current.addProduct(product.getId(), quantity);
             }
         }
+    }
+
+    public String formatTransaction(Transaction transaction) {
+        return transaction.toString(this);
     }
 
     /**
