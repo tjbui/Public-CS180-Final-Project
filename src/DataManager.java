@@ -216,11 +216,17 @@ public class DataManager {
                 while (line != null) {
                     Product product = Product.fromStringFormat(line);
 
-                    if (this.getProduct(product.getId()) == this.dummyProduct &&
-                            this.getStore(product.getStoreId()).getSellerEmail()
+                    product.setId(this.getCurrentProductId());
+                    this.incrementCurrentProductId();
+
+                    System.out.println(product.toStringFormat());
+
+                    if (this.getStore(product.getStoreId()).getSellerEmail()
                                     .equals(currentUser.getEmail())) {
                         this.products.add(product);
                     }
+
+                    line = bfr.readLine();
                 }
 
                 bfr.close();
