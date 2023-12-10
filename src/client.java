@@ -467,9 +467,11 @@ public class client {
                         switch (viewDataOption) {
                             case "View popular product data":
                                 productData();
+                                seller();
                                 break;
                             case "View Store Sales":
                                 storeSalesData();
+                                seller();
                                 break;
                         }
                         seller();
@@ -806,8 +808,9 @@ public class client {
                 storeNames[0]);
 
         int indexOfStore = Arrays.binarySearch(storeNames, storeName);
-        ArrayList<String[]> salesData = interpreter.getSaleData(interpreter.getOwnedStores().get(indexOfStore));
-
+        System.out.println(indexOfStore);
+        ArrayList<String[]> salesData = interpreter.getSaleData(interpreter.getOwnedStores().get(indexOfStore)); //todo not working
+        System.out.println("test");
         String viewSalesData = "";
         for (int j = 0; j < salesData.size(); j++) {
             viewSalesData += Arrays.toString(salesData.get(j));
@@ -816,7 +819,6 @@ public class client {
 
         JOptionPane.showMessageDialog(null, viewSalesData, "View Sales Data",
                 JOptionPane.INFORMATION_MESSAGE);
-
     }
 
     public static void productData() {
