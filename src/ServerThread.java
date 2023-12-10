@@ -80,6 +80,10 @@ public class ServerThread extends Thread {
                 User user = this.dm.getUser(email);
 
                 this.pw.println(user.toStringFormat());
+            } else if (command.equals("formatTransaction")) {
+                Transaction t = Transaction.fromStringFormat(this.s.nextLine());
+
+                this.pw.println(this.dm.formatTransaction(t));
             } else if (command.equals("userLogin")) {
                 String email = this.s.nextLine();
                 String password = this.s.nextLine();

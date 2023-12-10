@@ -195,15 +195,7 @@ public class client {
                     String filename = JOptionPane.showInputDialog(null, "Enter the name of the file to which to export:",
                             "File", JOptionPane.QUESTION_MESSAGE);
                     try {
-                        PrintWriter pw = new PrintWriter(new File(filename));
-
-                        ArrayList<Transaction> transactions = interpreter.getPurchaseHistory();
-
-                        for (int i = 0; i < transactions.size(); i++) {
-                            pw.println(transactions.get(i).toString());
-                        }
-
-                        pw.close();
+                        interpreter.exportPurchases(filename);
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(null, "Error occured during export", "Export error message",
                                 JOptionPane.ERROR_MESSAGE);
@@ -433,12 +425,14 @@ public class client {
     public static void seeCustomerPurchaseHistory() {
         String purchaseHistory = "";
 
-        if (interpreter.getPurchaseHistory().isEmpty()) {
+        ArrayList<Transaction> history = interpreter.getPurchaseHistory();
+
+        if (history.isEmpty()) {
             JOptionPane.showMessageDialog(null, "You have no past transactions", "Error",
                     JOptionPane.ERROR_MESSAGE);
         } else {
-            for (int i = 0; i < interpreter.getPurchaseHistory().size(); i++) {
-                purchaseHistory += interpreter.getPurchaseHistory().get(i).toString();
+            for (int i = 0; i < history.size(); i++) {
+                purchaseHistory += interpreter.formatTransaction(history.get(i));
                 purchaseHistory += "\n";
             }
             JOptionPane.showMessageDialog(null, purchaseHistory,"Purchase History",
@@ -659,6 +653,8 @@ public class client {
                     Product product = new Product(productName, description, storeId, quantity, priceProduct, interpreter.getCurrentProductId());
                     interpreter.incrementCurrentProductId();
                     interpreter.addProduct(product);
+                    store = interpreter.getStore(storeId);
+                    System.out.println(store.toStringFormat());
                     JOptionPane.showMessageDialog(null, "Product added!", "successful message",
                             JOptionPane.INFORMATION_MESSAGE);
                 } catch (InvalidPriceError e) {
@@ -668,6 +664,7 @@ public class client {
                 break;
 
             case "Delete product":
+                store = interpreter.getStore(storeId);
                 System.out.println(store.getProducts().size());
                 if (store.getProducts().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "No products in Store", "Error message", JOptionPane.ERROR_MESSAGE);
