@@ -302,6 +302,8 @@ public class Interpreter {
     }
 
     public String formatTransaction(Transaction transaction) {
+        this.pw.println("formatTransaction");
+        
         this.pw.println(transaction.toStringFormat());
 
         this.pw.flush();
