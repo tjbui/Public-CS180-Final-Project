@@ -312,7 +312,7 @@ public class client {
      */
     private static final String[] searchOptions = {"Search by keywords", "Sort all products by Price", "Sort all products by Quantities"};
     private static final String[] priceSortOptions = {"Search by ascending price", "Search by descending prices"};
-    private static final String[] quantitySortOptions = {"Search by ascending price", "Search by descending prices"};
+    private static final String[] quantitySortOptions = {"Search by ascending quantity", "Search by descending quantity"};
     private static final String[] refreshOptions = {"Refresh", "Continue"};
 
     public static void search() {
@@ -353,7 +353,7 @@ public class client {
                         } else {
                             while (true) {
                                 String mes = "";
-                                for (int i = 0; i < interpreter.getProductList(0, 0).size(); i++) {
+                                for (int i = 0; i < interpreter.getProductList(2, 1).size(); i++) {
                                     mes += interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_ASC).get(i).getName() + "\n";
                                 }
                                 String refresh = (String) JOptionPane.showInputDialog(null, mes,
@@ -372,7 +372,7 @@ public class client {
                         } else {
                             while (true) {
                                 String mes = "";
-                                for (int i = 0; i < interpreter.getProductList(0, 0).size(); i++) {
+                                for (int i = 0; i < interpreter.getProductList(2, 2).size(); i++) {
                                     mes += (interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_DESC).get(i).getName()) + "\n"; // idk if this will work
                                 }
                                 String refresh = (String) JOptionPane.showInputDialog(null, mes,
@@ -397,14 +397,14 @@ public class client {
                         "Options", JOptionPane.QUESTION_MESSAGE, null, quantitySortOptions,
                         quantitySortOptions[0]);
                 switch (sortQuantityOption) {
-                    case "Search by ascending price":
+                    case "Search by ascending quantity":
                         if (interpreter.getProductList(0, 0).isEmpty()) {
                             JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
                             while (true) {
                                 String mes = "";
-                                for (int i = 0; i < interpreter.getProductList(0, 0).size(); i++) {
+                                for (int i = 0; i < interpreter.getProductList(1, 1).size(); i++) {
                                     mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_ASC).get(i).getName()) + "\n";
                                 }
                                 String refresh = (String) JOptionPane.showInputDialog(null, mes,
@@ -416,14 +416,14 @@ public class client {
                             }
                         }
                         break;
-                    case "Search by descending prices":
+                    case "Search by descending quantity":
                         if (interpreter.getProductList(0, 0).isEmpty()) {
                             JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
                             while (true) {
                                 String mes = "";
-                                for (int i = 0; i < interpreter.getProductList(0, 0).size(); i++) {
+                                for (int i = 0; i < interpreter.getProductList(1, 2).size(); i++) {
                                     mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_DESC).get(i).getName()) + "\n";
                                 }
                                 String refresh = (String) JOptionPane.showInputDialog(null, mes,
