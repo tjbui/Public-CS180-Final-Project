@@ -204,6 +204,7 @@ public class client {
                         JOptionPane.showMessageDialog(null, "Error occured during export", "Export error message",
                                 JOptionPane.ERROR_MESSAGE);
                     }
+                    break;
                 default:
                     JOptionPane.showMessageDialog(null, "Invalid input", "Invalid input error message",
                             JOptionPane.ERROR_MESSAGE);
