@@ -353,7 +353,7 @@ public class client {
                             while (true) {
                                 String mes = "";
                                 for (int i = 0; i < interpreter.getProductList(0, 0).size(); i++) {
-                                    mes += interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_ASC).get(i).getName();
+                                    mes += interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_ASC).get(i).getName() + "\n";
                                 }
                                 String refresh = (String) JOptionPane.showInputDialog(null, mes,
                                         "Search message", JOptionPane.QUESTION_MESSAGE, null, refreshOptions,
@@ -372,7 +372,7 @@ public class client {
                             while (true) {
                                 String mes = "";
                                 for (int i = 0; i < interpreter.getProductList(0, 0).size(); i++) {
-                                    mes += (interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_DESC).get(i).getName()); // idk if this will work
+                                    mes += (interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_DESC).get(i).getName()) + "\n"; // idk if this will work
                                 }
                                 String refresh = (String) JOptionPane.showInputDialog(null, mes,
                                         "Search message", JOptionPane.QUESTION_MESSAGE, null, refreshOptions,
@@ -404,7 +404,7 @@ public class client {
                             while (true) {
                                 String mes = "";
                                 for (int i = 0; i < interpreter.getProductList(0, 0).size(); i++) {
-                                    mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_ASC).get(i).getName());
+                                    mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_ASC).get(i).getName()) + "\n";
                                 }
                                 String refresh = (String) JOptionPane.showInputDialog(null, mes,
                                         "Search message", JOptionPane.QUESTION_MESSAGE, null, refreshOptions,
@@ -423,7 +423,7 @@ public class client {
                             while (true) {
                                 String mes = "";
                                 for (int i = 0; i < interpreter.getProductList(0, 0).size(); i++) {
-                                    mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_DESC).get(i).getName());
+                                    mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_DESC).get(i).getName()) + "\n";
                                 }
                                 String refresh = (String) JOptionPane.showInputDialog(null, mes,
                                         "Search message", JOptionPane.QUESTION_MESSAGE, null, refreshOptions,
