@@ -11,7 +11,6 @@ public class client {
 
     /**
      * The main method takes the hostname and port number, then initializes the static Interpreter with the new socket. Then it runs the initialize() method
-     *
      */
     public static void main(String[] args) throws InvalidQuantityError, InvalidPriceError {
         try {
@@ -32,12 +31,14 @@ public class client {
                     JOptionPane.ERROR_MESSAGE);
         }
     }
+
     /**
      * ??? DOES IT NEED TO LOGOUT CURRENT USER ??? ~ commented out datamanger method since it doesn't exist.
      * There is no logout method in Interpreter so I'm not sure
      */
     private static final String[] loginOptions = {"Log in", "Sign up", "Exit"};
     private static final String[] sellerOptions = {"Stores Options", "View Data", "Import products from a File", "Export products to file", "Log Out"};
+
     public static void initialize() throws InvalidQuantityError, InvalidPriceError {
         interpreter.logout();
         String option = (String) JOptionPane.showInputDialog(null, "Choose option",
@@ -65,12 +66,13 @@ public class client {
             System.out.println("User canceled");
         }
     }
+
     /**
-     *
      * checkUserLogin() doesn't return anything ??? Tried debugging but not sure how the implementation works **RESOLVED**
      * works**
      */
     private static final String[] tryAgainOptions = {"Try Again", "Back"};
+
     public static void login() throws InvalidQuantityError, InvalidPriceError {
         String email = JOptionPane.showInputDialog(null, "Enter email",
                 "Email", JOptionPane.QUESTION_MESSAGE);
@@ -115,12 +117,13 @@ public class client {
      *
      */
     private static final String[] accountCreateOptions = {"Seller", "Customer", "Back"};
+
     public static void signup() throws InvalidQuantityError, InvalidPriceError {
         String email = JOptionPane.showInputDialog(null, "Enter a new email",
                 "Email", JOptionPane.QUESTION_MESSAGE);
         String password = JOptionPane.showInputDialog(null, "Create a password",
                 "Password", JOptionPane.QUESTION_MESSAGE);
-        if (email.isEmpty() || password.isEmpty()){
+        if (email.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Email or password is empty. Please try again", "Email empty message",
                     JOptionPane.ERROR_MESSAGE);
             signup();
@@ -168,6 +171,7 @@ public class client {
      * Not tested
      */
     private static final String[] customerOptions = {"Go to cart", "Search products", "See purchase history", "Log out", "Export transaction history"};
+
     public static void customer() throws InvalidQuantityError, InvalidPriceError {
         String option = (String) JOptionPane.showInputDialog(null, "Choose option",
                 "Options", JOptionPane.QUESTION_MESSAGE, null, customerOptions,
@@ -214,14 +218,16 @@ public class client {
 
     /**
      * Untested (needs other methods for testing)
+     *
      * @throws InvalidQuantityError
      * @throws InvalidPriceError
      */
-    private static final String[] cartOptions = {"Buy all", "Delete product from cart","Back to customer menu"};
+    private static final String[] cartOptions = {"Buy all", "Delete product from cart", "Back to customer menu"};
+
     public static void seeCart() throws InvalidQuantityError, InvalidPriceError {
         if (interpreter.getCurrentUser() instanceof Customer) { //doesn't work for some reason so it always thinks not costumer ??
-            
-            
+
+
             if (((Customer) interpreter.getCurrentUser()).getIds().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Cart is empty", "Empty cart message",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -258,7 +264,7 @@ public class client {
                                 }
                             }
                             break;
-                            // NOT TESTED
+                        // NOT TESTED
                         case "Delete product from cart":
                             running = false;
                             int numberInCart = 0;
@@ -303,10 +309,11 @@ public class client {
     /**
      * not tested
      */
-    private static final String[] searchOptions = {"Search by keywords", "Sort all products by Price","Sort all products by Quantities"};
+    private static final String[] searchOptions = {"Search by keywords", "Sort all products by Price", "Sort all products by Quantities"};
     private static final String[] priceSortOptions = {"Search by ascending price", "Search by descending prices"};
     private static final String[] quantitySortOptions = {"Search by ascending price", "Search by descending prices"};
-    private static final String[] refreshOptions = {"Refresh","Continue"};
+    private static final String[] refreshOptions = {"Refresh", "Continue"};
+
     public static void search() {
         String option = (String) JOptionPane.showInputDialog(null, "Choose option",
                 "Options", JOptionPane.QUESTION_MESSAGE, null, searchOptions,
@@ -339,7 +346,7 @@ public class client {
                         priceSortOptions[0]);
                 switch (sortPriceOption) {
                     case "Search by ascending price":
-                        if (interpreter.getProductList(0,0).isEmpty()) { //Not sure about getProductList() arguments
+                        if (interpreter.getProductList(0, 0).isEmpty()) { //Not sure about getProductList() arguments
                             JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
@@ -358,7 +365,7 @@ public class client {
                         }
                         break;
                     case "Search by descending prices":
-                        if (interpreter.getProductList(0,0).isEmpty()) {
+                        if (interpreter.getProductList(0, 0).isEmpty()) {
                             JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
@@ -390,7 +397,7 @@ public class client {
                         quantitySortOptions[0]);
                 switch (sortQuantityOption) {
                     case "Search by ascending price":
-                        if (interpreter.getProductList(0,0).isEmpty()) {
+                        if (interpreter.getProductList(0, 0).isEmpty()) {
                             JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
@@ -409,7 +416,7 @@ public class client {
                         }
                         break;
                     case "Search by descending prices":
-                        if (interpreter.getProductList(0,0).isEmpty()) {
+                        if (interpreter.getProductList(0, 0).isEmpty()) {
                             JOptionPane.showMessageDialog(null, "No Products listed", "Search message",
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
@@ -466,11 +473,12 @@ public class client {
                 purchaseHistory += interpreter.formatTransaction(history.get(i));
                 purchaseHistory += "\n";
             }
-            JOptionPane.showMessageDialog(null, purchaseHistory,"Purchase History",
+            JOptionPane.showMessageDialog(null, purchaseHistory, "Purchase History",
                     JOptionPane.INFORMATION_MESSAGE);
 
         }
     }
+
     public static void seller() throws InvalidQuantityError, InvalidPriceError {
         boolean running = true;
         try { // Try to catch nullpointerexception if user closes gui
@@ -578,8 +586,6 @@ public class client {
                 }
 
 
-
-
                 String storeNameForConversion = (String) JOptionPane.showInputDialog(null, "Choose option",
                         "Options", JOptionPane.QUESTION_MESSAGE, null, viewStoreNames,
                         viewStoreNames[0]);
@@ -659,7 +665,7 @@ public class client {
                         }
 
                         quantityString = JOptionPane.showInputDialog(null, "Enter an integer greater than or equal to 0:",
-                            "Edit Store", JOptionPane.QUESTION_MESSAGE);
+                                "Edit Store", JOptionPane.QUESTION_MESSAGE);
                     } while (true);
 
                     String priceProductString = JOptionPane.showInputDialog(null, "Price of product",
@@ -678,7 +684,7 @@ public class client {
                         }
 
                         priceProductString = JOptionPane.showInputDialog(null, "Enter a decimal greater than 0:",
-                            "Edit Store", JOptionPane.QUESTION_MESSAGE);
+                                "Edit Store", JOptionPane.QUESTION_MESSAGE);
                     } while (true);
 
                     Product product = new Product(productName, description, storeId, quantity, priceProduct, interpreter.getCurrentProductId());
@@ -785,7 +791,7 @@ public class client {
                     }
 
                     newProductQuantityString = JOptionPane.showInputDialog(null, "Enter an integer greater than or equal to 0:",
-                        "Edit Store", JOptionPane.QUESTION_MESSAGE);
+                            "Edit Store", JOptionPane.QUESTION_MESSAGE);
                 } while (true);
 
 
@@ -805,7 +811,7 @@ public class client {
                     }
 
                     newProductPriceString = JOptionPane.showInputDialog(null, "Enter a decimal greater than 0:",
-                        "Edit Store", JOptionPane.QUESTION_MESSAGE);
+                            "Edit Store", JOptionPane.QUESTION_MESSAGE);
                 } while (true);
 
                 try {
@@ -869,7 +875,7 @@ public class client {
 
     public static void putInCart() {
 
-        int cart = JOptionPane.showConfirmDialog (null, "Would you like to put an item in your cart?","Cart",JOptionPane.YES_NO_OPTION);
+        int cart = JOptionPane.showConfirmDialog(null, "Would you like to put an item in your cart?", "Cart", JOptionPane.YES_NO_OPTION);
 
         if (cart == JOptionPane.YES_OPTION) {
             String search = JOptionPane.showInputDialog(null, "Enter the name of the product which you would like to put in cart",

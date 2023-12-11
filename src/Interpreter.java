@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 /**
  * Communicates with a Client's designated ServerThread to perform operations on the shared
  * DataManager and convert text output to developer-friendly objects.
- * 
+ *
  * @author Seth Hartzler
  * @version December 5, 2023
  */
@@ -237,10 +237,10 @@ public class Interpreter {
     }
 
     /**
-     * @param by An integer representing what to sort the products by. Values include BY_NOTHING,
-     * BY_QUANTITY, and BY_PRICE
+     * @param by   An integer representing what to sort the products by. Values include BY_NOTHING,
+     *             BY_QUANTITY, and BY_PRICE
      * @param sort An integer representing how to sort the products. Values include NOT_SORTED,
-     * SORTED_ASC, and SORTED_DESC
+     *             SORTED_ASC, and SORTED_DESC
      * @return The list of all products in the marketplace
      */
     public ArrayList<Product> getProductList(int by, int sort) {
@@ -260,7 +260,8 @@ public class Interpreter {
                 Product product = Product.fromStringFormat(line);
 
                 results.add(product);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
 
             line = this.s.nextLine();
         }
@@ -311,7 +312,7 @@ public class Interpreter {
     /**
      * Edits a product. This is permitted only if the given product belongs to the current user.
      *
-     * @param id The id of the product
+     * @param id          The id of the product
      * @param name
      * @param description
      * @param quantity
@@ -397,11 +398,12 @@ public class Interpreter {
         String line = this.s.nextLine();
 
         while (!line.equals("END")) {
-            try{
+            try {
                 Product product = Product.fromStringFormat(line);
 
                 products.add(product);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
 
             line = this.s.nextLine();
         }
@@ -487,11 +489,12 @@ public class Interpreter {
                 Product product = Product.fromStringFormat(line);
 
                 results.add(product);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
 
             line = this.s.nextLine();
         }
-        
+
         return results;
     }
 
@@ -501,7 +504,7 @@ public class Interpreter {
      * @param product
      * @param quantity
      * @throws InvalidQuantityError Thrown if the quantity is negative or greater than the quantity
-     * of the Product currently in stock
+     *                              of the Product currently in stock
      */
     public boolean makePurchase(Product product, int quantity) throws InvalidQuantityError { //THROWS INVALID QUANTITY ERROR
         this.pw.println("makePurchase");

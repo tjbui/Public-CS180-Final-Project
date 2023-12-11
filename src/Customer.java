@@ -3,12 +3,8 @@ import java.util.ArrayList;
 /**
  * Project-04 – Customer
  *
- *
  * @author Gunho Park, Seth Hartzler, Isaac Shane, Tru Bui; Lab - L16
- *
-
  * @version Nov. 13, 2023
- *
  */
 
 public class Customer extends User {

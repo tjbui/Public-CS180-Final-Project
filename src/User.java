@@ -1,12 +1,8 @@
 /**
  * Project-04 – User
  *
- *
  * @author Gunho Park, Seth Hartzler, Isaac Shane, Tru Bui; Lab - L16
- *
-
  * @version Nov. 13, 2023
- *
  */
 public class User {
     private String email;
@@ -51,7 +47,7 @@ public class User {
             if (parts.length == 2) { // NECESSARY CAUSE IF NOT FOUND, raw will be "User not found," which will make parts length 1
                 return new User(parts[0], parts[1]);
             }
-            return new User(parts[0],"password");
+            return new User(parts[0], "password");
         }
     }
 }

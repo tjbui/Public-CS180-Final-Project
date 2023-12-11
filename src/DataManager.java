@@ -106,7 +106,8 @@ public class DataManager {
             }
 
             bfrStore.close();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         try {
             File fTransaction = new File("transactions.csv");
@@ -122,7 +123,8 @@ public class DataManager {
             }
 
             bfrTransaction.close();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         try {
             File fCurrentIds = new File("ids.txt");
@@ -146,7 +148,7 @@ public class DataManager {
      * program so that data is not lost.
      */
     public void saveToFile() {
-        synchronized(gatekeeper) {
+        synchronized (gatekeeper) {
             try {
                 File fProduct = new File("products.csv");
                 PrintWriter pwProduct = new PrintWriter(fProduct);
@@ -195,7 +197,8 @@ public class DataManager {
                 pwCurrentIds.println(this.currentStoreId);
 
                 pwCurrentIds.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -222,7 +225,7 @@ public class DataManager {
                     System.out.println(product.toStringFormat());
 
                     if (this.getStore(product.getStoreId()).getSellerEmail()
-                                    .equals(currentUser.getEmail())) {
+                            .equals(currentUser.getEmail())) {
                         this.products.add(product);
                         this.getStore(product.getStoreId()).getProducts().add(product.getId());
                     }
@@ -242,7 +245,7 @@ public class DataManager {
      * Exports all transactions associated with the current user to a file at the given location.
      *
      * @param currentUser
-     * @param filename The file to which the transaction data will be written
+     * @param filename    The file to which the transaction data will be written
      */
     public void exportPurchaseHistory(User currentUser, String filename) {
         if (currentUser != null && currentUser instanceof Customer) {
@@ -260,7 +263,8 @@ public class DataManager {
                 }
 
                 pw.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -268,7 +272,7 @@ public class DataManager {
      * Exports product data in CSV form to a given file source.
      *
      * @param currentUser
-     * @param filename The file to which the product data will be written
+     * @param filename    The file to which the product data will be written
      */
     public void exportProductData(User currentUser, String filename) {
         if (currentUser != null && currentUser instanceof Seller) {
@@ -286,7 +290,8 @@ public class DataManager {
                 }
 
                 pw.close();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -303,7 +308,7 @@ public class DataManager {
      * function.
      */
     public void incrementCurrentStoreId() {
-        synchronized(gatekeeper) {
+        synchronized (gatekeeper) {
             this.currentStoreId++;
         }
     }
@@ -321,7 +326,7 @@ public class DataManager {
      * function.
      */
     public void incrementCurrentProductId() {
-        synchronized(gatekeeper) {
+        synchronized (gatekeeper) {
             this.currentProductId++;
         }
     }
@@ -400,8 +405,8 @@ public class DataManager {
      * @param newPassword
      */
     public void editCurrentUser(User currentUser, String newEmail, String newPassword) {
-        if (currentUser != null && 
-        this.getUser(newEmail).getEmail().equals(this.dummyUser.getEmail())) {
+        if (currentUser != null &&
+                this.getUser(newEmail).getEmail().equals(this.dummyUser.getEmail())) {
             synchronized (gatekeeper) {
                 currentUser.setEmail(newEmail);
                 currentUser.setPassword(newPassword);
@@ -417,10 +422,10 @@ public class DataManager {
     }
 
     /**
-     * @param by An integer representing what to sort the products by. Values include BY_NOTHING,
-     * BY_QUANTITY, and BY_PRICE
+     * @param by   An integer representing what to sort the products by. Values include BY_NOTHING,
+     *             BY_QUANTITY, and BY_PRICE
      * @param sort An integer representing how to sort the products. Values include NOT_SORTED,
-     * SORTED_ASC, and SORTED_DESC
+     *             SORTED_ASC, and SORTED_DESC
      * @return The list of all products in the marketplace
      */
     public ArrayList<Product> getProductList(int by, int sort) {
@@ -528,14 +533,14 @@ public class DataManager {
     /**
      * Edits a product. This is permitted only if the given product belongs to the current user.
      *
-     * @param id The id of the product
+     * @param id          The id of the product
      * @param name
      * @param description
      * @param quantity
      * @param price
      */
-    public void editProduct(User currentUser, int id, String name, String description, int quantity, 
-    double price) {
+    public void editProduct(User currentUser, int id, String name, String description, int quantity,
+                            double price) {
         if (currentUser != null && currentUser instanceof Seller) {
             Product product = this.getProduct(id);
 
@@ -546,7 +551,8 @@ public class DataManager {
                     product.setQuantity(quantity);
                     try {
                         product.setPrice(price);
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                    }
                 }
             }
         }
@@ -556,7 +562,7 @@ public class DataManager {
      * Deletes a product. This is permitted only if the given product belongs to the current user.
      *
      * @param currentUser
-     * @param id The id of the product
+     * @param id          The id of the product
      */
     public void deleteProduct(User currentUser, int id) {
         if (currentUser != null && currentUser instanceof Seller) {
@@ -658,10 +664,10 @@ public class DataManager {
     public void addStore(Store store) {
         Store existingStore = this.getStore(store.getId());
 
-            if (existingStore == this.dummyStore) {
-                synchronized (gatekeeper) {
-                    this.stores.add(store);
-                }
+        if (existingStore == this.dummyStore) {
+            synchronized (gatekeeper) {
+                this.stores.add(store);
+            }
         }
     }
 
@@ -674,8 +680,8 @@ public class DataManager {
     public void deleteStore(User currentUser, int id) {
         Store existingStore = this.getStore(id);
 
-        if (existingStore != this.dummyStore && 
-        this.currentUserOwnsStore(currentUser, existingStore)) {
+        if (existingStore != this.dummyStore &&
+                this.currentUserOwnsStore(currentUser, existingStore)) {
             synchronized (gatekeeper) {
                 this.stores.remove(existingStore);
             }
@@ -689,7 +695,7 @@ public class DataManager {
      * @param name
      */
     public void editStore(int id, String name) {
-        synchronized(gatekeeper) {
+        synchronized (gatekeeper) {
             Store store = this.getStore(id);
 
             if (store != this.dummyStore) {
@@ -745,15 +751,15 @@ public class DataManager {
      * @param product
      * @param quantity
      * @throws InvalidQuantityError Thrown if the quantity is negative or greater than the quantity
-     * of the Product currently in stock
+     *                              of the Product currently in stock
      */
-    public void makePurchase(User currentUser, Product product, int quantity) 
-    throws InvalidQuantityError {
+    public void makePurchase(User currentUser, Product product, int quantity)
+            throws InvalidQuantityError {
         if (product.checkQuantity(quantity)) {
             synchronized (gatekeeper) {
                 product.purchase(quantity);
                 Transaction transaction = new Transaction(product.getId(), product.getStoreId(),
-                        currentUser.getEmail(), 
+                        currentUser.getEmail(),
                         this.getStore(product.getStoreId()).getSellerEmail(),
                         quantity, product.getPrice());
                 this.transactions.add(transaction);
