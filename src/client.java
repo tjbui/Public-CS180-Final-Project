@@ -204,6 +204,7 @@ public class client {
                         JOptionPane.showMessageDialog(null, "Error occured during export", "Export error message",
                                 JOptionPane.ERROR_MESSAGE);
                     }
+                    break;
                 default:
                     JOptionPane.showMessageDialog(null, "Invalid input", "Invalid input error message",
                             JOptionPane.ERROR_MESSAGE);
@@ -352,8 +353,13 @@ public class client {
                         } else {
                             while (true) {
                                 String mes = "";
+<<<<<<< HEAD
                                 for (int i = 0; i < interpreter.getProductList(2, 1).size(); i++) {
                                     mes += interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_ASC).get(i).getName();
+=======
+                                for (int i = 0; i < interpreter.getProductList(0, 0).size(); i++) {
+                                    mes += interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_ASC).get(i).getName() + "\n";
+>>>>>>> dbe31365fba14e72702f15917abca5e8d919f8da
                                 }
                                 String refresh = (String) JOptionPane.showInputDialog(null, mes,
                                         "Search message", JOptionPane.QUESTION_MESSAGE, null, refreshOptions,
@@ -371,8 +377,13 @@ public class client {
                         } else {
                             while (true) {
                                 String mes = "";
+<<<<<<< HEAD
                                 for (int i = 0; i < interpreter.getProductList(2, 2).size(); i++) {
                                     mes += (interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_DESC).get(i).getName()); // idk if this will work
+=======
+                                for (int i = 0; i < interpreter.getProductList(0, 0).size(); i++) {
+                                    mes += (interpreter.getProductList(DataManager.BY_PRICE, DataManager.SORTED_DESC).get(i).getName()) + "\n"; // idk if this will work
+>>>>>>> dbe31365fba14e72702f15917abca5e8d919f8da
                                 }
                                 String refresh = (String) JOptionPane.showInputDialog(null, mes,
                                         "Search message", JOptionPane.QUESTION_MESSAGE, null, refreshOptions,
@@ -403,8 +414,13 @@ public class client {
                         } else {
                             while (true) {
                                 String mes = "";
+<<<<<<< HEAD
                                 for (int i = 0; i < interpreter.getProductList(1, 1).size(); i++) {
                                     mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_ASC).get(i).getName());
+=======
+                                for (int i = 0; i < interpreter.getProductList(0, 0).size(); i++) {
+                                    mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_ASC).get(i).getName()) + "\n";
+>>>>>>> dbe31365fba14e72702f15917abca5e8d919f8da
                                 }
                                 String refresh = (String) JOptionPane.showInputDialog(null, mes,
                                         "Search message", JOptionPane.QUESTION_MESSAGE, null, refreshOptions,
@@ -422,8 +438,13 @@ public class client {
                         } else {
                             while (true) {
                                 String mes = "";
+<<<<<<< HEAD
                                 for (int i = 0; i < interpreter.getProductList(1, 2).size(); i++) {
                                     mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_DESC).get(i).getName());
+=======
+                                for (int i = 0; i < interpreter.getProductList(0, 0).size(); i++) {
+                                    mes += (interpreter.getProductList(DataManager.BY_QUANTITY, DataManager.SORTED_DESC).get(i).getName()) + "\n";
+>>>>>>> dbe31365fba14e72702f15917abca5e8d919f8da
                                 }
                                 String refresh = (String) JOptionPane.showInputDialog(null, mes,
                                         "Search message", JOptionPane.QUESTION_MESSAGE, null, refreshOptions,
